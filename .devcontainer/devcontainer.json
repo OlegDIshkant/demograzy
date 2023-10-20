@@ -1,3 +1,10 @@
 {
-    "build" : { "dockerfile": "DockerFile" }
+    "build" : { "dockerfile": "DockerFile" },
+
+    "customizations": {
+        "vscode": {
+          "settings": {},
+          "extensions": ["streetsidesoftware.code-spell-checker"]
+        }
+      }
 }
