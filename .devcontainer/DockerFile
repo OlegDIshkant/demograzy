@@ -1,0 +1,14 @@
+FROM ubuntu:23.04
+
+# Install utils
+RUN apt update
+RUN apt install -y wget
+RUN apt install -y dpkg
+
+# Prepare to install Net sdk
+RUN wget https://packages.microsoft.com/config/ubuntu/23.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN rm packages-microsoft-prod.deb
+
+# Install Net sdk
+RUN apt install -y dotnet-sdk-7.0
