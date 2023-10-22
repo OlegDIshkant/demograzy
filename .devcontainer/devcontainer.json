@@ -1,10 +1,13 @@
 {
     "build" : { "dockerfile": "DockerFile" },
 
-    "customizations": {
-        "vscode": {
-          "settings": {},
-          "extensions": ["streetsidesoftware.code-spell-checker"]
-        }
+    "customizations": 
+    {
+      "vscode": {
+        "settings": {},
+        "extensions": ["streetsidesoftware.code-spell-checker", "ms-dotnettools.csdevkit"]
       }
+    },
+
+    "postStartCommand": "dotnet restore ./*.sln"
 }
