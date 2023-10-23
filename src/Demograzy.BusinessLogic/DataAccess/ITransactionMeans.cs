@@ -1,7 +1,9 @@
 
+using System;
+
 namespace Demograzy.BusinessLogic.DataAccess
 {
-    public interface ITransacionMeans
+    public interface ITransactionMeans : IDisposable
     {
         public IClientsGateway ClientsGateway { get; }
     }
