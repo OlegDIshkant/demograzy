@@ -12,7 +12,10 @@ namespace Demograzy.DataAccess
         {
             if (_dataSource == null)
             {
-                _dataSource = NpgsqlDataSource.Create(connStringProvider.ConnectionString);
+                using (var connString = connStringProvider.ConnectionString)
+                {
+                    _dataSource = NpgsqlDataSource.Create(connString.ToString());
+                }
             }
 
             return _dataSource.CreateConnection();

@@ -1,10 +1,11 @@
 using System;
+using System.Security;
 
 
 namespace Demograzy.DataAccess
 {
     public interface IConnectionStringProvider 
     {
-        string ConnectionString { get; }
+        SecureString ConnectionString { get; }
     }
 }
