@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.BusinessLogic", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.DataAccess", "src\Demograzy.DataAccess\Demograzy.DataAccess.csproj", "{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.Server", "src\Demograzy.Server\Demograzy.Server.csproj", "{1FF58F86-D59B-4E4A-AACB-D4D77A088430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FF58F86-D59B-4E4A-AACB-D4D77A088430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FF58F86-D59B-4E4A-AACB-D4D77A088430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FF58F86-D59B-4E4A-AACB-D4D77A088430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FF58F86-D59B-4E4A-AACB-D4D77A088430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A3FDE3DA-6587-481A-B524-8B63C6404648} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
 		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
+		{1FF58F86-D59B-4E4A-AACB-D4D77A088430} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
 	EndGlobalSection
 EndGlobal
