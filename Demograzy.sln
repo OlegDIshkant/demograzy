@@ -5,11 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A406B56D-E216-4485-9ABA-C622CB35FE3D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "business_logic", "business_logic", "{BAD9C2DF-3DB2-4A68-BE9F-ADAB055EDA6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.BusinessLogic", "src\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj", "{A3FDE3DA-6587-481A-B524-8B63C6404648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.BusinessLogic", "src\business_logic\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj", "{A3FDE3DA-6587-481A-B524-8B63C6404648}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.DataAccess", "src\business_logic\Demograzy.DataAccess\Demograzy.DataAccess.csproj", "{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.DataAccess", "src\Demograzy.DataAccess\Demograzy.DataAccess.csproj", "{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,8 +28,7 @@ Global
 		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BAD9C2DF-3DB2-4A68-BE9F-ADAB055EDA6B} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
-		{A3FDE3DA-6587-481A-B524-8B63C6404648} = {BAD9C2DF-3DB2-4A68-BE9F-ADAB055EDA6B}
-		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1} = {BAD9C2DF-3DB2-4A68-BE9F-ADAB055EDA6B}
+		{A3FDE3DA-6587-481A-B524-8B63C6404648} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
+		{478850F8-BFFE-456A-BEE1-DE8CF070E1C1} = {A406B56D-E216-4485-9ABA-C622CB35FE3D}
 	EndGlobalSection
 EndGlobal
