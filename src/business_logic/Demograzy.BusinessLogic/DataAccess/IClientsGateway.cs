@@ -1,10 +1,12 @@
+using System.Threading.Tasks;
 
 
 namespace Demograzy.BusinessLogic.DataAccess
 {
     public interface IClientsGateway
     {
-        bool TryAddNewClient(out int clientId, out string sessionId);
-        bool TryRemoveClient(int clientId);
+        Task<bool> TryAddClientAsync(int id, string name, string sessionId);
+        Task<(string name, string sessionId)?> TryFindClientByIdAsync(int id);
+        Task<bool> TryDropClientAsync(int id);
     }
 }
