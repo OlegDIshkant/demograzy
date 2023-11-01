@@ -1,5 +1,7 @@
 {
     "build" : { "dockerfile": "DockerFile" },
+    
+    "forwardPorts": [5079],
 
     "customizations": 
     {

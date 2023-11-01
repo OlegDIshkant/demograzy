@@ -12,3 +12,6 @@ RUN rm packages-microsoft-prod.deb
 
 # Install Net sdk
 RUN apt install -y dotnet-sdk-7.0
+
+# Install git
+RUN apt install -y git
