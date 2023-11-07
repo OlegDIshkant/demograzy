@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using System;
 
-namespace Demograzy.DataAccess.Sql
+namespace Demograzy.DataAccess.Sql.PostgreSql
 {
     internal static class DbConnection
     {

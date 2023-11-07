@@ -1,8 +1,10 @@
 
+using System.Threading.Tasks;
+
 namespace Demograzy.BusinessLogic.DataAccess
 {
     public interface ITransactionMeansFactory
     {
-        ITransactionMeans Create();
+        Task<ITransactionMeans> CreateAsync();
     }
 }

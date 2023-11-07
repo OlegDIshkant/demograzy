@@ -2,7 +2,7 @@ using System;
 using System.Security;
 
 
-namespace Demograzy.DataAccess.Sql
+namespace Demograzy.DataAccess.Sql.PostgreSql
 {
     public interface IConnectionStringProvider 
     {

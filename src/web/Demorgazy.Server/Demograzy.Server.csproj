@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\core\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\..\core\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj" />
+    <ProjectReference Include="..\..\core\Demograzy.DataAccess.Sql.PostgreSql\Demograzy.DataAccess.Sql.PostgreSql.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

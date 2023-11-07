@@ -1,40 +1,47 @@
 #nullable disable
 
 using System;
+using System.Threading.Tasks;
 using Common;
 using Demograzy.BusinessLogic.DataAccess;
-using Npgsql;
 
 
 namespace Demograzy.DataAccess.Sql
 {
     public class TransactionMeans : DisposableObject, ITransactionMeans
     {
-        private NpgsqlConnection _connection;
-        private NpgsqlTransaction _currentTransaction;
+        private ISqlCommandBuilder _commandBuilder;
 
         public IClientsGateway ClientsGateway { get; private set; }
 
 
-
-        public TransactionMeans(IConnectionStringProvider connStringProvider)
+        internal static async Task<TransactionMeans> NewAsync(ISqlCommandBuilder commandBuilder)
         {
-            _connection = DbConnection.GetNewConnection(connStringProvider) ?? throw new System.Exception("Failed to create connection with db.");   
-
-            ClientsGateway = new ClientsGateway(() => _connection);   
-
-            _currentTransaction = _connection.BeginTransaction();
+            var instance = new TransactionMeans(commandBuilder);
+            await instance.StartAsync();
+            return instance;
         }
 
 
-        public void CompleteTransaction()
+        private TransactionMeans(ISqlCommandBuilder commandBuilder)
         {
-            if (_currentTransaction == null)
-            {
-                throw new InvalidOperationException($"Can't complete transaction since it already finished.");
-            }
-            _currentTransaction.Commit();
-            _currentTransaction = null;
+            _commandBuilder = commandBuilder;
+
+            ClientsGateway = new ClientsGateway(() => _commandBuilder);   
+        }
+
+
+        private Task StartAsync()
+        {
+            return _commandBuilder.Transactions.Begin().ExecuteAsync();
+        }
+
+
+        public async Task CompleteAsync()
+        {
+            ExceptionIfDisposed();
+            await _commandBuilder.Transactions.Commit().ExecuteAsync();
+            this.Dispose();
         }
 
 
@@ -42,10 +49,12 @@ namespace Demograzy.DataAccess.Sql
         {
             base.OnDispose();
 
-            if (_currentTransaction != null)
+            _commandBuilder.Dispose();
+
+            if (_commandBuilder != null)
             {
-                _currentTransaction.Rollback();
-                _currentTransaction = null;
+                _commandBuilder.Transactions.Rollback().ExecuteAsync();
+                _commandBuilder = null;
             }
         }
 

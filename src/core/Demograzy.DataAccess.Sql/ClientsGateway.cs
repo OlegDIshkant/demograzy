@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
-using Npgsql;
 
 
 namespace Demograzy.DataAccess.Sql
@@ -15,12 +13,12 @@ namespace Demograzy.DataAccess.Sql
         private readonly static string SESSION_ID = "session_id";
 
 
-        private Func<NpgsqlConnection> _PeekConnection;
+        private Func<ISqlCommandBuilder> _PeekCommandBuilder;
 
 
-        public ClientsGateway(Func<NpgsqlConnection> PeekConnection)
+        public ClientsGateway(Func<ISqlCommandBuilder> PeekCommandBuilder)
         {
-            _PeekConnection = PeekConnection;
+            _PeekCommandBuilder = PeekCommandBuilder;
         }
 
 
@@ -29,7 +27,7 @@ namespace Demograzy.DataAccess.Sql
         {
             throw new NotImplementedException();
             /*var cmdText = $"INSERT INTO {CLIENT_TABLE} ({ID}, {NAME}, {SESSION_ID}) VALUES ($1), (%2), (%3)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
+            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
             {
                 Parameters =
                 {
@@ -58,7 +56,7 @@ namespace Demograzy.DataAccess.Sql
             throw new NotImplementedException();
             /*
             var cmdText = $"SELECT {ID}, {NAME}, {SESSION_ID} FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
+            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
             {
                 Parameters =
                 {
@@ -99,7 +97,7 @@ namespace Demograzy.DataAccess.Sql
             throw new NotImplementedException();
             /*
             var cmdText = $"DELETE FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
+            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
             {
                 Parameters =
                 {

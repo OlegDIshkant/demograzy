@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 
 
@@ -6,19 +7,19 @@ namespace Demograzy.DataAccess.Sql
 {
     public sealed class TransactionMeansFactory : ITransactionMeansFactory
     {
-        private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly ISqlCommandBuilderFactory _factory;
 
 
-        public TransactionMeansFactory(IConnectionStringProvider connectionStringProvider)
+        public TransactionMeansFactory(ISqlCommandBuilderFactory factory)
         {
-            _connectionStringProvider = connectionStringProvider;
+            _factory = factory;
         }
 
 
 
-        public ITransactionMeans Create()
+        public async Task<ITransactionMeans> CreateAsync()
         {
-            return new TransactionMeans(_connectionStringProvider);
+            return await TransactionMeans.NewAsync(await _factory.CreateAsync());
         }
     }
 }
