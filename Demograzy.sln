@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.Server", "src\web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.DataAccess.Sql.PostgreSql", "src\core\Demograzy.DataAccess.Sql.PostgreSql\Demograzy.DataAccess.Sql.PostgreSql.csproj", "{E4D63AFE-5D61-446C-907C-33A8BCDA24A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demograzy.Core.Test", "src\core\Demograzy.Core.Test\Demograzy.Core.Test.csproj", "{7738C5A2-F380-4059-927B-5122B46B731B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{E4D63AFE-5D61-446C-907C-33A8BCDA24A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4D63AFE-5D61-446C-907C-33A8BCDA24A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4D63AFE-5D61-446C-907C-33A8BCDA24A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7738C5A2-F380-4059-927B-5122B46B731B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7738C5A2-F380-4059-927B-5122B46B731B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7738C5A2-F380-4059-927B-5122B46B731B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7738C5A2-F380-4059-927B-5122B46B731B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B1A0CBE4-D82F-4F0B-B6CB-0D514FFB63BD} = {77CEAD5A-D0CF-4D52-80E5-4E78F06B416E}
@@ -60,5 +66,6 @@ Global
 		{4DB13089-C701-4877-80CD-968A268B6EDE} = {77CEAD5A-D0CF-4D52-80E5-4E78F06B416E}
 		{8D367BC9-3352-47CE-A7A1-11A8DD3B4C65} = {4DB13089-C701-4877-80CD-968A268B6EDE}
 		{E4D63AFE-5D61-446C-907C-33A8BCDA24A4} = {A36E6EFC-87F0-4860-885C-D08969C6028C}
+		{7738C5A2-F380-4059-927B-5122B46B731B} = {A36E6EFC-87F0-4860-885C-D08969C6028C}
 	EndGlobalSection
 EndGlobal
