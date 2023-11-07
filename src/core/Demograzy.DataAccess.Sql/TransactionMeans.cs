@@ -6,7 +6,7 @@ using Demograzy.BusinessLogic.DataAccess;
 using Npgsql;
 
 
-namespace Demograzy.DataAccess
+namespace Demograzy.DataAccess.Sql
 {
     public class TransactionMeans : DisposableObject, ITransactionMeans
     {

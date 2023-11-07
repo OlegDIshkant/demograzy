@@ -2,7 +2,7 @@
 using Demograzy.BusinessLogic.DataAccess;
 
 
-namespace Demograzy.DataAccess
+namespace Demograzy.DataAccess.Sql
 {
     public sealed class TransactionMeansFactory : ITransactionMeansFactory
     {

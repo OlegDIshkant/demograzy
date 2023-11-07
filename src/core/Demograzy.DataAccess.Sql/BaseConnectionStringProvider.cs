@@ -6,7 +6,7 @@ using System.IO;
 using System.Security;
 
 
-namespace Demograzy.DataAccess
+namespace Demograzy.DataAccess.Sql
 {
     public class BaseConnectionStringProvider : IConnectionStringProvider
     {

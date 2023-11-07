@@ -5,7 +5,7 @@ using Demograzy.BusinessLogic.DataAccess;
 using Npgsql;
 
 
-namespace Demograzy.DataAccess
+namespace Demograzy.DataAccess.Sql
 {
     internal class ClientsGateway : BusinessLogic.DataAccess.IClientsGateway
     {
