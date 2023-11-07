@@ -5,8 +5,9 @@ namespace Demograzy.BusinessLogic.DataAccess
 {
     public interface IClientsGateway
     {
-        Task<bool> TryAddClientAsync(int id, string name, string sessionId);
-        Task<(string name, string sessionId)?> TryFindClientByIdAsync(int id);
-        Task<bool> TryDropClientAsync(int id);
+        Task<int> AddClientAsync(string name);
+        Task<ClientInfo> GetClientInfoAsync(int id);
+        Task<int> GetClientsAmountAsync();
+        Task<bool> DropClientAsync(int id);
     }
 }

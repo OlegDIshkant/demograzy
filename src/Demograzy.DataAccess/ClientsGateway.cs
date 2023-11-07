@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Demograzy.BusinessLogic.DataAccess;
 using Npgsql;
 
 
@@ -24,9 +25,10 @@ namespace Demograzy.DataAccess
 
 
 
-        public async Task<bool> TryAddClientAsync(int id, string name, string sessionId)
+        public Task<int> AddClientAsync(string name)
         {
-            var cmdText = $"INSERT INTO {CLIENT_TABLE} ({ID}, {NAME}, {SESSION_ID}) VALUES ($1), (%2), (%3)";
+            throw new NotImplementedException();
+            /*var cmdText = $"INSERT INTO {CLIENT_TABLE} ({ID}, {NAME}, {SESSION_ID}) VALUES ($1), (%2), (%3)";
             var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
             {
                 Parameters =
@@ -46,14 +48,15 @@ namespace Demograzy.DataAccess
             {
                 Debug.WriteLine($"Failed to add a client via '{cmdText}' due to exception: {e}.");
                 return false;
-            }
+            }*/
         }
 
 
 
-        public async Task<(string name, string sessionId)?> TryFindClientByIdAsync(int id)
+        public Task<ClientInfo> GetClientInfoAsync(int id)
         {
-
+            throw new NotImplementedException();
+            /*
             var cmdText = $"SELECT {ID}, {NAME}, {SESSION_ID} FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
             var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
             {
@@ -86,13 +89,15 @@ namespace Demograzy.DataAccess
                 Debug.WriteLine($"Failed to find a client by ID via '{cmdText}' due to exception: {e}.");
             }
 
-            return null;
+            return null;*/
         }
 
 
 
-        public async Task<bool> TryDropClientAsync(int id)
+        public Task<bool> DropClientAsync(int id)
         {
+            throw new NotImplementedException();
+            /*
             var cmdText = $"DELETE FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
             var cmd = new NpgsqlCommand(cmdText, _PeekConnection())
             {
@@ -112,7 +117,13 @@ namespace Demograzy.DataAccess
                 return false;
             }
 
-            return true;
+            return true;*/
+        }
+
+
+        public Task<int> GetClientsAmountAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

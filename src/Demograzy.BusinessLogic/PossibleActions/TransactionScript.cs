@@ -6,9 +6,11 @@ using Demograzy.BusinessLogic.DataAccess;
 
 namespace Demograzy.BusinessLogic.PossibleActions
 {
-    public abstract class TransactionScript : Common.DisposableObject
+    public abstract class TransactionScript<R> : Common.DisposableObject
     {
         private ITransactionMeans _transactionMeans;
+
+        protected IClientsGateway ClientGateway => _transactionMeans.ClientsGateway; 
 
         public bool Started { get; private set; } = false;
 
@@ -19,7 +21,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        public Task RunAsync()
+        public Task<R> RunAsync()
         {
             ExceptionIfDisposed();
 
@@ -33,7 +35,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         } 
 
 
-        protected abstract Task OnRunAsync();
+        protected abstract Task<R> OnRunAsync();
 
 
         protected override void OnDispose()
