@@ -15,3 +15,20 @@ RUN apt install -y dotnet-sdk-7.0
 
 # Install git
 RUN apt install -y git
+
+# Install more utils
+RUN apt install -y gpg
+
+# Install LiquiBase
+RUN bash -c "wget -qO- https://repo.liquibase.com/liquibase.asc | gpg --dearmor > liquibase-keyring.gpg"
+RUN bash -c "cat liquibase-keyring.gpg | tee /usr/share/keyrings/liquibase-keyring.gpg > /dev/null" 
+RUN cat /dev/null > liquibase-keyring.gpg
+RUN rm liquibase-keyring.gpg
+RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/liquibase-keyring.gpg] https://repo.liquibase.com stable main' | tee /etc/apt/sources.list.d/liquibase.list
+RUN apt update
+RUN apt install -y liquibase
+
+# Install JDK
+RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb -O jdk-21_linux-x64_bin.deb
+RUN dpkg -i jdk-21_linux-x64_bin.deb
+RUN rm jdk-21_linux-x64_bin.deb
