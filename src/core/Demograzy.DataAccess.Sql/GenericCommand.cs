@@ -1,7 +1,10 @@
 
-namespace Demograzy.DataAccess.Sql.PostgreSql
+using System;
+using System.Threading.Tasks;
+
+namespace Demograzy.DataAccess.Sql
 {
-    internal sealed class GenericCommand<R> : ISqlCommand<R>
+    public sealed class GenericCommand<R> : ISqlCommand<R>
     {
         private readonly Func<Task<R>> _Action;
 
