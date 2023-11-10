@@ -1,8 +1,9 @@
 
+using System;
 using System.Text;
 using Microsoft.Data.Sqlite;
 
-namespace Demograzy.DataAccess.Sql.SQLite
+namespace DataAccess.Sql.SQLite
 {
     internal class QueryBuilder : IQueryBuilder
     {

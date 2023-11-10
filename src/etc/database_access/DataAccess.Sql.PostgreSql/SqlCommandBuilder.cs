@@ -1,9 +1,9 @@
-#nullable disable
+
 
 using Common;
 using Npgsql;
 
-namespace Demograzy.DataAccess.Sql.PostgreSql
+namespace DataAccess.Sql.PostgreSql
 {
     internal sealed class SqlCommandBuilder : DisposableObject, ISqlCommandBuilder
     {

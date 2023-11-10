@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Common;
 using Microsoft.Data.Sqlite;
 
-namespace Demograzy.DataAccess.Sql.SQLite
+namespace DataAccess.Sql.SQLite
 {
     internal class QueryResult : DisposableObject, IQueryResult
     {

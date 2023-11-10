@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
-    <ProjectReference Include="..\..\etc\Common\Common.csproj" />
+    <ProjectReference Include="..\DataAccess.Sql\DataAccess.Sql.csproj" />
+    <ProjectReference Include="..\..\..\etc\Common\Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

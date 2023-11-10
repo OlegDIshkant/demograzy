@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Demograzy.DataAccess.Sql
+namespace DataAccess.Sql
 {
     public interface INonQueryBuilder
     {

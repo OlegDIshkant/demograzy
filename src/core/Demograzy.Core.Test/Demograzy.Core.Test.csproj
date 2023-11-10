@@ -14,10 +14,11 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
-    <ProjectReference Include="..\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
-    <ProjectReference Include="..\Demograzy.DataAccess.Sql.PostgreSql\Demograzy.DataAccess.Sql.PostgreSql.csproj" />
-    <ProjectReference Include="..\Demograzy.DataAccess.Sql.SQLite\Demograzy.DataAccess.Sql.SQLite.csproj" />
+
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql\DataAccess.Sql.csproj" />
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql.SQLite\DataAccess.Sql.SQLite.csproj" />
     <ProjectReference Include="..\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
   </ItemGroup>
 
 </Project>

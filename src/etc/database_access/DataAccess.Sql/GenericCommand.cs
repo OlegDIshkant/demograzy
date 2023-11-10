@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Demograzy.DataAccess.Sql
+namespace DataAccess.Sql
 {
     public sealed class GenericCommand<R> : ISqlCommand<R>
     {

@@ -1,5 +1,5 @@
 
-namespace Demograzy.DataAccess.Sql.PostgreSql
+namespace DataAccess.Sql.PostgreSql
 {
     public sealed class SqlCommandBuilderFactory : ISqlCommandBuilderFactory
     {

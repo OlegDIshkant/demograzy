@@ -1,6 +1,6 @@
 using System;
 
-namespace Demograzy.DataAccess.Sql
+namespace DataAccess.Sql
 {
     public interface ISqlCommandBuilder : IDisposable
     {

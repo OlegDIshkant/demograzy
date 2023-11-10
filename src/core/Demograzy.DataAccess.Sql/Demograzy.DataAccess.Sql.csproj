@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj" />
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql\DataAccess.Sql.csproj" />
   </ItemGroup>
 
 </Project>

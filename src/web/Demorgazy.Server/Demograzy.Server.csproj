@@ -3,12 +3,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\core\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\..\core\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj" />
-    <ProjectReference Include="..\..\core\Demograzy.DataAccess.Sql.PostgreSql\Demograzy.DataAccess.Sql.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql.PostgreSql\DataAccess.Sql.PostgreSql.csproj" />
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql\DataAccess.Sql.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 

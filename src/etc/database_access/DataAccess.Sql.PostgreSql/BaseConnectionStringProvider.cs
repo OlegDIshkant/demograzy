@@ -1,10 +1,9 @@
-#nullable disable
 
 using System.Diagnostics;
 using System.Security;
 
 
-namespace Demograzy.DataAccess.Sql.PostgreSql
+namespace DataAccess.Sql.PostgreSql
 {
     public class BaseConnectionStringProvider : IConnectionStringProvider
     {

@@ -1,7 +1,8 @@
+using System.Threading.Tasks;
 using Common;
 using Microsoft.Data.Sqlite;
 
-namespace Demograzy.DataAccess.Sql.SQLite
+namespace DataAccess.Sql.SQLite
 {
     internal class SqlCommandBuilder : DisposableObject, ISqlCommandBuilder
     {
@@ -33,7 +34,7 @@ namespace Demograzy.DataAccess.Sql.SQLite
         protected override void OnDispose()
         {
             base.OnDispose();
-            _connection.DisposeAsync();
+            _connection.Dispose();
         }
 
 

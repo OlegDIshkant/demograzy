@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="7.0.6" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess.Sql\DataAccess.Sql.csproj" />
+    <ProjectReference Include="..\..\..\etc\Common\Common.csproj" />
+  </ItemGroup>
+
+</Project>

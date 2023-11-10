@@ -1,8 +1,8 @@
-#nullable disable
+
 
 using Npgsql;
 
-namespace Demograzy.DataAccess.Sql.PostgreSql
+namespace DataAccess.Sql.PostgreSql
 {
     internal class TransactionBuilder : ITransactionBuilder
     {

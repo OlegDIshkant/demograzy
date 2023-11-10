@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Demograzy.BusinessLogic;
-using NUnit.Framework.Constraints;
+
+using SQLiteCommandBuilderFactory = DataAccess.Sql.SQLite.SqlCommandBuilderFactory;
 
 namespace Demograzy.Core.Test
 {
@@ -14,7 +15,7 @@ namespace Demograzy.Core.Test
             var testableService = 
                 new Demograzy.BusinessLogic.MainService(
                     new Demograzy.DataAccess.Sql.TransactionMeansFactory(
-                       Demograzy.DataAccess.Sql.SQLite.SqlCommandBuilderFactory.Create(dbName)));
+                       SQLiteCommandBuilderFactory.Create(dbName)));
 
             ApplyAllMigrations(dbName);
 

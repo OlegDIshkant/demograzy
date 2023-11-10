@@ -1,4 +1,4 @@
-namespace Demograzy.DataAccess.Sql
+namespace DataAccess.Sql
 {
     public interface ITransactionBuilder
     {

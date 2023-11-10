@@ -1,7 +1,8 @@
 
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
-namespace Demograzy.DataAccess.Sql.SQLite
+namespace DataAccess.Sql.SQLite
 {
     public class SqlCommandBuilderFactory : ISqlCommandBuilderFactory
     {
