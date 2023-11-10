@@ -9,6 +9,8 @@ namespace Demograzy.DataAccess.Sql.SQLite
         private SqliteConnection _connection;
 
         public ITransactionBuilder Transactions { get; private set; }
+        public IQueryBuilder Queries { get; private set; }
+        public INonQueryBuilder NonQueries {  get; private set; }
 
 
         public static async Task<SqlCommandBuilder> CreateAsync(string connectionString)
@@ -23,6 +25,8 @@ namespace Demograzy.DataAccess.Sql.SQLite
         {
             _connection = connection;
             Transactions = new TransactionBuilder(() => _connection);
+            Queries = new QueryBuilder(() => _connection);
+            NonQueries = new NonQueryBuilder(() => _connection);
         }
 
 

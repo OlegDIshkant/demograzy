@@ -37,13 +37,13 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
-        public async Task CompleteAsync()
+        public async Task FinishAsync(bool toCommit)
         {
             ExceptionIfDisposed();
             await _commandBuilder.Transactions.Commit().ExecuteAsync();
             this.Dispose();
         }
-
+        
 
         protected override void OnDispose()
         {
@@ -57,6 +57,5 @@ namespace Demograzy.DataAccess.Sql
                 _commandBuilder = null;
             }
         }
-
     }
 }

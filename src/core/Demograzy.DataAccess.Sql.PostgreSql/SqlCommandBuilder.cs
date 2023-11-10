@@ -11,6 +11,9 @@ namespace Demograzy.DataAccess.Sql.PostgreSql
 
         public ITransactionBuilder Transactions { get; private set; }
 
+        public IQueryBuilder Queries => throw new NotImplementedException();
+        public INonQueryBuilder NonQueries => throw new NotImplementedException();
+
 
         public SqlCommandBuilder(IConnectionStringProvider connectionStringProvider)
         {

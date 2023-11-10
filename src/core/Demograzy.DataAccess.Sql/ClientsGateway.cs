@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 
@@ -8,9 +9,7 @@ namespace Demograzy.DataAccess.Sql
     internal class ClientsGateway : BusinessLogic.DataAccess.IClientsGateway
     {
         private readonly static string CLIENT_TABLE = "client";
-        private readonly static string ID = "id";
         private readonly static string NAME = "name";
-        private readonly static string SESSION_ID = "session_id";
 
 
         private Func<ISqlCommandBuilder> _PeekCommandBuilder;
@@ -23,30 +22,50 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public Task<int> AddClientAsync(string name)
+        public async Task<int> AddClientAsync(string name)
         {
-            throw new NotImplementedException();
-            /*var cmdText = $"INSERT INTO {CLIENT_TABLE} ({ID}, {NAME}, {SESSION_ID}) VALUES ($1), (%2), (%3)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
-            {
-                Parameters =
-                {
-                    new NpgsqlParameter() { Value = id },
-                    new NpgsqlParameter() { Value = name },
-                    new NpgsqlParameter() { Value = sessionId }
-                }
-            };            
+            await InsertClientAsync(name);
+            return await GetInsertedClientIdAsync();
+        }
 
-            try
+
+        private async Task InsertClientAsync(string name)
+        {
+            var command =
+                _PeekCommandBuilder().NonQueries.Create(
+                    new InsertOptions()
+                    {
+                        Into = CLIENT_TABLE,
+                        Values = new List<(string, object)>()
+                        {
+                            (NAME, name)
+                        }
+                    }
+                );
+
+            var success = await command.ExecuteAsync();
+            if (!success)
             {
-                await cmd.ExecuteNonQueryAsync();
-                return true;
+                throw new Exception("Operation failed.");
             }
-            catch (Exception e)
+        }
+
+
+        private async Task<int> GetInsertedClientIdAsync()
+        {
+            var query =
+                _PeekCommandBuilder().Queries.Create(
+                    new SelectOptions()
+                    {
+                        Select = new List<IColumnOption>() { new LastInsertedRowId() }
+                    }
+                );
+
+            using (var result = (await query.ExecuteAsync()).GetEnumerator())
             {
-                Debug.WriteLine($"Failed to add a client via '{cmdText}' due to exception: {e}.");
-                return false;
-            }*/
+                result.MoveNext();
+                return result.Current.GetInt(0);
+            }
         }
 
 
@@ -119,9 +138,24 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
-        public Task<int> GetClientsAmountAsync()
+        public async Task<int> GetClientsAmountAsync()
         {
-            throw new NotImplementedException();
+            var query = 
+                _PeekCommandBuilder().Queries.Create(
+                    new SelectOptions()
+                    {
+                        Select = new List<IColumnOption>() { new Count() },
+                        From = CLIENT_TABLE
+                    }
+                );
+            
+            using (var result = (await query.ExecuteAsync()).GetEnumerator())
+            {
+                result.MoveNext();
+                return result.Current.GetInt(0);
+            }
         }
+        
+
     }
 }

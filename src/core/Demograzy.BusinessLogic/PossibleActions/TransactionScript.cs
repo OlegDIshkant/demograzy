@@ -21,7 +21,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        public Task<R> RunAsync()
+        public async Task<R> RunAsync()
         {
             ExceptionIfDisposed();
 
@@ -30,8 +30,19 @@ namespace Demograzy.BusinessLogic.PossibleActions
                 throw new InvalidOperationException($"Can't run script {this} since it has already been started.");
             }
             Started = true;
-
-            return OnRunAsync();
+            
+            R result = default;
+            try
+            {
+                result = await OnRunAsync();
+                await _transactionMeans.FinishAsync(toCommit: true);
+                return result;
+            }
+            catch (Exception e)
+            {
+                await _transactionMeans.FinishAsync(toCommit: false);
+                throw e;
+            }
         } 
 
 
