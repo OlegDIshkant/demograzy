@@ -1,0 +1,49 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_client",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "client",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "name",
+                                        "type" : "VARCHAR(20)",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
