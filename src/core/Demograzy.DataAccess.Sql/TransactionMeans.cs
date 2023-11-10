@@ -28,7 +28,9 @@ namespace Demograzy.DataAccess.Sql
         {
             _commandBuilder = commandBuilder;
 
-            ClientsGateway = new ClientsGateway(() => _commandBuilder);   
+            ClientsGateway = new ClientsGateway(
+                () => _commandBuilder.Queries,
+                () => _commandBuilder.NonQueries);   
         }
 
 

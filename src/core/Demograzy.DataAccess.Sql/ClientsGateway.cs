@@ -13,12 +13,14 @@ namespace Demograzy.DataAccess.Sql
         private readonly static string NAME = "name";
 
 
-        private Func<ISqlCommandBuilder> _PeekCommandBuilder;
+        private Func<IQueryBuilder> _PeekQueryBuilder;
+        private Func<INonQueryBuilder> _PeekNonQueryBuilder;
 
 
-        public ClientsGateway(Func<ISqlCommandBuilder> PeekCommandBuilder)
+        public ClientsGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder)
         {
-            _PeekCommandBuilder = PeekCommandBuilder;
+            _PeekQueryBuilder = PeekQueryBuilder;
+            _PeekNonQueryBuilder = PeekNonQueryBuilder;
         }
 
 
@@ -33,7 +35,7 @@ namespace Demograzy.DataAccess.Sql
         private async Task InsertClientAsync(string name)
         {
             var command =
-                _PeekCommandBuilder().NonQueries.Create(
+                _PeekNonQueryBuilder().Create(
                     new InsertOptions()
                     {
                         Into = CLIENT_TABLE,
@@ -55,7 +57,7 @@ namespace Demograzy.DataAccess.Sql
         private async Task<int> GetInsertedClientIdAsync()
         {
             var query =
-                _PeekCommandBuilder().Queries.Create(
+                _PeekQueryBuilder().Create(
                     new SelectOptions()
                     {
                         Select = new List<IColumnOption>() { new LastInsertedRowId() }
@@ -142,7 +144,7 @@ namespace Demograzy.DataAccess.Sql
         public async Task<int> GetClientsAmountAsync()
         {
             var query = 
-                _PeekCommandBuilder().Queries.Create(
+                _PeekQueryBuilder().Create(
                     new SelectOptions()
                     {
                         Select = new List<IColumnOption>() { new Count() },
