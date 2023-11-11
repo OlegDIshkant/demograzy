@@ -19,6 +19,7 @@ namespace DataAccess.Sql
     public interface IRow
     {
         int GetInt(int columnIndex);
+        string GetString(int columnIndex);
     }
 
     

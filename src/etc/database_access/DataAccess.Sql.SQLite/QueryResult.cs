@@ -69,6 +69,7 @@ namespace DataAccess.Sql.SQLite
 
             public int GetInt(int columnIndex) => Master.DataReader.GetInt32(columnIndex);
 
+            public string GetString(int columnIndex) => Master.DataReader.GetString(columnIndex);
 
             protected override void OnDispose()
             {

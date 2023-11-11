@@ -10,6 +10,7 @@ namespace Demograzy.DataAccess.Sql
     internal class ClientsGateway : BusinessLogic.DataAccess.IClientsGateway
     {
         private readonly static string CLIENT_TABLE = "client";
+        private readonly static string ID = "id";
         private readonly static string NAME = "name";
 
 
@@ -60,7 +61,7 @@ namespace Demograzy.DataAccess.Sql
                 _PeekQueryBuilder().Create(
                     new SelectOptions()
                     {
-                        Select = new List<IColumnOption>() { new LastInsertedRowId() }
+                        Select = new SelectClause(new LastInsertedRowId())
                     }
                 );
 
@@ -73,43 +74,22 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public Task<ClientInfo> GetClientInfoAsync(int id)
+        public async Task<ClientInfo> GetClientInfoAsync(int id)
         {
-            throw new NotImplementedException();
-            /*
-            var cmdText = $"SELECT {ID}, {NAME}, {SESSION_ID} FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
-            {
-                Parameters =
+            var query = _PeekQueryBuilder().Create(
+                new SelectOptions()
                 {
-                    new NpgsqlParameter() { Value = id }
+                    Select = new SelectClause(new ColumnName(NAME)),
+                    From = CLIENT_TABLE,
+                    Where = new Comparison(new Parameter(id), CompareType.EQUALS, new ColumnName(ID))
                 }
-            };     
-
-            try
+            );
+            
+            using (var result = (await query.ExecuteAsync()).GetEnumerator())
             {
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    if (reader.HasRows)
-                    {
-                        reader.NextResult();
-                        var result = (reader.GetString(1), reader.GetString(2));
-                        
-                        if (reader.NextResult())
-                        {
-                            Debug.WriteLine($"Failed to find a client by ID via '{cmdText}' since thare more than one such user.");
-                        }
-
-                        return result;
-                    }
-                }
+                result.MoveNext();
+                return new ClientInfo() { name = result.Current.GetString(0) };
             }
-            catch (Exception e)
-            {
-                Debug.WriteLine($"Failed to find a client by ID via '{cmdText}' due to exception: {e}.");
-            }
-
-            return null;*/
         }
 
 
@@ -147,7 +127,7 @@ namespace Demograzy.DataAccess.Sql
                 _PeekQueryBuilder().Create(
                     new SelectOptions()
                     {
-                        Select = new List<IColumnOption>() { new Count() },
+                        Select = new SelectClause(new Count()),
                         From = CLIENT_TABLE
                     }
                 );
