@@ -17,13 +17,33 @@ namespace DataAccess.Sql.SQLite
 
         public ISqlCommand<bool> Create(InsertOptions insertOptions)
         {
+            return GenerateCommand(
+                () => (InsertStatementBuilder.Build(insertOptions, out var parameters), parameters)
+            );
+        }
+
+
+        public ISqlCommand<bool> Create(DeleteOptions deleteOptions)
+        {
+            return GenerateCommand(
+                () => (DeleStatementBuilder.Build(deleteOptions, out var parameters), parameters)
+            );
+        }
+
+
+        private ISqlCommand<bool> GenerateCommand(Func<(string text, Dictionary<string, object> parameters)> PrepareCommand)
+        {
             return new GenericCommand<bool> (
                 async () =>
                 {
                     using (var command = _PeekConnection().CreateCommand())
                     {
-                        command.CommandText = BuildInsertStatement(insertOptions);
-                        InsertParameters(command, insertOptions);
+                        var preparedCommand = PrepareCommand();
+                        command.CommandText = preparedCommand.text;
+                        foreach (var item in preparedCommand.parameters)
+                        {
+                            command.Parameters.AddWithValue(item.Key, item.Value);
+                        }
                         var changedAmount = await command.ExecuteNonQueryAsync();
                         return  changedAmount > 0;
                     }
@@ -31,36 +51,5 @@ namespace DataAccess.Sql.SQLite
             );
         }
 
-
-        private string BuildInsertStatement(InsertOptions insertOptions)
-        {
-            var b = new StringBuilder();
-
-            b.Append($"INSERT INTO {insertOptions.Into} (");
-            foreach (var (itemName, _) in insertOptions.Values)
-            {
-                b.Append($"{itemName}, ");
-            }
-            b.Remove(b.Length - 2, 2);
-
-            b.Append(") VALUES (");
-            foreach (var (itemName, _) in insertOptions.Values)
-            {
-                b.Append($"${itemName}, ");
-            }
-            b.Remove(b.Length - 2, 2);
-            b.Append(")");
-
-            return b.ToString();
-        }
-
-
-        private void InsertParameters(SqliteCommand command, InsertOptions insertOptions)
-        {
-            foreach (var (itemName, itemValue) in insertOptions.Values)
-            {
-                command.Parameters.AddWithValue($"${itemName}", itemValue);
-            }
-        }
     }
 }

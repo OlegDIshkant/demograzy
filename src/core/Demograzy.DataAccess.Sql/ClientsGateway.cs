@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using DataAccess.Sql;
 using Demograzy.BusinessLogic.DataAccess;
@@ -94,30 +95,25 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public Task<bool> DropClientAsync(int id)
+        public async Task<bool> DropClientAsync(int id)
         {
-            throw new NotImplementedException();
-            /*
-            var cmdText = $"DELETE FROM {CLIENT_TABLE} WHERE {ID} = ($1)";
-            var cmd = new NpgsqlCommand(cmdText, _PeekCommandBuilder())
-            {
-                Parameters =
+            var deleteCommand = _PeekNonQueryBuilder().Create(
+                new DeleteOptions()
                 {
-                    new NpgsqlParameter() { Value = id }
+                    From = CLIENT_TABLE,
+                    Where = new Comparison(new ColumnName(ID), CompareType.EQUALS, new Parameter(id))
                 }
-            };            
+            );      
 
             try
             {
-                await cmd.ExecuteNonQueryAsync();
+                return await deleteCommand.ExecuteAsync();
             }
             catch(Exception e)
             {
-                Debug.WriteLine($"Failed to drop a client via '{cmdText}' due to exception: {e}.");
+                Debug.WriteLine($"Failed to drop a client via '{deleteCommand}' due to exception: {e}.");
                 return false;
             }
-
-            return true;*/
         }
 
 
