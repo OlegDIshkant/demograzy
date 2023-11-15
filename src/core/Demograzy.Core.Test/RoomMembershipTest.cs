@@ -49,6 +49,75 @@ namespace Demograzy.Core.Test
 
         [Test]
         [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenClientTriesJoinRoomAfterVotingStartedThenReturnsFalse()
+        {
+            var service = CommonRoutines.PrepareMainService();
+            var ownerId = await service.AddClientAsync("client_for_room");
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            for(int i = 0; i < MAX_ROOM_MEMBERS - 2; i++)
+            {
+                var otherClientId = await service.AddClientAsync($"client_{i}");
+                await service.AddMember(roomId, otherClientId);
+            }
+            Assert.That(await service.StartVotingAsync(roomId));
+
+            var clientToFailId = await service.AddClientAsync("client_to_fail");
+            var jointFailed = !await service.AddMember(roomId, clientToFailId);
+
+            Assert.That(jointFailed);
+        }
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenClientTriesLeftRoomAfterVotingStartedThenReturnsFalse()
+        {
+            var service = CommonRoutines.PrepareMainService();
+            var ownerId = await service.AddClientAsync("client_for_room");
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            for(int i = 0; i < MAX_ROOM_MEMBERS - 3; i++)
+            {
+                var otherClientId = await service.AddClientAsync($"client_{i}");
+                await service.AddMember(roomId, otherClientId);
+            }
+            var lastMemberId = await service.AddClientAsync("client_to_fail");
+            Assert.That(await service.AddMember(roomId, lastMemberId));
+            Assert.That(await service.StartVotingAsync(roomId));
+            var expectedMembers = await service.GetMembers(roomId);
+
+            var deleteFailed = !await service.DeleteMemberAsync(roomId, lastMemberId);
+
+            Assert.That(deleteFailed);
+        }
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenDeleteClientAfterVotingStartedThenReturnsFalse()
+        {
+            var service = CommonRoutines.PrepareMainService();
+            var ownerId = await service.AddClientAsync("client_for_room");
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            for(int i = 0; i < MAX_ROOM_MEMBERS - 3; i++)
+            {
+                var otherClientId = await service.AddClientAsync($"client_{i}");
+                await service.AddMember(roomId, otherClientId);
+            }
+            var lastMemberId = await service.AddClientAsync("client_to_fail");
+            Assert.That(await service.AddMember(roomId, lastMemberId));
+            Assert.That(await service.StartVotingAsync(roomId));
+            var expectedMembers = await service.GetMembers(roomId);
+
+            var deleteFailed = !await service.DropClientAsync(lastMemberId);
+
+            Assert.That(deleteFailed);
+        }
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOtherClientsJoinRoomThenMembersListHasOnlyThemAndOwner()
         {
             var service = CommonRoutines.PrepareMainService();
@@ -84,6 +153,53 @@ namespace Demograzy.Core.Test
 
             var clientToFailId = await service.AddClientAsync("client_to_fail");
             await service.AddMember(roomId, clientToFailId);
+
+            Assert.That(expectedMembers, Is.EqualTo(await service.GetMembers(roomId)));
+        }
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenClientTriesJoinRoomAfterVotingStartedThenMembersListDoesNotChange()
+        {
+            var service = CommonRoutines.PrepareMainService();
+            var ownerId = await service.AddClientAsync("client_for_room");
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            for(int i = 0; i < MAX_ROOM_MEMBERS - 2; i++)
+            {
+                var otherClientId = await service.AddClientAsync($"client_{i}");
+                await service.AddMember(roomId, otherClientId);
+            }
+            Assert.That(await service.StartVotingAsync(roomId));
+            var expectedMembers = await service.GetMembers(roomId);
+
+            var clientToFailId = await service.AddClientAsync("client_to_fail");
+            await service.AddMember(roomId, clientToFailId);
+
+            Assert.That(expectedMembers, Is.EqualTo(await service.GetMembers(roomId)));
+        }
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenClientTriesLeftRoomAfterVotingStartedThenMembersListDoesNotChange()
+        {
+            var service = CommonRoutines.PrepareMainService();
+            var ownerId = await service.AddClientAsync("client_for_room");
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            for(int i = 0; i < MAX_ROOM_MEMBERS - 3; i++)
+            {
+                var otherClientId = await service.AddClientAsync($"client_{i}");
+                await service.AddMember(roomId, otherClientId);
+            }
+            var lastMemberId = await service.AddClientAsync("client_to_fail");
+            Assert.That(await service.AddMember(roomId, lastMemberId));
+            Assert.That(await service.StartVotingAsync(roomId));
+            var expectedMembers = await service.GetMembers(roomId);
+
+            Assert.That(!await service.DeleteMemberAsync(roomId, lastMemberId));
 
             Assert.That(expectedMembers, Is.EqualTo(await service.GetMembers(roomId)));
         }
