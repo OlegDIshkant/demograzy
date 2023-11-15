@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 using Demograzy.BusinessLogic.PossibleActions;
@@ -20,7 +22,7 @@ namespace Demograzy.BusinessLogic
             await new AddClientTs(name, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
 
-        public async Task<bool> DropClient(int clientId) =>
+        public async Task<bool> DropClientAsync(int clientId) =>
             await new DropClientTs(clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
 
@@ -30,6 +32,15 @@ namespace Demograzy.BusinessLogic
 
         public async Task<int> GetClientAmount() =>
             await new GetClientsAmountTs(await _transactionMeansFactory.CreateAsync()).RunAsync();
+
+
+        public Task<int?> AddRoomAsync(int ownerClientId, string title, string passphrase) => throw new NotImplementedException(); 
+
+        public Task<List<int>> GetOwnedRoomsAsync(int ownerClientId) => throw new NotImplementedException();
+
+        public Task<RoomInfo?> GetRoomInfoAsync(int roomId) => throw new NotImplementedException();
+
+        public Task<bool> DeleteRoomAsync(int roomId) => throw new NotImplementedException();
 
     }
 }

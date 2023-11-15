@@ -2,7 +2,7 @@ using Demograzy.BusinessLogic.DataAccess;
 
 namespace Demograzy.Core.Test
 {
-    [TestFixture(Category = "Clients")]
+    [TestFixture()]
     public class ClientTests
     {
         public const int STANDARD_TIMEOUT = 3000;
@@ -66,7 +66,7 @@ namespace Demograzy.Core.Test
             var clientId = await service.AddClientAsync("test_client");
             var clientsExpected = await service.GetClientAmount() - 1;
 
-            await service.DropClient(clientId);
+            await service.DropClientAsync(clientId);
 
             var clientsActually = await service.GetClientAmount();
             Assert.That(clientsActually, Is.EqualTo(clientsExpected));
@@ -80,10 +80,10 @@ namespace Demograzy.Core.Test
         {
             var service = CommonRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
-            Assert.True(await service.DropClient(clientId));
+            Assert.True(await service.DropClientAsync(clientId));
             var clientsExpected = await service.GetClientAmount();
 
-            await service.DropClient(clientId);
+            await service.DropClientAsync(clientId);
 
             var clientsActually = await service.GetClientAmount();
             Assert.That(clientsActually, Is.EqualTo(clientsExpected));
@@ -98,7 +98,7 @@ namespace Demograzy.Core.Test
             var service = CommonRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
 
-            var success = await service.DropClient(clientId);
+            var success = await service.DropClientAsync(clientId);
 
             Assert.True(success);
         }
@@ -111,9 +111,9 @@ namespace Demograzy.Core.Test
         {
             var service = CommonRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
-            Assert.True(await service.DropClient(clientId));
+            Assert.True(await service.DropClientAsync(clientId));
 
-            var success = await service.DropClient(clientId);
+            var success = await service.DropClientAsync(clientId);
 
             Assert.False(success);
         }
@@ -131,7 +131,7 @@ namespace Demograzy.Core.Test
             Assert.That(clientsToCheck, Is.AtLeast(1));
             var service = CommonRoutines.PrepareMainService();
             var originalId = await service.AddClientAsync("original_client");
-            Assert.True(await service.DropClient(originalId));
+            Assert.True(await service.DropClientAsync(originalId));
             var furtherIds = new List<int>();
 
             for (int i = 0; i < clientsToCheck; i++)
@@ -140,6 +140,24 @@ namespace Demograzy.Core.Test
             }
 
             Assert.That(furtherIds, Has.None.EqualTo(originalId));
+        }
+
+
+
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenDeleteClientThenNullReturnsAsItsInfo()
+        {            
+            var service = CommonRoutines.PrepareMainService();
+            var originalId = await service.AddClientAsync("some_client");
+
+            var wasDeleted = await service.DeleteRoomAsync(originalId);
+
+            Assert.That(wasDeleted);
+            Assert.That(await service.GetRoomInfoAsync(originalId), Is.Null);
         }
 
 
