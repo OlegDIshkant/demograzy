@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Room.Create.Fail
@@ -12,7 +13,7 @@ namespace Demograzy.Core.Test.Room.Create.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenTryAddRoomsAboveLimitThenOwnedRoomsListDoesNotChange()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");       
             for (int i = 0; i < MAX_OWNED_ROOMS; i++)
             {
@@ -32,7 +33,7 @@ namespace Demograzy.Core.Test.Room.Create.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenTryAddRoomsAboveLimitThenReturnNullId()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");       
             for (int i = 0; i < MAX_OWNED_ROOMS; i++)
             {

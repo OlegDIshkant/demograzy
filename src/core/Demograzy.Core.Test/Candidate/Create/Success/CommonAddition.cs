@@ -1,4 +1,5 @@
 using Demograzy.BusinessLogic.DataAccess;
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 
@@ -13,7 +14,7 @@ namespace Demograzy.Core.Test.Candidate.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenAddCandidatesThenReturnsDistinctIds()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
             var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
             var candidateIds = new List<int>();
@@ -32,7 +33,7 @@ namespace Demograzy.Core.Test.Candidate.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenAddCandidatesThenCanQueryEachCandidateInfo()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
             var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
             var candidateIds = new List<int>();
@@ -61,7 +62,7 @@ namespace Demograzy.Core.Test.Candidate.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenAddCandidatesThenCandidatesListContainsThem()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
             var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
             var candidateIds = new List<int>();

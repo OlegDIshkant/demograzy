@@ -1,4 +1,5 @@
 using Demograzy.BusinessLogic.DataAccess;
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Client.Create.Success
@@ -11,7 +12,7 @@ namespace Demograzy.Core.Test.Client.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenAddClientThenAmountOfClientsGrows()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientsExpected = await service.GetClientAmount() + 1;
 
             await service.AddClientAsync("test_client");
@@ -26,7 +27,7 @@ namespace Demograzy.Core.Test.Client.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenAddClientThenCanQueryHisInfo()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var originalInfo = new ClientInfo() { name = "test_client" };
 
             var clientId = await service.AddClientAsync(originalInfo.name);
@@ -43,7 +44,7 @@ namespace Demograzy.Core.Test.Client.Create.Success
         {
             const int clientsAmount = 4;
             Assert.That(clientsAmount, Is.AtLeast(2));
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientIds = new List<int>();
 
             for (int i = 0; i < clientsAmount; i++)
@@ -62,7 +63,7 @@ namespace Demograzy.Core.Test.Client.Create.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenClientJustAddedThenHisJoinedRoomsListIsEmpty()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
 
             var clientId = await service.AddClientAsync("client");
 

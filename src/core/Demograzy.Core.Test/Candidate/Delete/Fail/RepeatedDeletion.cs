@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 
@@ -15,7 +16,7 @@ namespace Demograzy.Core.Test.Candidate.Delete.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteSameCandidateAgainThenReturnsFalse()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
             var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
             for(int i = 0; i < MAX_CANDIDATES - 1; i++)
@@ -36,7 +37,7 @@ namespace Demograzy.Core.Test.Candidate.Delete.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteSameCandidateAgainThenCandidatesListDoesNotChange()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
             var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
             for(int i = 0; i < MAX_CANDIDATES - 1; i++)

@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Client.Delete.Fail
@@ -10,7 +11,7 @@ namespace Demograzy.Core.Test.Client.Delete.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientAgainThenAmountOfClientsStaysTheSame()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
             Assert.True(await service.DropClientAsync(clientId));
             var clientsExpected = await service.GetClientAmount();
@@ -30,7 +31,7 @@ namespace Demograzy.Core.Test.Client.Delete.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientAgainThenDeletionReturnsFalse()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
             Assert.True(await service.DropClientAsync(clientId));
 

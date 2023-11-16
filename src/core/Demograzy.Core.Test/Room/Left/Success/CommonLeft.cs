@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Room.Left.Success
@@ -12,7 +13,7 @@ namespace Demograzy.Core.Test.Room.Left.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenMemberLeftRoomThenReturnsTrue()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
@@ -28,7 +29,7 @@ namespace Demograzy.Core.Test.Room.Left.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenMemberLeftRoomThenMembersListDoesNotContainHim()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
@@ -44,7 +45,7 @@ namespace Demograzy.Core.Test.Room.Left.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenMemberLeftRoomThenHisJoinedRoomsListDoesNotContainTheRoom()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");

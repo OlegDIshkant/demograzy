@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 
@@ -11,7 +12,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenDeletionReturnsTrue()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
 
             var success = await service.DropClientAsync(clientId);
@@ -25,7 +26,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenAmountOfClientsDecrease()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("test_client");
             var clientsExpected = await service.GetClientAmount() - 1;
 
@@ -43,7 +44,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         {            
             const int clientsToCheck = 4;
             Assert.That(clientsToCheck, Is.AtLeast(1));
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var originalId = await service.AddClientAsync("original_client");
             Assert.True(await service.DropClientAsync(originalId));
             var furtherIds = new List<int>();
@@ -65,7 +66,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenNullReturnsAsItsInfo()
         {            
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var originalId = await service.AddClientAsync("some_client");
 
             var wasDeleted = await service.DeleteRoomAsync(originalId);
@@ -80,7 +81,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenHisOwnedRoomsListIsNull()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room"); 
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
 
@@ -96,7 +97,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenHisRoomsInfoQueriesReturnNull()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room"); 
             var roomIds = new List<int>();
             for (int i = 0; i < MAX_OWNED_ROOMS; i++)
@@ -119,7 +120,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenClientJustDeletedThenHisJoinedRoomsListIsNull()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var clientId = await service.AddClientAsync("client");
 
             Assert.That(await service.DropClientAsync(clientId));
@@ -135,7 +136,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteClientThenMembersListOfRoomHeJoinedDoesNotContainHim()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client");
@@ -150,7 +151,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteRoomOwnerThenMembersListIsNull()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client");
@@ -167,7 +168,7 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteRoomOwnerThenJoinedRoomsListsOfExMembersDoNotContainTheRoom()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberIds = new List<int>();

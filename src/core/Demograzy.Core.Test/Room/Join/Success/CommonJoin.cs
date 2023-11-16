@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Room.Join.Success
@@ -13,7 +14,7 @@ namespace Demograzy.Core.Test.Room.Join.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOtherClientsJoinsRoomThenReturnsTrueEachTime()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var joinResults = new List<bool>();
@@ -33,7 +34,7 @@ namespace Demograzy.Core.Test.Room.Join.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOtherClientsJoinRoomThenMembersListHasOnlyThemAndOwner()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var expectedMembers = new List<int>() { ownerId };
@@ -54,7 +55,7 @@ namespace Demograzy.Core.Test.Room.Join.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOtherClientsJoinRoomThenTheirJoinedRoomsListsContainTheRoom()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var clientIds = new List<int>();
@@ -70,6 +71,23 @@ namespace Demograzy.Core.Test.Room.Join.Success
             {
                 Assert.That(await service.GetJoinedRooms(id), Has.Member(roomId));
             }
+        }
+
+
+
+        [Test]
+        [Timeout(STANDARD_TIMEOUT)]
+        public async Task WhenClientJoinsRoomThenActiveVersesListsAreNull()
+        {
+            var service = StartUpRoutines.PrepareMainService();
+            var owner = await service.AddClientAsync("client_for_room");
+            var room = (await service.AddRoomAsync(owner, "some_room", "")).Value;
+            var extraMember = await service.AddClientAsync("extra_member");
+            
+            await service.AddMember(room, extraMember);
+
+            Assert.That(await service.GetActiveVersesAsync(room, owner), Is.Null);
+            Assert.That(await service.GetActiveVersesAsync(room, extraMember), Is.Null);
         }
 
 

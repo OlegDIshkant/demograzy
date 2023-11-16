@@ -59,5 +59,14 @@ namespace Demograzy.BusinessLogic
         public Task<CandidateInfo?> GetCandidateInfo(int candidateId) => throw new NotImplementedException();
 
         public Task<bool> StartVotingAsync(int roomId) => throw new NotImplementedException();
+
+        public Task<int?> GetWinnerAsync(int roomId) => throw new NotImplementedException();
+
+        public Task<List<int>> GetActiveVersesAsync(int roomId, int clientId) => throw new NotImplementedException();
+
+        public Task<VersusInfo> GetVersusInfoAsync(int versusId) => throw new NotImplementedException(); 
+
+        public Task<bool> VoteAsync(int versusId, int clientId, bool votedForFirst) => throw new NotImplementedException();
+
     } 
 }

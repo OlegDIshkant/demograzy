@@ -3,9 +3,9 @@ using Demograzy.BusinessLogic;
 
 using SQLiteCommandBuilderFactory = DataAccess.Sql.SQLite.SqlCommandBuilderFactory;
 
-namespace Demograzy.Core.Test
+namespace Demograzy.Core.Test.CommonRoutines
 {
-    internal static class CommonRoutines
+    internal static class StartUpRoutines
     {
 
         internal static MainService PrepareMainService()

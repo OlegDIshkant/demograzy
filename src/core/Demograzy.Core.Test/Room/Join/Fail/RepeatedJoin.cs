@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Room.Join.Fail
@@ -12,7 +13,7 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenSameClientTryJoinRoomAgainThenReturnsFalse()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
@@ -29,7 +30,7 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenSameClientTryJoinRoomAgainThenMembersListDoesNotChange()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
@@ -47,7 +48,7 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenSameClientTryJoinRoomAgainThenHisJoinedRoomsListDoesNotChange()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");

@@ -1,3 +1,4 @@
+using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
 namespace Demograzy.Core.Test.Room.Delete.Success
@@ -12,7 +13,7 @@ namespace Demograzy.Core.Test.Room.Delete.Success
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenDeleteNonexistingRoomThenReturnsFalse()
         {
-            var service = CommonRoutines.PrepareMainService();
+            var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room"); 
             var roomId = await service.AddRoomAsync(ownerId, "some_room", "");
             await service.DeleteRoomAsync(roomId.Value);
