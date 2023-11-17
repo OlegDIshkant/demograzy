@@ -18,7 +18,7 @@ namespace Demograzy.BusinessLogic
 
         protected override Task<List<int>> OnRunAsync()
         {
-            return RoomGateway.GetRoomMembersAsync(_roomId);
+            return MembershipGateway.GetRoomMembersAsync(_roomId);
         }
         
     }

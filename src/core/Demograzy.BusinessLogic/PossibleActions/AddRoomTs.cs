@@ -24,7 +24,7 @@ namespace Demograzy.BusinessLogic
             var roomId = await RoomGateway.AddRoomAsync(_ownerId, _roomTitle, _passphrase);
             if (roomId != null)
             {
-                var success = await RoomGateway.AddRoomMemberAsync(roomId.Value, _ownerId);
+                var success = await MembershipGateway.AddRoomMemberAsync(roomId.Value, _ownerId);
             }
             return roomId;
         }

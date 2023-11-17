@@ -8,6 +8,7 @@ namespace Demograzy.BusinessLogic.DataAccess
     {
         public IClientsGateway ClientsGateway { get; }
         public IRoomsGateway RoomsGateway { get; }
+        public IMembershipGateway MembershipGateway { get; }
         public ICandidatesGateway CandidatesGateway { get; }
 
         public Task FinishAsync(bool toCommit);
