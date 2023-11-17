@@ -90,7 +90,7 @@ namespace Demograzy.Core.Test.Room.Create.Success
 
             var members = await service.GetMembers(roomId);             
             Assert.That(members, Has.Count.EqualTo(1));
-            Assert.That(members, Has.Member(roomId));
+            Assert.That(members, Has.Member(ownerId));
         }
 
 

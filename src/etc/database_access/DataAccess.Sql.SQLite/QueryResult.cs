@@ -15,7 +15,6 @@ namespace DataAccess.Sql.SQLite
         {
             get
             {
-                ExceptionIfDisposed();
                 return p_dataReader;
             }
             set
@@ -63,7 +62,7 @@ namespace DataAccess.Sql.SQLite
             object IEnumerator.Current => Current;
 
 
-            public bool MoveNext() => Master.DataReader.Read();
+            public bool MoveNext() => Master.DataReader?.Read() ?? false;
 
             public void Reset() => throw new NotSupportedException();
 

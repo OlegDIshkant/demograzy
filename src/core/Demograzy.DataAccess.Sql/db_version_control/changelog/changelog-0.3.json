@@ -1,0 +1,87 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_room_membership",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "room_membership",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "client",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "room",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+
+                            ]
+                            ,
+                            "constraints" :
+                            [
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "client",
+                                        "baseTableName" : "room_membership",
+                                        "constraintName" : "fk_room_membership_client",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "client"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "room",
+                                        "baseTableName" : "room_membership",
+                                        "constraintName" : "fk_room_membership_room",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "room"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
