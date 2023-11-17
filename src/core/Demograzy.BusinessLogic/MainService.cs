@@ -52,7 +52,8 @@ namespace Demograzy.BusinessLogic
 
         public Task<List<int>> GetJoinedRooms(int clientId) => throw new NotImplementedException();
 
-        public Task<int?> AddCandidateAsync(int roomId, string name) => throw new NotImplementedException();
+        public async Task<int?> AddCandidateAsync(int roomId, string name) => 
+            await new AddCandidateTs(roomId, name, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public Task<bool> DeleteCandidateAsync(int candidateId) => throw new NotImplementedException();
 

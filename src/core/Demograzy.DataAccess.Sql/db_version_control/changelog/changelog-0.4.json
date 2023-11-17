@@ -1,0 +1,76 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_candidate",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "candidate",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "name",
+                                        "type" : "VARCHAR(20)",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "room",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+
+                            ]
+                            ,
+                            "constraints" :
+                            [
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "room",
+                                        "baseTableName" : "candidate",
+                                        "constraintName" : "fk__candidate_room",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "room"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

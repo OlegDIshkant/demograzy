@@ -17,6 +17,9 @@ namespace Demograzy.DataAccess.Sql
 
         public IRoomsGateway RoomsGateway { get; private set; }
 
+        public ICandidatesGateway CandidatesGateway { get; private set; }
+
+
         internal static async Task<TransactionMeans> NewAsync(ISqlCommandBuilder commandBuilder)
         {
             var instance = new TransactionMeans(commandBuilder);
@@ -33,6 +36,9 @@ namespace Demograzy.DataAccess.Sql
                 () => _commandBuilder.Queries,
                 () => _commandBuilder.NonQueries);   
             RoomsGateway = new RoomsGateway(
+                () => _commandBuilder.Queries,
+                () => _commandBuilder.NonQueries);
+            CandidatesGateway = new CandidatesGateway(
                 () => _commandBuilder.Queries,
                 () => _commandBuilder.NonQueries);
         }
