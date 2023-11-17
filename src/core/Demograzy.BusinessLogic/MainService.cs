@@ -34,7 +34,8 @@ namespace Demograzy.BusinessLogic
             await new GetClientsAmountTs(await _transactionMeansFactory.CreateAsync()).RunAsync();
 
 
-        public Task<int?> AddRoomAsync(int ownerClientId, string title, string passphrase) => throw new NotImplementedException(); 
+        public async Task<int?> AddRoomAsync(int ownerClientId, string title, string passphrase) => 
+            await new AddRoomTs(ownerClientId, title, passphrase, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public Task<List<int>> GetOwnedRoomsAsync(int ownerClientId) => throw new NotImplementedException();
 

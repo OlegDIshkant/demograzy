@@ -8,21 +8,16 @@ using Demograzy.BusinessLogic.DataAccess;
 
 namespace Demograzy.DataAccess.Sql
 {
-    internal class ClientsGateway : BusinessLogic.DataAccess.IClientsGateway
+    internal class ClientsGateway : Gateway, BusinessLogic.DataAccess.IClientsGateway
     {
         private readonly static string CLIENT_TABLE = "client";
         private readonly static string ID = "id";
         private readonly static string NAME = "name";
 
 
-        private Func<IQueryBuilder> _PeekQueryBuilder;
-        private Func<INonQueryBuilder> _PeekNonQueryBuilder;
-
-
-        public ClientsGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder)
+        public ClientsGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder) 
         {
-            _PeekQueryBuilder = PeekQueryBuilder;
-            _PeekNonQueryBuilder = PeekNonQueryBuilder;
         }
 
 
@@ -30,14 +25,14 @@ namespace Demograzy.DataAccess.Sql
         public async Task<int> AddClientAsync(string name)
         {
             await InsertClientAsync(name);
-            return await GetInsertedClientIdAsync();
+            return await GetLastInsertedIdAsync();
         }
 
 
         private async Task InsertClientAsync(string name)
         {
             var command =
-                _PeekNonQueryBuilder().Create(
+                NonQueryBuilder.Create(
                     new InsertOptions()
                     {
                         Into = CLIENT_TABLE,
@@ -56,28 +51,10 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
-        private async Task<int> GetInsertedClientIdAsync()
-        {
-            var query =
-                _PeekQueryBuilder().Create(
-                    new SelectOptions()
-                    {
-                        Select = new SelectClause(new LastInsertedRowId())
-                    }
-                );
-
-            using (var result = (await query.ExecuteAsync()).GetEnumerator())
-            {
-                result.MoveNext();
-                return result.Current.GetInt(0);
-            }
-        }
-
-
 
         public async Task<ClientInfo> GetClientInfoAsync(int id)
         {
-            var query = _PeekQueryBuilder().Create(
+            var query = QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(NAME)),
@@ -97,7 +74,7 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<bool> DropClientAsync(int id)
         {
-            var deleteCommand = _PeekNonQueryBuilder().Create(
+            var deleteCommand = NonQueryBuilder.Create(
                 new DeleteOptions()
                 {
                     From = CLIENT_TABLE,
@@ -120,7 +97,7 @@ namespace Demograzy.DataAccess.Sql
         public async Task<int> GetClientsAmountAsync()
         {
             var query = 
-                _PeekQueryBuilder().Create(
+                QueryBuilder.Create(
                     new SelectOptions()
                     {
                         Select = new SelectClause(new Count()),

@@ -11,6 +11,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         private ITransactionMeans _transactionMeans;
 
         protected IClientsGateway ClientGateway => _transactionMeans.ClientsGateway; 
+        protected IRoomsGateway RoomGateway => _transactionMeans.RoomsGateway; 
 
         public bool Started { get; private set; } = false;
 

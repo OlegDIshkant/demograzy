@@ -1,11 +1,8 @@
 {
     "databaseChangeLog": 
     [
-        {
-            "include" :
-            {
-                "file": "changelog-0.1.json"
-            }
-        }
+        { "include" : { "file": "changelog-0.1.json" } },
+        { "include" : { "file": "changelog-0.2.json" } }
+
     ]
 }
