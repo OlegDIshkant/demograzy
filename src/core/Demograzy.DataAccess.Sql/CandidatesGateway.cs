@@ -93,5 +93,23 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+        public async Task<int> GetCandidatesAmount(int roomId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new Count()),
+                    From = CANDIDATE_TABLE,
+                    Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
+                }
+            );
+
+            using (var queryResult = await query.ExecuteAsync())
+            {
+                var e = queryResult.GetEnumerator();
+                e.MoveNext();
+                return e.Current.GetInt(0);
+            }
+        }
     }
 }

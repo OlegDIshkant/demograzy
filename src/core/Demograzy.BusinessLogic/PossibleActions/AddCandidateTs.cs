@@ -17,9 +17,17 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override Task<int?> OnRunAsync()
+        protected override async Task<int?> OnRunAsync()
         {
-            return base.CandidateGateway.AddCandidateAsync(_roomId, _candidateName);
+            var candidatesAmount = await CandidateGateway.GetCandidatesAmount(_roomId);
+            if (candidatesAmount < Limits.MAX_CANDIDATES_PER_ROOM)
+            {
+                return await CandidateGateway.AddCandidateAsync(_roomId, _candidateName);
+            }
+            else
+            {
+                return null;
+            }
         }
         
     }
