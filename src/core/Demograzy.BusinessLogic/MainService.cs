@@ -57,7 +57,8 @@ namespace Demograzy.BusinessLogic
 
         public Task<bool> DeleteCandidateAsync(int candidateId) => throw new NotImplementedException();
 
-        public Task<List<int>> GetCandidatesAsync(int roomId) => throw new NotImplementedException();
+        public async Task<List<int>> GetCandidatesAsync(int roomId) => 
+            await new GetCandidatesTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<CandidateInfo?> GetCandidateInfo(int candidateId) => 
             await new GetCandidateInfoTs(candidateId, await _transactionMeansFactory.CreateAsync()).RunAsync();

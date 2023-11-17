@@ -67,5 +67,31 @@ namespace Demograzy.DataAccess.Sql
             }
         }
 
+
+
+        public async Task<List<int>> GetCandidates(int roomId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new ColumnName(ID_COLUMN)),
+                    From = CANDIDATE_TABLE,
+                    Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
+                }
+            );
+
+            using (var queryResult = await query.ExecuteAsync())
+            {
+                var result = new List<int>();
+                var e = queryResult.GetEnumerator();
+                while(e.MoveNext())
+                {
+                    result.Add(e.Current.GetInt(0));
+                }
+                return result;
+            }
+        }
+
+
     }
 }
