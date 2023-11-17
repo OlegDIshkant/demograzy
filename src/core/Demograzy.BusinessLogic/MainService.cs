@@ -63,7 +63,8 @@ namespace Demograzy.BusinessLogic
         public async Task<CandidateInfo?> GetCandidateInfo(int candidateId) => 
             await new GetCandidateInfoTs(candidateId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public Task<bool> StartVotingAsync(int roomId) => throw new NotImplementedException();
+        public async Task<bool> StartVotingAsync(int roomId) =>
+            await new StartVotingTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public Task<int?> GetWinnerAsync(int roomId) => throw new NotImplementedException();
 

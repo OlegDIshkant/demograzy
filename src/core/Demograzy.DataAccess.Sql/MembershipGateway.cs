@@ -22,9 +22,9 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public Task<bool> AddRoomMemberAsync(int roomId, int clientId)
+        public async Task<bool> AddRoomMemberAsync(int roomId, int clientId)
         {
-            return NonQueryBuilder.Create(
+            var insertedAmount = await NonQueryBuilder.Create(
                 new InsertOptions()
                 {
                     Into = MEMBERSHIP_TABLE,
@@ -36,6 +36,8 @@ namespace Demograzy.DataAccess.Sql
                 }
             )
             .ExecuteAsync();
+
+            return insertedAmount > 0;
         }
 
 

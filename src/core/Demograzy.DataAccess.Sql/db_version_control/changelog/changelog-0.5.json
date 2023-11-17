@@ -1,0 +1,31 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_room_table_column_voting_started",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "addColumn" :
+                        {
+                            "tableName" : "room",
+                            "column" :
+                            {
+                                "name" : "voting_started",
+                                "type" : "BOOLEAN",
+                                "defaultValue" : false,
+                                "constraints" :
+                                {
+                                    "nullable" : false
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

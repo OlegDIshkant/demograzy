@@ -5,5 +5,6 @@ namespace Demograzy.BusinessLogic.DataAccess
         public int ownerClientId;
         public string title;
         public string passphrase; 
+        public bool votingStarted; 
     }
 }

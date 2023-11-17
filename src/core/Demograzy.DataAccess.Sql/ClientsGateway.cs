@@ -43,7 +43,7 @@ namespace Demograzy.DataAccess.Sql
                     }
                 );
 
-            var success = await command.ExecuteAsync();
+            var success = await command.ExecuteAsync() > 0;
             if (!success)
             {
                 throw new Exception("Operation failed.");
@@ -84,7 +84,7 @@ namespace Demograzy.DataAccess.Sql
 
             try
             {
-                return await deleteCommand.ExecuteAsync();
+                return await deleteCommand.ExecuteAsync() > 0;
             }
             catch(Exception e)
             {

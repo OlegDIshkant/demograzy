@@ -70,6 +70,8 @@ namespace DataAccess.Sql.SQLite
 
             public string GetString(int columnIndex) => Master.DataReader.GetString(columnIndex);
 
+            public bool GetBool(int columnIndex) => Master.DataReader.GetBoolean(columnIndex);
+
             protected override void OnDispose()
             {
                 base.OnDispose();

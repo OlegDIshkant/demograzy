@@ -15,7 +15,7 @@ namespace DataAccess.Sql.SQLite
         }
 
 
-        public ISqlCommand<bool> Create(InsertOptions insertOptions)
+        public ISqlCommand<int> Create(InsertOptions insertOptions)
         {
             return GenerateCommand(
                 () => (InsertStatementBuilder.Build(insertOptions, out var parameters), parameters)
@@ -23,17 +23,24 @@ namespace DataAccess.Sql.SQLite
         }
 
 
-        public ISqlCommand<bool> Create(DeleteOptions deleteOptions)
+        public ISqlCommand<int> Create(DeleteOptions deleteOptions)
         {
             return GenerateCommand(
                 () => (DeleStatementBuilder.Build(deleteOptions, out var parameters), parameters)
             );
         }
 
-
-        private ISqlCommand<bool> GenerateCommand(Func<(string text, Dictionary<string, object> parameters)> PrepareCommand)
+        public ISqlCommand<int> Create(UpdateOptions updateOptions)
         {
-            return new GenericCommand<bool> (
+            return GenerateCommand(
+                () => (UpdateStatementBuilder.Build(updateOptions, out var parameters), parameters)
+            );
+        }
+
+
+        private ISqlCommand<int> GenerateCommand(Func<(string text, Dictionary<string, object> parameters)> PrepareCommand)
+        {
+            return new GenericCommand<int> (
                 async () =>
                 {
                     using (var command = _PeekConnection().CreateCommand())
@@ -45,7 +52,7 @@ namespace DataAccess.Sql.SQLite
                             command.Parameters.AddWithValue(item.Key, item.Value);
                         }
                         var changedAmount = await command.ExecuteNonQueryAsync();
-                        return  changedAmount > 0;
+                        return  changedAmount;
                     }
                 }
             );

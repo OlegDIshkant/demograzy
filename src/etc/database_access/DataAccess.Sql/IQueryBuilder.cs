@@ -20,6 +20,7 @@ namespace DataAccess.Sql
     {
         int GetInt(int columnIndex);
         string GetString(int columnIndex);
+        bool GetBool(int columnIndex);
     }
 
     
