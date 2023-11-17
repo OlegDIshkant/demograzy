@@ -53,7 +53,9 @@ namespace Demograzy.Core.Test.Candidate.Create.Success
 
             foreach (var id in candidateIds)
             {
-                Assert.That(await service.GetCandidateInfo(id), Is.EqualTo(candidateInfos[id]));
+                var info = await service.GetCandidateInfo(id);
+                Assert.That(info, Is.Not.Null);
+                Assert.That(info.Value, Is.EqualTo(candidateInfos[id]));
             }
         }
 
