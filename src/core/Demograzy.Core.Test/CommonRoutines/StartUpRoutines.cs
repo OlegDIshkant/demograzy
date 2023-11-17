@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using DataAccess.Sql.SQLite;
 using Demograzy.BusinessLogic;
-
+using SQLitePCL;
 using SQLiteCommandBuilderFactory = DataAccess.Sql.SQLite.SqlCommandBuilderFactory;
 
 namespace Demograzy.Core.Test.CommonRoutines
@@ -10,16 +11,30 @@ namespace Demograzy.Core.Test.CommonRoutines
 
         internal static MainService PrepareMainService()
         {
-            const string dbName = "/workspaces/demograzy/src/core/Demograzy.Core.Test/test_db/~$_unit_test_db";
+            const string dbPath = "/workspaces/demograzy/src/core/Demograzy.Core.Test/test_db/~$_unit_test_db";
+
+            MakeSureTestBdReady(dbPath);
 
             var testableService = 
                 new Demograzy.BusinessLogic.MainService(
                     new Demograzy.DataAccess.Sql.TransactionMeansFactory(
-                       SQLiteCommandBuilderFactory.Create(dbName)));
+                       SQLiteCommandBuilderFactory.Create(dbPath)));
 
-            ApplyAllMigrations(dbName);
 
             return testableService;
+        }
+
+
+        private static void MakeSureTestBdReady(string pathToTestDb)
+        {
+            MakeSureTestBdExists(pathToTestDb);
+            ApplyAllMigrations(pathToTestDb);
+        }
+
+
+        private static void MakeSureTestBdExists(string pathToTestDb)
+        {
+            global::DataAccess.Sql.SQLite.Utils.CreateDb(pathToTestDb);
         }
 
 

@@ -32,3 +32,6 @@ RUN apt install -y liquibase
 RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb -O jdk-21_linux-x64_bin.deb
 RUN dpkg -i jdk-21_linux-x64_bin.deb
 RUN rm jdk-21_linux-x64_bin.deb
+
+# Install sqlite3
+RUN apt install sqlite3
