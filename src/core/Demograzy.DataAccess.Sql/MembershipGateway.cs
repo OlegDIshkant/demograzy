@@ -60,5 +60,24 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+        public async Task<List<int>> GetJoinedRoomsAsync(int clientId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new ColumnName(ROOM_COLUMN)),
+                    From = MEMBERSHIP_TABLE,
+                    Where = new Comparison(new ColumnName(CLIENT_COLUMN), CompareType.EQUALS, new Parameter(clientId))
+                }
+            );
+
+            using (var queryResult = await query.ExecuteAsync())
+            {
+                return queryResult.Select(r => r.GetInt(0)).ToList();
+            }
+        }
+
+
     }
 }

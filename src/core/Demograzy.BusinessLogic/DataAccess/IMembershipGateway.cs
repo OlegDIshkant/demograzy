@@ -8,5 +8,6 @@ namespace Demograzy.BusinessLogic.DataAccess
     {
         Task<bool> AddRoomMemberAsync(int roomId, int clientId);
         Task<List<int>> GetRoomMembersAsync(int roomId);
+        Task<List<int>> GetJoinedRoomsAsync(int clientId);
     }
 }
