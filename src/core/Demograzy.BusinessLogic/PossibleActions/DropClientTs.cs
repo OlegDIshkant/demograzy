@@ -59,6 +59,12 @@ namespace Demograzy.BusinessLogic.PossibleActions
 
         private async Task<bool> MayDropClient()
         {
+            var clientDoesNotExist = !await ClientGateway.CheckClientExistsAsync(_clientId);
+            if (clientDoesNotExist)
+            {
+                return false;
+            }
+
             var joinedRoomIds = await MembershipGateway.GetJoinedRoomsAsync(_clientId);
             if (joinedRoomIds is null)
             {
