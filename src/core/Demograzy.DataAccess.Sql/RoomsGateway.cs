@@ -43,8 +43,7 @@ namespace Demograzy.DataAccess.Sql
             )
             .ExecuteAsync();
 
-            return await GetLastInsertedIdAsync();
-            
+            return await GetLastInsertedIdAsync();            
         }
 
         public async Task<RoomInfo?> GetRoomInfoAsync(int roomId)
@@ -62,17 +61,23 @@ namespace Demograzy.DataAccess.Sql
                 }
             );
 
-            using (var queryResult = await query.ExecuteAsync())
-            {
-                var e = queryResult.GetEnumerator();
-                e.MoveNext();
-                return new RoomInfo()
+            var queryResult = await InvokeQuery(
+                query, 
+                r => new RoomInfo()
                 {
-                    ownerClientId = e.Current.GetInt(0),
-                    title = e.Current.GetString(1),
-                    passphrase = e.Current.GetString(2),
-                    votingStarted = e.Current.GetBool(3),
-                };
+                    ownerClientId = r.GetInt(0),
+                    title = r.GetString(1),
+                    passphrase = r.GetString(2),
+                    votingStarted = r.GetBool(3),
+                });
+
+            if (queryResult.Any())
+            {
+                return queryResult.Single();
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -110,5 +115,26 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+        public async Task<bool> CheckRoomExistsAsync(int roomId)
+        {
+            //TODO: check properly (via SQL)
+            return (await GetRoomInfoAsync(roomId)).HasValue;
+        }
+
+
+
+        public async Task<bool> DeleteRoomAsync(int roomId)
+        {
+            var modifiedRows = await NonQueryBuilder.Create(
+                new DeleteOptions()
+                {
+                    From = ROOM_TABLE,
+                    Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(roomId))
+                }
+            ).ExecuteAsync();
+
+            return CheckIfSingleRowChanged(modifiedRows);
+        }
     }
 }

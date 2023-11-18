@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
@@ -20,13 +21,39 @@ namespace Demograzy.BusinessLogic.PossibleActions
         {
             if (await MayDropClient())
             {
-                return await ClientGateway.DropClientAsync(_clientId);
+                var ownedRoomIds = await RoomGateway.GetOwnedRoomsAsync(_clientId);
+                
+                if (!await ClientGateway.DropClientAsync(_clientId))
+                {
+                    throw new Exception($"Failed to delete the client '{_clientId}'.");
+                }
+
+                foreach (var roomId in ownedRoomIds)
+                {
+                    await DeleteRoomAndForgetItsMembers(roomId);
+                }
+
+                return true;
             }
             else
             {
                 return false;
             }
 
+        }
+
+
+        private async Task DeleteRoomAndForgetItsMembers(int roomId)
+        {
+            if (!await RoomGateway.DeleteRoomAsync(roomId))
+            {
+                throw new Exception($"Failed to delete owned room '{roomId}'.");
+            }
+
+            if (!await MembershipGateway.ForgetAllMembersAsync(roomId))
+            {
+                throw new Exception($"Failed to forget members of the room '{roomId}'.");
+            }
         }
 
 

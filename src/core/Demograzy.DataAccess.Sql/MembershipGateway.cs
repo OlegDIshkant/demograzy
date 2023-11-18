@@ -79,5 +79,20 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+        public async Task<bool> ForgetAllMembersAsync(int roomId)
+        {
+            var command = await NonQueryBuilder.Create(
+                new DeleteOptions()
+                {
+                    From = MEMBERSHIP_TABLE,
+                    Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
+                }
+            ).ExecuteAsync();
+
+            return true;
+        }
+
+
     }
 }
