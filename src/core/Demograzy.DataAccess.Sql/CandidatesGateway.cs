@@ -85,16 +85,7 @@ namespace Demograzy.DataAccess.Sql
                 }
             );
 
-            using (var queryResult = await query.ExecuteAsync())
-            {
-                var result = new List<int>();
-                var e = queryResult.GetEnumerator();
-                while(e.MoveNext())
-                {
-                    result.Add(e.Current.GetInt(0));
-                }
-                return result;
-            }
+            return await InvokeQuery(query, r => r.GetInt(0));
         }
 
 

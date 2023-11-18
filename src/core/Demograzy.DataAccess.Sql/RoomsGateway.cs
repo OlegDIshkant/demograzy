@@ -47,8 +47,6 @@ namespace Demograzy.DataAccess.Sql
             
         }
 
-
-
         public async Task<RoomInfo?> GetRoomInfoAsync(int roomId)
         {
             var query = QueryBuilder.Create(
@@ -94,6 +92,22 @@ namespace Demograzy.DataAccess.Sql
             return CheckIfSingleRowChanged(updatedRowsNum);
         }
 
+
+
+
+        public async Task<List<int>> GetOwnedRoomsAsync(int ownerId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new ColumnName(ID_COLUMN)),
+                    From = ROOM_TABLE,
+                    Where = new Comparison(new ColumnName(OWNER_COLUMN), CompareType.EQUALS, new Parameter(ownerId))
+                }
+            );
+
+            return await InvokeQuery(query, r => r.GetInt(0));
+        }
 
 
     }

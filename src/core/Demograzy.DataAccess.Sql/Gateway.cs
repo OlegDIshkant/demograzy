@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataAccess.Sql;
 
@@ -60,6 +61,20 @@ namespace Demograzy.DataAccess.Sql
             }
         }
 
+
+        protected async Task<List<R>> InvokeQuery<R>(ISqlCommand<IQueryResult> query, Func<IRow, R> ExtractRowInfo)
+        {
+            using (var queryResult = await query.ExecuteAsync())
+            {
+                var result = new List<R>();
+                var e = queryResult.GetEnumerator();
+                while(e.MoveNext())
+                {
+                    result.Add(ExtractRowInfo(e.Current));
+                }
+                return result;
+            }
+        }
 
     }
 }
