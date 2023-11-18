@@ -19,7 +19,7 @@ namespace Demograzy.BusinessLogic
 
         protected override async Task<int?> OnRunAsync()
         {
-            var votingNotStarted = !(await RoomGateway.GetRoomInfoAsync(_roomId)).Value.votingStarted;
+            var votingNotStarted = !await RoomGateway.IsVotingStarted(_roomId);
             var limitNotReached = await CandidateGateway.GetCandidatesAmount(_roomId) < Limits.MAX_CANDIDATES_PER_ROOM;
 
             if (votingNotStarted && limitNotReached)

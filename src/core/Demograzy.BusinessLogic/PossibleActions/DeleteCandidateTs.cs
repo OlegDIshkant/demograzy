@@ -15,9 +15,18 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override Task<bool> OnRunAsync()
+        protected override async Task<bool> OnRunAsync()
         {
-            return CandidateGateway.DeleteCandidateAsync(_candidateId);
+            var votingNotStarted = !await RoomGateway.IsVotingStarted(await CandidateGateway.GetRoom(_candidateId));
+
+            if (votingNotStarted)
+            {
+                return await CandidateGateway.DeleteCandidateAsync(_candidateId);
+            }
+            else
+            {
+                return false;
+            }
         }
         
     }
