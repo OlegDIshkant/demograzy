@@ -35,6 +35,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
             Started = true;
             
             R result = default;
+
             try
             {
                 result = await OnRunAsync();
