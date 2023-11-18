@@ -26,7 +26,7 @@ namespace Demograzy.Core.Test.Candidate.Delete.Fail
             var deletedCandidateId = (await service.AddCandidateAsync(roomId, "candidate_to_delete")).Value;
             Assert.That(await service.DeleteCandidateAsync(deletedCandidateId));
 
-            var deleteFailed = await service.DeleteCandidateAsync(deletedCandidateId);
+            var deleteFailed = !await service.DeleteCandidateAsync(deletedCandidateId);
 
             Assert.That(deleteFailed);
         }

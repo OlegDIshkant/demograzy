@@ -44,7 +44,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
             catch (Exception e)
             {
                 await _transactionMeans.FinishAsync(toCommit: false);
-                throw e;
+                throw e.InnerException;
             }
         } 
 

@@ -17,7 +17,16 @@ namespace Demograzy.BusinessLogic
 
         protected override async Task<bool> OnRunAsync()
         {
-            var votingNotStarted = !await RoomGateway.IsVotingStarted(await CandidateGateway.GetRoom(_candidateId));
+            var candidateInfo = await CandidateGateway.GetCandidateInfo(_candidateId);
+            var candidateExists = candidateInfo.HasValue;
+
+            if (!candidateExists)
+            {
+                return false;
+            } 
+
+            var roomInfo = await RoomGateway.GetRoomInfoAsync(candidateInfo.Value.roomId);
+            var votingNotStarted = !roomInfo.Value.votingStarted;
 
             if (votingNotStarted)
             {
