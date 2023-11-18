@@ -4,7 +4,7 @@ using Demograzy.BusinessLogic.DataAccess;
 
 namespace Demograzy.BusinessLogic.PossibleActions
 {
-    internal class GetClientInfoTs : TransactionScript<ClientInfo>
+    internal class GetClientInfoTs : TransactionScript<ClientInfo?>
     {
         private readonly int _clientId;
 
@@ -15,7 +15,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override Task<ClientInfo> OnRunAsync()
+        protected override Task<ClientInfo?> OnRunAsync()
         {
             return ClientGateway.GetClientInfoAsync(_clientId);
         }

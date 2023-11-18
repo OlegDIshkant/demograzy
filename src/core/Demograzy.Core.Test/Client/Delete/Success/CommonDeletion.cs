@@ -67,12 +67,11 @@ namespace Demograzy.Core.Test.Client.Delete.Success
         public async Task WhenDeleteClientThenNullReturnsAsItsInfo()
         {            
             var service = StartUpRoutines.PrepareMainService();
-            var originalId = await service.AddClientAsync("some_client");
+            var clientId = await service.AddClientAsync("some_client");
 
-            var wasDeleted = await service.DeleteRoomAsync(originalId);
+            Assert.That(await service.DropClientAsync(clientId));
 
-            Assert.That(wasDeleted);
-            Assert.That(await service.GetRoomInfoAsync(originalId), Is.Null);
+            Assert.That(await service.GetClientInfo(clientId), Is.Null);
         }
 
 

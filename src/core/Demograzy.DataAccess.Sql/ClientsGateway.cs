@@ -52,7 +52,7 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public async Task<ClientInfo> GetClientInfoAsync(int id)
+        public async Task<ClientInfo?> GetClientInfoAsync(int id)
         {
             var query = QueryBuilder.Create(
                 new SelectOptions()
@@ -65,8 +65,14 @@ namespace Demograzy.DataAccess.Sql
             
             using (var result = (await query.ExecuteAsync()).GetEnumerator())
             {
-                result.MoveNext();
-                return new ClientInfo() { name = result.Current.GetString(0) };
+                if (result.MoveNext())
+                {
+                    return new ClientInfo() { name = result.Current.GetString(0) };
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

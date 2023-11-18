@@ -26,7 +26,7 @@ namespace Demograzy.BusinessLogic
             await new DropClientTs(clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
 
-        public async Task<ClientInfo> GetClientInfo(int clientId) =>
+        public async Task<ClientInfo?> GetClientInfo(int clientId) =>
             await new GetClientInfoTs(clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
 
