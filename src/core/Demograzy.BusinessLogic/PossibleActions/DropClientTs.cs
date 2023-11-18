@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 
@@ -15,9 +16,44 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override Task<bool> OnRunAsync()
+        protected override async Task<bool> OnRunAsync()
         {
-            return ClientGateway.DropClientAsync(_clientId);
+            if (await MayDropClient())
+            {
+                return await ClientGateway.DropClientAsync(_clientId);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
+        private async Task<bool> MayDropClient()
+        {
+            var joinedRoomIds = await MembershipGateway.GetJoinedRoomsAsync(_clientId);
+            if (joinedRoomIds is null)
+            {
+                return false;
+            } 
+
+            return !await RoomWithStartedVotingExists(joinedRoomIds);
+        }
+
+
+        private async Task<bool> RoomWithStartedVotingExists(List<int> joinedRoomIds)
+        {
+            // TODO: find a solution with fewer database accesses.
+            foreach (var roomId in joinedRoomIds)
+            {
+                var votingStarted = (await RoomGateway.GetRoomInfoAsync(roomId)).Value.votingStarted;
+                if (votingStarted)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         
     }
