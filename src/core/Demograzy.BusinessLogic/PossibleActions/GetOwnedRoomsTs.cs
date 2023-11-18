@@ -17,9 +17,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
 
         protected override async Task<List<int>> OnRunAsync()
         {
-            var clientExists = (await ClientGateway.GetClientInfoAsync(_clientId)).HasValue;
-
-            if (clientExists)
+            if (await ClientGateway.CheckClientExistsAsync(_clientId))
             {
                 return await RoomGateway.GetOwnedRoomsAsync(_clientId);
             }

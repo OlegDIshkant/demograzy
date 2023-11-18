@@ -117,7 +117,11 @@ namespace Demograzy.DataAccess.Sql
                 return result.Current.GetInt(0);
             }
         }
-        
 
+        public async Task<bool> CheckClientExistsAsync(int id)
+        {
+            //TODO: check properly (via SQL)
+            return (await GetClientInfoAsync(id)).HasValue;
+        }
     }
 }
