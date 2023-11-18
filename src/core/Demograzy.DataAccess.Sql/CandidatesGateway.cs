@@ -43,7 +43,6 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
-
         public async Task<CandidateInfo?> GetCandidateInfo(int candidateId)
         {
             var query = QueryBuilder.Create(
@@ -111,5 +110,21 @@ namespace Demograzy.DataAccess.Sql
                 return e.Current.GetInt(0);
             }
         }
+
+
+        public async Task<bool> DeleteCandidateAsync(int candidateId)
+        {
+            var deletedRows = await NonQueryBuilder.Create(
+                new DeleteOptions()
+                {
+                    From = CANDIDATE_TABLE,
+                    Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(candidateId))
+                }
+            ).ExecuteAsync();
+
+            return CheckIfSingleRowChanged(deletedRows);
+        }
+
+
     }
 }

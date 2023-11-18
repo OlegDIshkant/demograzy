@@ -42,5 +42,24 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+
+        protected bool CheckIfSingleRowChanged(int changedRowsAmount)
+        {
+            if (changedRowsAmount == 0)
+            {
+                return false;
+            } 
+            else if (changedRowsAmount == 1)
+            {
+                return true;
+            }
+            else
+            {
+                throw new Exception($"Unexpected amount of updated rows: '{changedRowsAmount}' (should be 1 or 0).");
+            }
+        }
+
+
     }
 }

@@ -10,5 +10,6 @@ namespace Demograzy.BusinessLogic.DataAccess
         Task<CandidateInfo?> GetCandidateInfo(int candidateId);
         Task<List<int>> GetCandidates(int roomId);
         Task<int> GetCandidatesAmount(int roomId);
+        Task<bool> DeleteCandidateAsync(int candidateId);
     }
 }

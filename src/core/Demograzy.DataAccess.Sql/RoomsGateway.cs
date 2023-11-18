@@ -82,28 +82,16 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<bool> StartVotingAsync(int roomId)
         {
-            var command = NonQueryBuilder.Create(
+            var updatedRowsNum = await NonQueryBuilder.Create(
                 new UpdateOptions()
                 {
                     Update = ROOM_TABLE,
                     Set = new List<(string, object)>() { (VOTING_STARTED_COLUMN, true) },
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
-            );
+            ).ExecuteAsync();
 
-            var rowsUpdated = await command.ExecuteAsync();
-            if (rowsUpdated == 0)
-            {
-                return false;
-            } 
-            else if (rowsUpdated == 1)
-            {
-                return true;
-            }
-            else
-            {
-                throw new Exception($"Unexpected amount of updated rows: '{rowsUpdated}' (should be 1 or 0).");
-            }
+            return CheckIfSingleRowChanged(updatedRowsNum);
         }
 
 
