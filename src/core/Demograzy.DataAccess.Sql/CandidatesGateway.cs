@@ -57,12 +57,18 @@ namespace Demograzy.DataAccess.Sql
             using (var result = await query.ExecuteAsync())
             {
                 var e = result.GetEnumerator();
-                e.MoveNext();
-                return new CandidateInfo()
+                if (e.MoveNext())
                 {
-                    name = e.Current.GetString(0),
-                    roomId = e.Current.GetInt(1)
-                };
+                    return new CandidateInfo()
+                    {
+                        name = e.Current.GetString(0),
+                        roomId = e.Current.GetInt(1)
+                    };
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
