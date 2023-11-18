@@ -35,17 +35,21 @@ namespace Demograzy.BusinessLogic.PossibleActions
             Started = true;
             
             R result = default;
+#if RELEASE
             try
             {
+#endif
                 result = await OnRunAsync();
                 await _transactionMeans.FinishAsync(toCommit: true);
                 return result;
+#if RELEASE
             }
             catch (Exception e)
             {
                 await _transactionMeans.FinishAsync(toCommit: false);
                 throw e.InnerException;
             }
+#endif
         } 
 
 
