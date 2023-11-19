@@ -20,7 +20,28 @@ namespace Demograzy.BusinessLogic
 
         protected override async Task<Result> OnRunAsync()
         {
-            return Result.DependsOn(await MembershipGateway.AddRoomMemberAsync(_roomId, _clientId));
+            if (await MayJoinRoom())
+            {
+                return Result.DependsOn(await JoinRoom());
+            }
+            else
+            {
+                return Result.Fail(false);
+            }
+        }
+
+
+        private async Task<bool> MayJoinRoom()
+        {
+            var limitReached = (await MembershipGateway.GetRoomMembersAsync(_roomId)).Count >= Limits.MAX_MEMBERS_PER_ROOMS;
+
+            return !limitReached;
+        }
+
+
+        private Task<bool> JoinRoom()
+        {
+            return MembershipGateway.AddRoomMemberAsync(_roomId, _clientId);
         }
         
     }
