@@ -6,7 +6,7 @@ using Demograzy.BusinessLogic.DataAccess;
 
 namespace Demograzy.BusinessLogic.PossibleActions
 {
-    public abstract class TransactionScript<R> : Common.DisposableObject
+    internal abstract class TransactionScript<R> : Common.DisposableObject
     {
         private ITransactionMeans _transactionMeans;
 
@@ -16,15 +16,17 @@ namespace Demograzy.BusinessLogic.PossibleActions
         protected ICandidatesGateway CandidateGateway => _transactionMeans.CandidatesGateway; 
         protected IWinnersGateway WinnersGateway => _transactionMeans.WinnersGateway; 
         public IVersesGateway VersesGateway => _transactionMeans.VersesGateway;
-        public IVotesGateway VotesGateway => _transactionMeans.VotesGateway;
+        protected IVotesGateway VotesGateway => _transactionMeans.VotesGateway;
 
-
+        protected CommonRoutines CommonRoutines { get; private set; }
         public bool Started { get; private set; } = false;
 
 
         public TransactionScript(ITransactionMeans transactionMeans)
         {
             _transactionMeans = transactionMeans;
+
+            CommonRoutines = new CommonRoutines(transactionMeans);
         }
 
 

@@ -36,7 +36,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
             var ownedRoomIds = await RoomGateway.GetOwnedRoomsAsync(_clientId);
             foreach (var roomId in ownedRoomIds)
             {
-                if (!await DeleteRoomAndForgetItsMembers(roomId))
+                if (!await CommonRoutines.DeleteRoomAndForgetItsMembers(roomId))
                 {
                     return false;
                 }
@@ -45,12 +45,6 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        private async Task<bool> DeleteRoomAndForgetItsMembers(int roomId)
-        {
-            return 
-                await RoomGateway.DeleteRoomAsync(roomId) &&
-                await MembershipGateway.ForgetAllMembersAsync(roomId);
-        }
 
 
         private async Task<bool> MayDropClient()
