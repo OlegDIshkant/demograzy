@@ -34,8 +34,11 @@ namespace Demograzy.BusinessLogic
         private async Task<bool> MayJoinRoom()
         {
             var limitReached = (await MembershipGateway.GetRoomMembersAsync(_roomId)).Count >= Limits.MAX_MEMBERS_PER_ROOMS;
+            var votingStarted = await CommonRoutines.RoomExistsAndVotingStarted(_roomId);
 
-            return !limitReached;
+            var joinForbidden = limitReached || votingStarted;
+
+            return !joinForbidden;
         }
 
 

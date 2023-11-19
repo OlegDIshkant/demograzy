@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
@@ -32,6 +33,20 @@ namespace Demograzy.BusinessLogic
             return 
                 await RoomGateway.DeleteRoomAsync(roomId) &&
                 await MembershipGateway.ForgetAllMembersAsync(roomId);
+        }
+
+
+
+        public async Task<bool> RoomExistsAndVotingStarted(int roomId, Action<RoomInfo> OnRoomInfoFetched = null)
+        {
+            var roomInfo = await RoomGateway.GetRoomInfoAsync(roomId);
+            if (!roomInfo.HasValue)
+            {
+                return false;
+            }
+
+            OnRoomInfoFetched?.Invoke(roomInfo.Value);
+            return roomInfo.Value.votingStarted;
         }
 
 
