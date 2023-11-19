@@ -15,18 +15,18 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override async Task<RoomInfo?> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
             var roomInfo = await RoomGateway.GetRoomInfoAsync(_roomId);
             var roomExists = roomInfo.HasValue;
 
             if (roomExists)
             {
-                return roomInfo.Value;
+                return Result.Success(roomInfo.Value);
             }
             else 
             {
-                return null;
+                return Result.Fail(null);
             }
 
 

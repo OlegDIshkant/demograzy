@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 
@@ -15,14 +16,14 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override async Task<List<int>> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
             if (await ClientGateway.CheckClientExistsAsync(_clientId))
             {
-                return await MembershipGateway.GetJoinedRoomsAsync(_clientId);
+                return Result.Success(await MembershipGateway.GetJoinedRoomsAsync(_clientId));
             }
             {
-                return null;
+                return Result.Fail(null);
             }
         }
         

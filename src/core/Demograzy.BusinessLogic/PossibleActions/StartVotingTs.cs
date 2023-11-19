@@ -16,9 +16,9 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override Task<bool> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            return RoomGateway.StartVotingAsync(_roomId);
+            return Result.DependsOn(await RoomGateway.StartVotingAsync(_roomId));
         }
         
     }

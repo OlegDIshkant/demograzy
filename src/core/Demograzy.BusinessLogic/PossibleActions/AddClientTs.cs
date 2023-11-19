@@ -15,9 +15,9 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override Task<int> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            return base.ClientGateway.AddClientAsync(_clientName);
+            return Result.Success(await ClientGateway.AddClientAsync(_clientName));
         }
         
     }

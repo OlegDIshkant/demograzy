@@ -15,9 +15,9 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override Task<CandidateInfo?> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            return CandidateGateway.GetCandidateInfo(_candidateId);
+            return Result.Success(await CandidateGateway.GetCandidateInfo(_candidateId));
         }
         
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Demograzy.BusinessLogic.DataAccess;
 
@@ -17,43 +18,38 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override async Task<bool> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            if (await MayDropClient())
-            {
-                var ownedRoomIds = await RoomGateway.GetOwnedRoomsAsync(_clientId);
-                
-                if (!await ClientGateway.DropClientAsync(_clientId))
-                {
-                    throw new Exception($"Failed to delete the client '{_clientId}'.");
-                }
+            var success =
+                await MayDropClient() &&
+                await DeleteOwnedRoomsAndForgetItsMembers() &&
+                await ClientGateway.DropClientAsync(_clientId);
 
-                foreach (var roomId in ownedRoomIds)
-                {
-                    await DeleteRoomAndForgetItsMembers(roomId);
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
+            return success ? 
+                Result.Success(true) :
+                Result.Fail(false);
         }
 
 
-        private async Task DeleteRoomAndForgetItsMembers(int roomId)
+        private async Task<bool> DeleteOwnedRoomsAndForgetItsMembers()
         {
-            if (!await RoomGateway.DeleteRoomAsync(roomId))
+            var ownedRoomIds = await RoomGateway.GetOwnedRoomsAsync(_clientId);
+            foreach (var roomId in ownedRoomIds)
             {
-                throw new Exception($"Failed to delete owned room '{roomId}'.");
+                if (!await DeleteRoomAndForgetItsMembers(roomId))
+                {
+                    return false;
+                }
             }
+            return true;
+        }
 
-            if (!await MembershipGateway.ForgetAllMembersAsync(roomId))
-            {
-                throw new Exception($"Failed to forget members of the room '{roomId}'.");
-            }
+
+        private async Task<bool> DeleteRoomAndForgetItsMembers(int roomId)
+        {
+            return 
+                await RoomGateway.DeleteRoomAsync(roomId) &&
+                await MembershipGateway.ForgetAllMembersAsync(roomId);
         }
 
 

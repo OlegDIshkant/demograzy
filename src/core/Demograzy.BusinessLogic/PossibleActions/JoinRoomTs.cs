@@ -18,9 +18,9 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override Task<bool> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            return MembershipGateway.AddRoomMemberAsync(_roomId, _clientId);
+            return Result.DependsOn(await MembershipGateway.AddRoomMemberAsync(_roomId, _clientId));
         }
         
     }

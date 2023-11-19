@@ -35,9 +35,9 @@ namespace Demograzy.Core.Test.Client.Delete.Fail
             var clientId = await service.AddClientAsync("test_client");
             Assert.True(await service.DropClientAsync(clientId));
 
-            var success = await service.DropClientAsync(clientId);
+            var deletionFailed = !await service.DropClientAsync(clientId);
 
-            Assert.False(success);
+            Assert.That(deletionFailed);
         }
 
 

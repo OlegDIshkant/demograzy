@@ -15,26 +15,28 @@ namespace Demograzy.BusinessLogic
         }
 
 
-        protected override async Task<bool> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            var candidateInfo = await CandidateGateway.GetCandidateInfo(_candidateId);
-            var candidateExists = candidateInfo.HasValue;
-
-            if (!candidateExists)
+            if (await MayDeleteCandidate())
             {
-                return false;
-            } 
-
-            var roomInfo = await RoomGateway.GetRoomInfoAsync(candidateInfo.Value.roomId);
-            var votingNotStarted = !roomInfo.Value.votingStarted;
-
-            if (votingNotStarted)
-            {
-                return await CandidateGateway.DeleteCandidateAsync(_candidateId);
+                return Result.DependsOn(await CandidateGateway.DeleteCandidateAsync(_candidateId));
             }
             else
             {
-                return false;
+                return Result.Fail(false);
+            }
+
+            //----------
+            async Task<bool> MayDeleteCandidate()
+            {
+                var candidateInfo = await CandidateGateway.GetCandidateInfo(_candidateId);
+                if (!candidateInfo.HasValue) return false;
+
+                var roomInfo = await RoomGateway.GetRoomInfoAsync(candidateInfo.Value.roomId);
+                if (!roomInfo.HasValue) return false;
+                if (roomInfo.Value.votingStarted) return false;
+
+                return true;
             }
         }
         

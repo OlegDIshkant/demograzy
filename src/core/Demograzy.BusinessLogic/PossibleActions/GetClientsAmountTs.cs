@@ -13,9 +13,9 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        protected override Task<int> OnRunAsync()
+        protected override async Task<Result> OnRunAsync()
         {
-            return ClientGateway.GetClientsAmountAsync();
+            return Result.Success(await ClientGateway.GetClientsAmountAsync());
         }
         
     }

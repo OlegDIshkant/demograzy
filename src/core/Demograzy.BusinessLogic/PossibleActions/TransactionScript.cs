@@ -34,23 +34,24 @@ namespace Demograzy.BusinessLogic.PossibleActions
             }
             Started = true;
             
-            R result = default;
+            Result result = default;
 
             try
             {
                 result = await OnRunAsync();
-                await _transactionMeans.FinishAsync(toCommit: true);
-                return result;
+                var commitAllowed = result.Status == Result.Statuses.SUCCESS;
+                await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: commitAllowed);
+                return result.Value;
             }
             catch (Exception e)
             {
-                await _transactionMeans.FinishAsync(toCommit: false);
+                await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: false);
                 throw e.InnerException;
             }
         } 
 
 
-        protected abstract Task<R> OnRunAsync();
+        protected abstract Task<Result> OnRunAsync();
 
 
         protected override void OnDispose()
@@ -59,6 +60,52 @@ namespace Demograzy.BusinessLogic.PossibleActions
 
             _transactionMeans.Dispose();
             _transactionMeans = null;
+        }
+
+
+        public struct Result
+        {
+            public enum Statuses { SUCCESS, FAIL } 
+            public R Value { get; set; } 
+            public Statuses Status { get; set; }
+
+            public static Result Success(R value)
+            {
+                return new Result()
+                {
+                    Value = value,
+                    Status = Statuses.SUCCESS
+                };
+            }
+
+            public static Result Fail(R value)
+            {
+                return new Result()
+                {
+                    Value = value,
+                    Status = Statuses.FAIL
+                };
+            }
+
+            public static Result DependsOn(bool value)
+            {
+                return new Result()
+                {
+                    Value = (R)(object)value,
+                    Status = value ? Statuses.SUCCESS : Statuses.FAIL
+                };
+            }
+
+            public static Result DependsIfNull(R value)
+            {
+                return new Result()
+                {
+                    Value = value,
+                    Status = value == null ? Statuses.FAIL : Statuses.SUCCESS
+                };
+            }
+
+
         }
     }
 }
