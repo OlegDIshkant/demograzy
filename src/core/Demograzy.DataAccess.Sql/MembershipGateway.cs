@@ -94,5 +94,23 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+        public async Task<bool> ForgetMemberAsync(int roomId, int clientId)
+        {
+            var changedRowsAmount = await NonQueryBuilder.Create(
+                new DeleteOptions()
+                {
+                    From = MEMBERSHIP_TABLE,
+                    Where = MultiComparison.And(
+                        new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId)),
+                        new Comparison(new ColumnName(CLIENT_COLUMN), CompareType.EQUALS, new Parameter(clientId))
+                    ) 
+                }
+            ).ExecuteAsync();
+
+            return CheckIfSingleRowChanged(changedRowsAmount);
+        }
+
+
     }
 }
