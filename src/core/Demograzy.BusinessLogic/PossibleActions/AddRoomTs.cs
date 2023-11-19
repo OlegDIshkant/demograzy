@@ -23,11 +23,15 @@ namespace Demograzy.BusinessLogic
         {
             var ownerExists = await ClientGateway.CheckClientExistsAsync(_ownerId);
             var limitReached = (await RoomGateway.GetOwnedRoomsAsync(_ownerId)).Count >= Limits.MAX_OWNED_ROOMS; 
-            var roomId = await RoomGateway.AddRoomAsync(_ownerId, _roomTitle, _passphrase);
 
-            if (ownerExists && 
-                !limitReached &&
-                roomId != null &&
+            if (!ownerExists || limitReached)
+            {
+                return Result.Fail(null);
+            }
+
+            var roomId = await RoomGateway.AddRoomAsync(_ownerId, _roomTitle, _passphrase);
+            
+            if (roomId.HasValue &&
                 await MembershipGateway.AddRoomMemberAsync(roomId.Value, _ownerId))
             {
                 return Result.Success(roomId);
