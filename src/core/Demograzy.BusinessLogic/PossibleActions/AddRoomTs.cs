@@ -22,9 +22,11 @@ namespace Demograzy.BusinessLogic
         protected override async Task<Result> OnRunAsync()
         {
             var ownerExists = await ClientGateway.CheckClientExistsAsync(_ownerId);
+            var limitReached = (await RoomGateway.GetOwnedRoomsAsync(_ownerId)).Count >= Limits.MAX_OWNED_ROOMS; 
             var roomId = await RoomGateway.AddRoomAsync(_ownerId, _roomTitle, _passphrase);
 
             if (ownerExists && 
+                !limitReached &&
                 roomId != null &&
                 await MembershipGateway.AddRoomMemberAsync(roomId.Value, _ownerId))
             {
