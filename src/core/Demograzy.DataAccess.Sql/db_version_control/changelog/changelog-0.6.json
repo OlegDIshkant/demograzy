@@ -1,0 +1,75 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_winner",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "winner",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "room",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+
+                            ]
+                            ,
+                            "constraints" :
+                            [
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "room",
+                                        "baseTableName" : "winner",
+                                        "constraintName" : "fk__winner_room",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "room"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "id",
+                                        "baseTableName" : "winner",
+                                        "constraintName" : "fk__winner_id",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "client"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

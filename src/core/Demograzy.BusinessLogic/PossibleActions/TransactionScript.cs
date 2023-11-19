@@ -14,6 +14,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         protected IRoomsGateway RoomGateway => _transactionMeans.RoomsGateway; 
         protected IMembershipGateway MembershipGateway => _transactionMeans.MembershipGateway; 
         protected ICandidatesGateway CandidateGateway => _transactionMeans.CandidatesGateway; 
+        protected IWinnersGateway WinnersGateway => _transactionMeans.WinnersGateway; 
 
         public bool Started { get; private set; } = false;
 
