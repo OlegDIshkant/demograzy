@@ -1,7 +1,7 @@
 using Demograzy.Core.Test.CommonRoutines;
 using static Demograzy.Core.Test.GeneralConstants;
 
-namespace Demograzy.Core.Test.Room.Delete.Success
+namespace Demograzy.Core.Test.Room.Delete.Fail
 {
     [TestFixture]
     public class NonexistentRoom
