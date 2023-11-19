@@ -35,7 +35,8 @@ namespace Demograzy.BusinessLogic.PossibleActions
 
         private async Task<bool> MayGetActiveVerses()
         {
-            return (await RoomGateway.GetRoomInfoAsync(_roomId)).Value.votingStarted;
+            var roomInfo = await RoomGateway.GetRoomInfoAsync(_roomId);
+            return roomInfo.HasValue && roomInfo.Value.votingStarted;
         }
 
 
