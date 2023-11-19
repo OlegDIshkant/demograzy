@@ -22,7 +22,7 @@ namespace DataAccess.Sql.SQLite
                     command.CommandText = SelectStatementBuilder.Build(selectOptions, out var parameters);
                     foreach (var p in parameters)
                     {
-                        command.Parameters.AddWithValue(p.Key, p.Value);
+                        command.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value);
                     }                         
                     return new QueryResult(command, await command.ExecuteReaderAsync());
                 }

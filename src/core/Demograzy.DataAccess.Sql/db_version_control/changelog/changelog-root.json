@@ -6,7 +6,9 @@
         { "include" : { "file": "changelog-0.3.json" } },
         { "include" : { "file": "changelog-0.4.json" } },
         { "include" : { "file": "changelog-0.5.json" } },
-        { "include" : { "file": "changelog-0.6.json" } }
+        { "include" : { "file": "changelog-0.6.json" } },
+        { "include" : { "file": "changelog-0.7.json" } },
+        { "include" : { "file": "changelog-0.8.json" } }
 
     ]
 }

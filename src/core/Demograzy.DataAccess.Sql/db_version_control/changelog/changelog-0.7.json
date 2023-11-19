@@ -1,0 +1,122 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_versus",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "versus",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "room",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "first_candidate",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "second_candidate",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "first_candidate_won",
+                                        "type" : "BOOLEAN",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : true
+                                        }
+                                    }
+                                }
+
+                            ]
+                            ,
+                            "constraints" :
+                            [
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "room",
+                                        "baseTableName" : "versus",
+                                        "constraintName" : "fk__versus_room",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "room"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "first_candidate",
+                                        "baseTableName" : "versus",
+                                        "constraintName" : "fk__versus_first_candidate",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "candidate"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "second_candidate",
+                                        "baseTableName" : "versus",
+                                        "constraintName" : "fk__versus_second_candidate",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "candidate"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

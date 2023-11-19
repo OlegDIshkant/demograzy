@@ -4,19 +4,17 @@ namespace DataAccess.Sql.SQLite
 {
     internal static class StatementBuilding
     {
+        private static readonly string AND_COPULA = " AND ";
+
         public static void AppendWhereClause(this StringBuilder b, IWhereClause whereClause, Dictionary<string, object> parameters)
         {
             if (whereClause != null)
             {
                 b.Append("WHERE ");
 
-                if (whereClause is Comparison comparison)
+                if (whereClause is IComparison comparison)
                 {
-                    b.AppendItem(comparison.Left, parameters);
-                    b.AppendWhitespace();
-                    b.AppendComparisonSign(comparison.CompareType);
-                    b.AppendWhitespace();
-                    b.AppendItem(comparison.Right, parameters);
+                    b.AppendComparison(comparison, parameters);
                 }
                 else 
                 {
@@ -26,6 +24,45 @@ namespace DataAccess.Sql.SQLite
                 b.AppendWhitespace();
             }
 
+        }
+
+
+        private static void AppendComparison(this StringBuilder b, IComparison comparison, Dictionary<string, object> parameters)
+        {
+                if (comparison is Comparison simpleComparison)
+                {
+                    b.AppendItem(simpleComparison.Left, parameters);
+                    b.AppendWhitespace();
+                    b.AppendComparisonSign(simpleComparison.CompareType);
+                    b.AppendWhitespace();
+                    b.AppendItem(simpleComparison.Right, parameters);
+                }
+                else if (comparison is MultiComparison multiComparison)
+                {
+                    b.Append("(");
+
+                    var copula = FigureOutCopula(multiComparison.Type);
+
+                    foreach (var comp in multiComparison.Comparisons)
+                    {
+                        b.AppendComparison(comp, parameters);
+                        b.Append(copula);        
+                    }
+
+                    b.DropLastChars(copula.Length);
+                    b.Append(")");
+                }
+        }
+
+
+
+        private static string FigureOutCopula(MultiComparison.Types copulaType)
+        {
+            if (copulaType == MultiComparison.Types.AND)
+            {
+                return AND_COPULA;
+            }  
+            throw new NotImplementedException();
         }
       
 
@@ -41,6 +78,7 @@ namespace DataAccess.Sql.SQLite
                 var @ref = $"${parameter.RefIndex}";
                 b.Append(@ref);
                 parameters.Add(@ref, parameter.Value);
+
             }
             else if (item is Count)
             {

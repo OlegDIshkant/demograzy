@@ -19,7 +19,7 @@ namespace DataAccess.Sql
         public Parameter(object value)
         { 
             Value = value; 
-            RefIndex = autoIncr;
+            RefIndex = autoIncr++;
         }
     }
 

@@ -15,6 +15,9 @@ namespace Demograzy.BusinessLogic.PossibleActions
         protected IMembershipGateway MembershipGateway => _transactionMeans.MembershipGateway; 
         protected ICandidatesGateway CandidateGateway => _transactionMeans.CandidatesGateway; 
         protected IWinnersGateway WinnersGateway => _transactionMeans.WinnersGateway; 
+        public IVersesGateway VersesGateway => _transactionMeans.VersesGateway;
+        public IVotesGateway VotesGateway => _transactionMeans.VotesGateway;
+
 
         public bool Started { get; private set; } = false;
 
@@ -37,18 +40,18 @@ namespace Demograzy.BusinessLogic.PossibleActions
             
             Result result = default;
 
-            try
-            {
+            //try
+            //{
                 result = await OnRunAsync();
                 var commitAllowed = result.Status == Result.Statuses.SUCCESS;
                 await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: commitAllowed);
                 return result.Value;
-            }
-            catch (Exception e)
-            {
-                await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: false);
-                throw e.InnerException;
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: false);
+            //    throw e.InnerException;
+            //}
         } 
 
 

@@ -1,8 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace DataAccess.Sql
 {
 
     public interface IWhereClause { }
-    public class Comparison : IWhereClause
+
+    public interface IComparison : IWhereClause
+    {
+
+    }
+
+    public class Comparison : IComparison
     {
         public IItem Left { get; set; }  
         public IItem Right { get; set; } 
@@ -13,6 +23,28 @@ namespace DataAccess.Sql
             Right = right;
             CompareType = compareType;
         } 
+    }
+
+    public class MultiComparison : IComparison
+    {
+        public enum Types { AND, OR }
+
+        private List<IComparison> _comparisons = new List<IComparison>();
+
+        public IReadOnlyList<IComparison> Comparisons => _comparisons;
+        public Types Type { get; private set; }
+
+        public static MultiComparison And(params IComparison[] comparisons)
+        {            
+            var instance = new MultiComparison();
+            instance._comparisons = comparisons.ToList();
+            instance.Type = Types.AND;
+            return instance;
+        }
+
+        private MultiComparison()
+        {            
+        }
     }
 
 

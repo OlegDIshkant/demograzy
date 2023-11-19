@@ -11,6 +11,8 @@ namespace Demograzy.BusinessLogic.DataAccess
         public IMembershipGateway MembershipGateway { get; }
         public ICandidatesGateway CandidatesGateway { get; }
         public IWinnersGateway WinnersGateway { get; }
+        public IVersesGateway VersesGateway { get; }
+        public IVotesGateway VotesGateway { get; }
 
         public Task FinishAsync(bool toCommitInsteadOfRollback);
     }

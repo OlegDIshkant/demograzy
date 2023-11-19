@@ -1,0 +1,98 @@
+{
+    "databaseChangeLog": 
+    [
+        {
+            "changeSet" :
+            {
+                "id" : "create_table_vote",
+                "author" : "oleg.dishkant",
+                "changes" :
+                [
+                    {
+                        "createTable" :
+                        {
+                            "tableName" : "vote",
+                            "columns" :
+                            [
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "id",
+                                        "type" : "INT",
+                                        "autoIncrement" : true,
+                                        "constraints" :
+                                        {
+                                            "primaryKey" : true,
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "client",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "versus",
+                                        "type" : "INT",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "voted_for_first",
+                                        "type" : "BOOLEAN",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : false
+                                        }
+                                    }
+                                }
+                            ]
+                            ,
+                            "constraints" :
+                            [
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "room",
+                                        "baseTableName" : "vote",
+                                        "constraintName" : "fk__vote_room",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "room"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "client",
+                                        "baseTableName" : "vote",
+                                        "constraintName" : "fk__vote_client",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "client"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
