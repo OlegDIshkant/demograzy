@@ -31,11 +31,14 @@ namespace Demograzy.BusinessLogic
 
         private async Task<bool> MayStartVoting()
         {
+            var roomInfo = await RoomGateway.GetRoomInfoAsync(_roomId);
+            if (VotingAlreadyStarted(roomInfo.Value)) return false;
             var candidatesAmount = await CandidateGateway.GetCandidatesAmount(_roomId);
             return EnoughCandidates(candidatesAmount);
 
             //----------
-            bool EnoughCandidates(int candidateAmount) => candidateAmount > Limits.MIN_CANDIDATES_TO_START_VOTING;
+            bool EnoughCandidates(int candidateAmount) => candidateAmount >= Limits.MIN_CANDIDATES_TO_START_VOTING;
+            bool VotingAlreadyStarted(RoomInfo roomInfo) => roomInfo.votingStarted;
         }
 
 

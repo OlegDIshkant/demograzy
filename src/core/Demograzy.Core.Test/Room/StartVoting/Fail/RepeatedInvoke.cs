@@ -14,6 +14,8 @@ namespace Demograzy.Core.Test.Room.StartVoting.Fail
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner"); 
             var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var candidate1 = await service.AddCandidateAsync(roomId, "c1");
+            var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.StartVotingAsync(roomId));
 
             var secondStartingFailed = !await service.StartVotingAsync(roomId);
