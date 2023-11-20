@@ -18,7 +18,30 @@ namespace Demograzy.BusinessLogic
 
         protected override async Task<Result> OnRunAsync()
         {
-            return Result.DependsOn(await RoomGateway.StartVotingAsync(_roomId));
+            if (await MayStartVoting())
+            {
+                return Result.DependsOn(await StartVoting());
+            }
+            else
+            {
+                return Result.Fail(false);
+            }
+        }
+
+
+        private async Task<bool> MayStartVoting()
+        {
+            var candidatesAmount = await CandidateGateway.GetCandidatesAmount(_roomId);
+            return EnoughCandidates(candidatesAmount);
+
+            //----------
+            bool EnoughCandidates(int candidateAmount) => candidateAmount > Limits.MIN_CANDIDATES_TO_START_VOTING;
+        }
+
+
+        private Task<bool> StartVoting()
+        {
+            return RoomGateway.StartVotingAsync(_roomId);
         }
         
     }
