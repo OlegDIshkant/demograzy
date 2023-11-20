@@ -23,6 +23,8 @@ namespace Demograzy.Core.Test.Room.Left.Fail
                 await service.AddMember(roomId, otherClientId);
             }
             var lastMemberId = await service.AddClientAsync("client_to_fail");
+            var candidate1 = await service.AddCandidateAsync(roomId, "c1");
+            var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.AddMember(roomId, lastMemberId));
             Assert.That(await service.StartVotingAsync(roomId));
             var expectedMembers = await service.GetMembers(roomId);
@@ -48,6 +50,8 @@ namespace Demograzy.Core.Test.Room.Left.Fail
                 await service.AddMember(roomId, otherClientId);
             }
             var lastMemberId = await service.AddClientAsync("client_to_fail");
+            var candidate1 = await service.AddCandidateAsync(roomId, "c1");
+            var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.AddMember(roomId, lastMemberId));
             Assert.That(await service.StartVotingAsync(roomId));
             var expectedMembers = await service.GetMembers(roomId);

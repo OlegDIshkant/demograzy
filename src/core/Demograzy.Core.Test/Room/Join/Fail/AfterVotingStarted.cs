@@ -21,6 +21,8 @@ namespace Demograzy.Core.Test.Room.Join.Fail
                 var otherClientId = await service.AddClientAsync($"client_{i}");
                 await service.AddMember(roomId, otherClientId);
             }
+            var candidate1 = await service.AddCandidateAsync(roomId, "c1");
+            var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.StartVotingAsync(roomId));
 
             var clientToFailId = await service.AddClientAsync("client_to_fail");
@@ -42,6 +44,8 @@ namespace Demograzy.Core.Test.Room.Join.Fail
                 var otherClientId = await service.AddClientAsync($"client_{i}");
                 await service.AddMember(roomId, otherClientId);
             }
+            var candidate1 = await service.AddCandidateAsync(roomId, "c1");
+            var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.StartVotingAsync(roomId));
             var expectedMembers = await service.GetMembers(roomId);
 
