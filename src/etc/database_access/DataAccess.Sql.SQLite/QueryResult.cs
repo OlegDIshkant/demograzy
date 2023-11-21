@@ -72,6 +72,8 @@ namespace DataAccess.Sql.SQLite
 
             public bool GetBool(int columnIndex) => Master.DataReader.GetBoolean(columnIndex);
 
+            public bool IsNull(int columnIndex) => Master.DataReader.IsDBNull(columnIndex);
+
             protected override void OnDispose()
             {
                 base.OnDispose();

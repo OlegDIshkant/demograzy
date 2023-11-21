@@ -15,7 +15,7 @@ namespace Demograzy.DataAccess.Sql
         private static readonly string ROOM_COLUMN = "room";
         private static readonly string FIRST_CANDIDATE_COLUMN = "first_candidate";
         private static readonly string SECOND_CANDIDATE_COLUMN = "second_candidate";
-        private static readonly string FIRST_CANDIDATE_WON = "first_candidate_won";
+        private static readonly string FIRST_CANDIDATE_WON_COLUMN = "first_candidate_won";
         
 
 
@@ -37,7 +37,7 @@ namespace Demograzy.DataAccess.Sql
                         (ROOM_COLUMN, roomId),
                         (FIRST_CANDIDATE_COLUMN, firstCandidateId),
                         (SECOND_CANDIDATE_COLUMN, secondCandidateId),
-                        (FIRST_CANDIDATE_WON, null)
+                        (FIRST_CANDIDATE_WON_COLUMN, null)
                     }
                 }
             ).ExecuteAsync();
@@ -64,7 +64,7 @@ namespace Demograzy.DataAccess.Sql
                     From = VERSUS_TABLE,
                     Where = MultiComparison.And(
                         new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId)),
-                        new NullComparison(new ColumnName(FIRST_CANDIDATE_WON), NullCompareType.IS_NULL)
+                        new NullComparison(new ColumnName(FIRST_CANDIDATE_WON_COLUMN), NullCompareType.IS_NULL)
                     ) 
                 }
             );
@@ -73,6 +73,43 @@ namespace Demograzy.DataAccess.Sql
             return queryResult.ToList();
         }
 
+
+        public async Task<VersusInfo?> GetVersusInfoAsync(int versusId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(
+                        new ColumnName(ROOM_COLUMN),
+                        new ColumnName(FIRST_CANDIDATE_COLUMN),
+                        new ColumnName(SECOND_CANDIDATE_COLUMN),
+                        new ColumnName(FIRST_CANDIDATE_WON_COLUMN)),
+                    From = VERSUS_TABLE,
+                    Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
+                });
+
+            var queryResult = await InvokeQuery(
+                query,
+                r => new VersusInfo()
+                {
+                    roomId = r.GetInt(0),
+                    firstCandidateId = r.GetInt(1),
+                    secondCandidateId = r.GetInt(2),
+                    status = 
+                        r.IsNull(3) ? VersusInfo.Statuses.UNCOMPLETED :
+                        r.GetBool(3) ? VersusInfo.Statuses.FIRST_WON :
+                        VersusInfo.Statuses.SECOND_WON
+                });
+
+            if (queryResult.Count == 1)
+            {
+                return queryResult.Single();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }
