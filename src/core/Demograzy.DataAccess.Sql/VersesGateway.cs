@@ -111,5 +111,24 @@ namespace Demograzy.DataAccess.Sql
             }
         }
 
+
+
+        public async Task<bool> SetVersusWinnerAsync(int versusId, bool firstIsWinner)
+        {
+            var changedAmount = await NonQueryBuilder.Create(
+                new UpdateOptions()
+                {
+                    Update = VERSUS_TABLE,
+                    Set = new List<(string column, object value)>()
+                    {
+                        (FIRST_CANDIDATE_WON_COLUMN, firstIsWinner)
+                    },
+                    Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
+                }
+            ).ExecuteAsync();
+
+            return changedAmount == 1;
+        }
+
     }
 }

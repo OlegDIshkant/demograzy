@@ -7,6 +7,8 @@ namespace Demograzy.BusinessLogic
 {
     internal class VoteTs : TransactionScript<bool>
     {
+        private enum Winner { FIRST, SECOND }
+
         private static int _versusId; 
         private static int _clientId; 
         private static bool _votedForFirst;
@@ -37,6 +39,10 @@ namespace Demograzy.BusinessLogic
         private async Task<bool> MayVote()
         {
             var versusInfo = (await VersesGateway.GetVersusInfoAsync(_versusId)).Value;
+            var winnerAlreadyDefined = versusInfo.status != VersusInfo.Statuses.UNCOMPLETED;
+
+            if (winnerAlreadyDefined) return false;
+
             var memberIds = await MembershipGateway.GetRoomMembersAsync(versusInfo.roomId);
             var voterIsNotMember = !memberIds.Contains(_clientId);
             
@@ -48,7 +54,49 @@ namespace Demograzy.BusinessLogic
 
         private async Task<bool> Vote()
         {
-            throw new NotImplementedException();
+            var votingFailed = !await VotesGateway.AddVoteAsync(_versusId, _clientId, _votedForFirst);
+            if (votingFailed) return false;
+
+            var winner = await TryFigureOutWinner();
+            if (winner.HasValue)
+            {
+                return await CompleteVersus(winner.Value);
+            }
+
+            return true;
+        }
+
+
+        private async Task<Winner?> TryFigureOutWinner()
+        {
+            var versusInfo = (await VersesGateway.GetVersusInfoAsync(_versusId)).Value;
+            var maxVotes = (await MembershipGateway.GetRoomMembersAsync(versusInfo.roomId)).Count;
+            var votesMajority = (int)(maxVotes / 2) + 1;
+            var votesSoFar = await VotesGateway.GetVotesAmountAsync(_versusId);
+            var fewVoted = votesSoFar < votesMajority;
+
+            if (fewVoted) return null;
+
+            var votesForFirst = await VotesGateway.GetVotesAmountForFirstCandidateAsync(_versusId);
+            var firstWon = votesForFirst >= votesMajority;
+
+            if (firstWon) return Winner.FIRST; 
+
+            var votesForSecond = votesSoFar - votesForFirst;
+            var secondWon = votesForSecond >= votesMajority;
+
+            if (secondWon) return Winner.SECOND;
+
+            return null;
+        }
+
+
+        private async Task<bool> CompleteVersus(Winner winner)
+        {
+            var setWinnerFailed = !await VersesGateway.SetVersusWinnerAsync(_versusId, winner == Winner.FIRST);
+            if (setWinnerFailed) return false;
+
+            return true;
         }
 
 

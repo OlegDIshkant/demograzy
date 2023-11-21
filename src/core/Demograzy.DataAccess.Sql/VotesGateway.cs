@@ -24,6 +24,25 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+        public async Task<bool> AddVoteAsync(int versusId, int clientId, bool votedForFirst)
+        {
+            var insertedAmount = await NonQueryBuilder.Create(
+                new InsertOptions()
+                {
+                    Into = VOTE_TABLE,
+                    Values = new List<(string, object)>()
+                    {
+                        (VERSUS_COLUMN, versusId),
+                        (CLIENT_COLUMN, clientId),
+                        (VOTED_FOR_FIRST_COLUMN, votedForFirst)
+                    }
+                }
+            ).ExecuteAsync();
+
+            return insertedAmount == 1;
+        }
+
+
         public async Task<bool> CheckIfClientVotedAsync(int versusId, int clientId)
         {
             var query = QueryBuilder.Create(
@@ -40,6 +59,40 @@ namespace Demograzy.DataAccess.Sql
 
             var queryResult = await InvokeQuery(query, r => r.GetInt(0));
             return queryResult.Count == 1;
+        }
+
+
+
+        public async Task<int> GetVotesAmountAsync(int versusId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new Count()),
+                    From = VOTE_TABLE,
+                    Where = new Comparison(new ColumnName(VERSUS_COLUMN), CompareType.EQUALS, new Parameter(versusId))
+                }
+            );
+
+            return (await InvokeQuery(query, r => r.GetInt(0))).Single();
+        }
+
+
+
+        public async Task<int> GetVotesAmountForFirstCandidateAsync(int versusId)
+        {
+            var query = QueryBuilder.Create(
+                new SelectOptions()
+                {
+                    Select = new SelectClause(new Count()),
+                    From = VOTE_TABLE,
+                    Where = MultiComparison.And(
+                        new Comparison(new ColumnName(VERSUS_COLUMN), CompareType.EQUALS, new Parameter(versusId)),
+                        new Comparison(new ColumnName(VOTED_FOR_FIRST_COLUMN), CompareType.EQUALS, new Parameter(true))) 
+                }
+            );
+
+            return (await InvokeQuery(query, r => r.GetInt(0))).Single();
         }
     }
 }
