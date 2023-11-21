@@ -25,6 +25,36 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
+
+        public async Task<int?> AddVersusAsync(int roomId, int firstCandidateId, int secondCandidateId)
+        {
+            var insertedAmount = await NonQueryBuilder.Create(
+                new InsertOptions()
+                {
+                    Into = VERSUS_TABLE,
+                    Values = new List<(string, object)>()
+                    {
+                        (ROOM_COLUMN, roomId),
+                        (FIRST_CANDIDATE_COLUMN, firstCandidateId),
+                        (SECOND_CANDIDATE_COLUMN, secondCandidateId),
+                        (FIRST_CANDIDATE_WON, null)
+                    }
+                }
+            ).ExecuteAsync();
+
+            if (insertedAmount == 1)
+            {
+                return await GetLastInsertedIdAsync();
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+
+
         public async Task<List<int>> GetUnfinishedVersesAsync(int roomId)
         {
             var query = QueryBuilder.Create(
@@ -34,7 +64,7 @@ namespace Demograzy.DataAccess.Sql
                     From = VERSUS_TABLE,
                     Where = MultiComparison.And(
                         new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId)),
-                        new Comparison(new ColumnName(FIRST_CANDIDATE_WON), CompareType.EQUALS, new Parameter(null))
+                        new NullComparison(new ColumnName(FIRST_CANDIDATE_WON), NullCompareType.IS_NULL)
                     ) 
                 }
             );

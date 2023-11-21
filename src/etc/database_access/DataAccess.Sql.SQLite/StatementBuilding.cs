@@ -52,6 +52,16 @@ namespace DataAccess.Sql.SQLite
                     b.DropLastChars(copula.Length);
                     b.Append(")");
                 }
+                else if (comparison is NullComparison nullComparison)
+                {
+                    b.AppendItem(nullComparison.Item, parameters);
+                    b.AppendWhitespace();
+                    b.AppendNullComparison(nullComparison.CompareType);
+                }
+                else 
+                {
+                    throw new NotSupportedException($"Comparison with type '{comparison.GetType()}' is not supported yet.");
+                }
         }
 
 
@@ -118,6 +128,23 @@ namespace DataAccess.Sql.SQLite
             else if (compareType is CompareType.LESS_THAN)
             {
                 b.Append("<");
+            }
+            else 
+            {
+                throw new NotSupportedException($"Compare type '{compareType}' is not supported yet.");
+            }
+        }
+
+
+        private static void AppendNullComparison(this StringBuilder b, NullCompareType compareType)
+        {
+            if (compareType is NullCompareType.IS_NULL)
+            {
+                b.Append("IS NULL");
+            }
+            else if (compareType is NullCompareType.IS_NOT_NULL)
+            {
+                b.Append("IS NOT NULL");
             }
             else 
             {

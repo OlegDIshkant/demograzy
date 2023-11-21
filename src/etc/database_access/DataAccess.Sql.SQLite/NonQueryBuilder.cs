@@ -49,7 +49,7 @@ namespace DataAccess.Sql.SQLite
                         command.CommandText = preparedCommand.text;
                         foreach (var item in preparedCommand.parameters)
                         {
-                            command.Parameters.AddWithValue(item.Key, item.Value);
+                            command.Parameters.AddWithValue(item.Key, item.Value ?? DBNull.Value);
                         }
                         var changedAmount = await command.ExecuteNonQueryAsync();
                         return  changedAmount;

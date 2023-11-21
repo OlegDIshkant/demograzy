@@ -7,6 +7,8 @@ namespace DataAccess.Sql
 
     public interface IWhereClause { }
 
+
+
     public interface IComparison : IWhereClause
     {
 
@@ -53,5 +55,23 @@ namespace DataAccess.Sql
         EQUALS,
         MORE_THAN,
         LESS_THAN
+    };
+
+
+    public class NullComparison : IComparison
+    {
+        public IItem Item { get; set; }  
+        public NullCompareType CompareType { get; set; }
+        public NullComparison(IItem item, NullCompareType compareType)
+        {
+            Item = item;
+            CompareType = compareType;
+        } 
+    }
+
+    public enum NullCompareType
+    {
+        IS_NULL,
+        IS_NOT_NULL
     };
 }

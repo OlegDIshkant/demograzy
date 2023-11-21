@@ -11,6 +11,9 @@ namespace Demograzy.DataAccess.Sql
 {
     public class TransactionMeans : DisposableObject, ITransactionMeans
     {
+
+        private bool _finished = false;
+
         private ISqlCommandBuilder _commandBuilder;
 
         public IClientsGateway ClientsGateway { get; private set; }
@@ -68,6 +71,7 @@ namespace Demograzy.DataAccess.Sql
         {
             ExceptionIfDisposed();
             await _commandBuilder.Transactions.Commit().ExecuteAsync();
+            _finished = true;
             this.Dispose();
         }
         
@@ -76,13 +80,12 @@ namespace Demograzy.DataAccess.Sql
         {
             base.OnDispose();
 
-            _commandBuilder.Dispose();
-
-            if (_commandBuilder != null)
+            if (!_finished)
             {
                 _commandBuilder.Transactions.Rollback().ExecuteAsync();
-                _commandBuilder = null;
             }
+            _commandBuilder.Dispose();
+            _commandBuilder = null;
         }
     }
 }
