@@ -20,7 +20,8 @@ namespace Demograzy.Core.Test.Room.StartVoting.Success
             var room = (await service.AddRoomAsync(owner, "some_room", "")).Value;
             // Add candidates
             var candidates = Enumerable.Range(0, candidatesAmount)
-            .Select(async i => await service.AddCandidateAsync(room, $"candidate_{i}"));
+            .Select(async i => await service.AddCandidateAsync(room, $"candidate_{i}"))
+            .ToList();
 
             var startingSucceeded = await service.StartVotingAsync(room);
 
