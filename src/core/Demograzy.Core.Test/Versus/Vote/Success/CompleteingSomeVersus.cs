@@ -24,7 +24,8 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             // Add candidates
             var candidatesAmount = candidateAmountIsEven ? 6 : 11;
             var candidates = Enumerable.Range(0, candidatesAmount)
-            .Select(async i => await service.AddCandidateAsync(room, $"candidate_{i}"));
+            .Select(async i => await service.AddCandidateAsync(room, $"candidate_{i}"))
+            .ToList();
             // Start voting
             Assert.That(await service.StartVotingAsync(room));
             // Get first stage verses
