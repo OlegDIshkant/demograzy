@@ -111,12 +111,33 @@ namespace Demograzy.BusinessLogic
 
         private async Task<bool> OnVersusCompleted()
         {
+            return 
+                await HandleNextVersusStarting() &&
+                await HandleWholeVotingCompleting();
+        }
+
+
+        private async Task<bool> HandleNextVersusStarting()
+        {
             StartVersusArgs args = default;
             if (await ShouldStartNewVersus(a => args = a))
             {
-                return await StartNewVersus(args);
+                var failed = !await StartNewVersus(args);
+                if (failed) return false;
             }
-            
+            return true;
+        }
+
+
+        private async Task<bool> HandleWholeVotingCompleting()
+        {
+            var wholeVotingWinner = await CheckIfWholeVotingWinnerKnown();
+            var wholeVotingShouldBeCompleted = wholeVotingWinner.HasValue;
+            if (wholeVotingShouldBeCompleted)
+            {
+                var failed = !await CompleteWholeVoting(wholeVotingWinner.Value); 
+                if (failed) return false;
+            }
             return true;
         }
 
@@ -187,5 +208,33 @@ namespace Demograzy.BusinessLogic
             public int secondCompletedVersusId;
             public int secondVersusWinnerId;
         }
+
+
+        private async Task<int?> CheckIfWholeVotingWinnerKnown()
+        {
+            var roomId = (await VersesGateway.GetVersusInfoAsync(_versusId)).Value.roomId;
+            var unfinishedVerses = (await VersesGateway.GetUnfinishedVersesAsync(roomId)).Count;
+
+            if (unfinishedVerses > 0) return null;
+
+            var versesWithoutFollowUp = await VersesGateway.GetCompletedVersesWithoutFollowUpAsync(roomId);
+            var lastVersusCompleted = versesWithoutFollowUp.Count == 1;
+
+            if (lastVersusCompleted) 
+            {
+                var lastVersusWinner = await VersesGateway.GetVersusWinnerAsync(versesWithoutFollowUp.Single());
+                return lastVersusWinner;
+            }
+
+            return null;
+        }
+
+
+        private async Task<bool> CompleteWholeVoting(int winnerId)
+        {
+            var roomId = (await VersesGateway.GetVersusInfoAsync(_versusId)).Value.roomId;
+            return await WinnersGateway.AddWinnerAsync(roomId, winnerId);
+        }
+
     }
 }

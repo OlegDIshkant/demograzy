@@ -24,6 +24,11 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             var candidate1 = (await service.AddCandidateAsync(room, "candidate")).Value;
             var candidate2 = (await service.AddCandidateAsync(room, "candidate")).Value;
             var candidate3 = (await service.AddCandidateAsync(room, "candidate")).Value;
+            var candidate4 = (await service.AddCandidateAsync(room, "candidate")).Value;
+            var candidate5 = (await service.AddCandidateAsync(room, "candidate")).Value;
+            var candidate6 = (await service.AddCandidateAsync(room, "candidate")).Value;
+            var candidate7 = (await service.AddCandidateAsync(room, "candidate")).Value;
+            var candidate8 = (await service.AddCandidateAsync(room, "candidate")).Value;
             // Start voting
             Assert.That(await service.StartVotingAsync(room));
             // Get first stage verses

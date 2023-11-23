@@ -20,7 +20,27 @@ namespace Demograzy.DataAccess.Sql
             base(PeekQueryBuilder, PeekNonQueryBuilder)
         {
         }
-        
+
+
+
+        public async Task<bool> AddWinnerAsync(int roomId, int winnerId)
+        {
+            var changedAmount = await NonQueryBuilder.Create(
+                new InsertOptions()
+                {
+                    Into = WINNER_TABLE,
+                    Values = new List<(string, object)>()
+                    {
+                        (ID_COLUMN, winnerId),
+                        (ROOM_COLUMN, roomId)
+                    }
+                }
+            ).ExecuteAsync();
+
+            return changedAmount == 1;
+        }
+
+
 
         public async Task<int?> GetWinnerAsync(int roomId)
         {
