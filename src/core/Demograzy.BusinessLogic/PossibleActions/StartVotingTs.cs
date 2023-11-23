@@ -56,20 +56,55 @@ namespace Demograzy.BusinessLogic
         {
             var candidates = await CandidateGateway.GetCandidates(_roomId);
 
-            var versesAmount = (int)(candidates.Count / 2);
-            for (int i = 0; i < versesAmount; i += 1)
+            var failedToStartVersesForPairs = !await StartVersesForCandidatePairs(candidates);
+            if (failedToStartVersesForPairs) return false;
+
+            if (ShouldAddFictiveVersusForLastCandidate(candidates))
+            {
+                var failedToAddFictiveVersus = !await AddFictiveVersesForCandidate(candidates.Last());
+                if (failedToAddFictiveVersus) return false;
+            }
+
+            return true;
+        }
+        
+    
+
+
+        private async Task<bool> StartVersesForCandidatePairs(List<int> candidates)
+        {
+            var pairsAmount = (int)(candidates.Count / 2);
+            for (int i = 0; i < pairsAmount; i += 1)
             {
                 var versus = await VersesGateway.AddVersusAsync(
                     _roomId,
                     candidates[i * 2],
                     candidates[i * 2 + 1]);
+                    
                 if (!versus.HasValue)
                 {
                     return false;
                 }
             }
-
             return true;
+        }
+        
+    
+
+
+        private bool ShouldAddFictiveVersusForLastCandidate(List<int> candidates)
+        {
+            var candidatesAmountIsOdd = (candidates.Count % 2) != 0;
+            return candidatesAmountIsOdd; 
+        }
+        
+    
+
+
+        private async Task<bool> AddFictiveVersesForCandidate(int candidateId)
+        {
+            return (await VersesGateway.AddFictiveVersusAsync(_roomId, candidateId)).HasValue;
+
         }
         
     }

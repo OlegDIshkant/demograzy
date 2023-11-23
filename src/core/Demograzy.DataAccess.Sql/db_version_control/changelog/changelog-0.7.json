@@ -59,7 +59,7 @@
                                         "type" : "INT",
                                         "constraints" : 
                                         {
-                                            "nullable" : false
+                                            "nullable" : true
                                         }
                                     }
                                 }
@@ -69,6 +69,18 @@
                                     {
                                         "name" : "first_candidate_won",
                                         "type" : "BOOLEAN",
+                                        "constraints" : 
+                                        {
+                                            "nullable" : true
+                                        }
+                                    }
+                                }
+                                ,
+                                {
+                                    "column" :
+                                    {
+                                        "name" : "follow_up",
+                                        "type" : "INT",
                                         "constraints" : 
                                         {
                                             "nullable" : true
@@ -110,6 +122,17 @@
                                         "constraintName" : "fk__versus_second_candidate",
                                         "referencedColumnNames" : "id",
                                         "referencedTableName" : "candidate"
+                                    }
+                                }
+                                ,
+                                {
+                                    "foreignKeyConstraint" :
+                                    {
+                                        "baseColumnNames" : "follow_up",
+                                        "baseTableName" : "versus",
+                                        "constraintName" : "fk__versus_follow_up",
+                                        "referencedColumnNames" : "id",
+                                        "referencedTableName" : "versus"
                                     }
                                 }
                             ]
