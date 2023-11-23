@@ -42,18 +42,18 @@ namespace Demograzy.BusinessLogic.PossibleActions
             
             Result result = default;
 
-            //try
-            //{
+            try
+            {
                 result = await OnRunAsync();
                 var commitAllowed = result.Status == Result.Statuses.SUCCESS;
                 await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: commitAllowed);
                 return result.Value;
-            //}
-            //catch (Exception e)
-            //{
-            //    await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: false);
-            //    throw e.InnerException;
-            //}
+            }
+            catch (Exception e)
+            {
+                await _transactionMeans.FinishAsync(toCommitInsteadOfRollback: false);
+                throw e.InnerException;
+            }
         } 
 
 
