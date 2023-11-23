@@ -71,8 +71,8 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
             var expectedWinner = voteForFirstInLastVersus ?
-                (await service.GetVersusInfoAsync(lastVersus)).firstCandidateId :
-                (await service.GetVersusInfoAsync(lastVersus)).secondCandidateId;
+                (await service.GetVersusInfoAsync(lastVersus)).Value.firstCandidateId :
+                (await service.GetVersusInfoAsync(lastVersus)).Value.secondCandidateId;
             var actualWinner = (await service.GetWinnerAsync(room)).Value;
             Assert.That(actualWinner, Is.EqualTo(expectedWinner));
         }

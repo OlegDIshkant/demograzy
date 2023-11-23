@@ -71,13 +71,13 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
             // Complete fist versus
             var versus1 = firstStageVerses[0];
-            var firstWinner = (await service.GetVersusInfoAsync(versus1)).firstCandidateId;
+            var firstWinner = (await service.GetVersusInfoAsync(versus1)).Value.firstCandidateId;
             Assert.That(await service.VoteAsync(versus1, extraMember1, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, extraMember2, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, owner, votedForFirst: true));
             // Complete second versus
             var versus2 = firstStageVerses[1];
-            var secondWinner = (await service.GetVersusInfoAsync(versus1)).secondCandidateId;
+            var secondWinner = (await service.GetVersusInfoAsync(versus2)).Value.secondCandidateId;
             Assert.That(await service.VoteAsync(versus2, extraMember1, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus2, extraMember2, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus2, extraMember3, votedForFirst: false));
@@ -85,8 +85,17 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
             var newVersus = (await service.GetActiveVersesAsync(room, owner)).ToHashSet().Except(firstStageVerses.ToHashSet()).Single();
             var newVersusInfo = await service.GetVersusInfoAsync(newVersus);
-            Assert.That(newVersusInfo.firstCandidateId, Is.EqualTo(firstWinner));
-            Assert.That(newVersusInfo.secondCandidateId, Is.EqualTo(secondWinner));
+            var newVersusCandidates = new List<int>()
+            { 
+                newVersusInfo.Value.firstCandidateId,
+                newVersusInfo.Value.secondCandidateId
+            };
+            var prevVersesWinners = new List<int>()
+            {
+                firstWinner,
+                secondWinner
+            };
+            Assert.That(newVersusCandidates, Is.EquivalentTo(prevVersesWinners));
         }
 
 
@@ -222,7 +231,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             Assert.That(await service.VoteAsync(versus, extraMember3, votedForFirst: false));
 
 
-            Assert.That((await service.GetVersusInfoAsync(versus)).status, Is.EqualTo(VersusInfo.Statuses.SECOND_WON));
+            Assert.That((await service.GetVersusInfoAsync(versus)).Value.status, Is.EqualTo(VersusInfo.Statuses.SECOND_WON));
         }
 
     }
