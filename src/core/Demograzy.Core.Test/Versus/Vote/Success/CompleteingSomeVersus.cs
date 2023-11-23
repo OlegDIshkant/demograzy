@@ -197,7 +197,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             Assert.That(await service.GetActiveVersesAsync(room, extraMember2), Has.No.Member(versus));
             Assert.That(await service.GetActiveVersesAsync(room, extraMember3), Has.No.Member(versus));
             Assert.That(await service.GetActiveVersesAsync(room, extraMember4), Has.No.Member(versus));
-            Assert.That(await service.GetActiveVersesAsync(room, owner), Has.Member(versus));
+            Assert.That(await service.GetActiveVersesAsync(room, owner), Has.No.Member(versus));
         }
 
 
