@@ -1,4 +1,6 @@
 // Create app logic object
+using System.Text.Json;
+
 var demograzyService = new Demograzy.BusinessLogic.MainService(
     new Demograzy.DataAccess.Sql.TransactionMeansFactory(
         new DataAccess.Sql.PostgreSql.SqlCommandBuilderFactory(
@@ -8,6 +10,32 @@ var demograzyService = new Demograzy.BusinessLogic.MainService(
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet(
+    "/", 
+    () =>
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "text/html");
+
+    });
+
+app.MapPut(
+    "/client/new", 
+    async (context) =>
+    {
+        if (context.Request.Query.TryGetValue("name", out var name))
+        {
+            var clientId = await demograzyService.AddClientAsync(name);
+            await context.Response.WriteAsync(JsonSerializer.Serialize(clientId));
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 201; 
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+
+    });
 
 app.Run();

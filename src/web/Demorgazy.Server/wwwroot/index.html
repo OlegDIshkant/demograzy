@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test web page.</title>  
+    </head>
+    <body>
+
+        <h1>---DEMOGRAZY---</h1>
+        <br><br>
+
+        <div id=create_client_screen>
+            <h2>Come up with some name to start using the service...</h1>
+            <form id="create_client_form">
+                <label>Name: </label>
+                <input type="text" id="name_input">
+                <input id="submit_client_name" type="submit">
+            </form>
+        </div>
+
+
+        <script>
+
+            main();
+
+
+
+            function main()
+            {
+                init_screens();
+                start_create_client_screen();
+            }
+
+
+
+            function init_screens()
+            {
+                document.getElementById("create_client_screen").style.display = "none";
+            }
+
+
+
+            function start_create_client_screen()
+            {
+                var screen = document.getElementById("create_client_screen");                
+                var submitBtn = document.getElementById("submit_client_name");                
+                screen.style.display = "block";              
+                document.getElementById("submit_client_name").onclick = function()
+                {
+                    submit_client_name();
+                }
+            }
+
+
+
+            function submit_client_name()
+            {
+                let xhr = new XMLHttpRequest();
+                let url = new URL('http://localhost:5079/client/new');
+                url.searchParams.set('name', 'web_user');
+                xhr.open('PUT', url); 
+                xhr.onload = function() {
+                    if (xhr.status != 201) { 
+                        alert(`Error ${xhr.status}: ${xhr.statusText}`); 
+                    } else {
+                        alert(`Loaded: ${xhr.status} ${xhr.response}`);
+                    }
+                };
+                xhr.onerror = function() {
+                        alert(`Connection error`); 
+                };
+
+                xhr.send();            
+            }
+        </script>
+
+    </body>
+</html>
