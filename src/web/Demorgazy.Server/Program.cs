@@ -27,9 +27,9 @@ app.MapPut(
         if (context.Request.Query.TryGetValue("name", out var name))
         {
             var clientId = await demograzyService.AddClientAsync(name);
-            await context.Response.WriteAsync(JsonSerializer.Serialize(clientId));
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = 201; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(clientId));
         }
         else
         {

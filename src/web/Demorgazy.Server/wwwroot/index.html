@@ -9,12 +9,28 @@
         <br><br>
 
         <div id=create_client_screen>
-            <h2>Come up with some name to start using the service...</h1>
+            <h2>Come up with some name to start using the service...</h2>
             <form id="create_client_form">
                 <label>Name: </label>
                 <input type="text" id="name_input">
                 <input id="submit_client_name" type="submit">
             </form>
+        </div>
+
+
+
+        <div id=create_client_fail_screen>
+            <h2>Failed to connect you to the service :(</h2>
+        </div>
+
+
+
+        <div id=client_menu_screen>
+            <h2>Welcome!</h2>
+            <br>
+            <button>Start New Voting</button>
+            <br>
+            <button>Join Voting</button>
         </div>
 
 
@@ -35,6 +51,8 @@
             function init_screens()
             {
                 document.getElementById("create_client_screen").style.display = "none";
+                document.getElementById("create_client_fail_screen").style.display = "none";  
+                document.getElementById("client_menu_screen").style.display = "none";  
             }
 
 
@@ -43,13 +61,26 @@
             {
                 var screen = document.getElementById("create_client_screen");                
                 var submitBtn = document.getElementById("submit_client_name");                
-                screen.style.display = "block";              
+                screen.style.display = "block";     
+                
+                var form = document.getElementById("create_client_form");
+                form.addEventListener('submit', function(event) { event.preventDefault(); });
+
                 document.getElementById("submit_client_name").onclick = function()
                 {
+                    submitBtn.style.display = "none";
                     submit_client_name();
                 }
             }
 
+
+
+
+            function finish_create_client_screen()
+            {
+                var screen = document.getElementById("create_client_screen");                 
+                screen.style.display = "none";     
+            }
 
 
             function submit_client_name()
@@ -58,11 +89,12 @@
                 let url = new URL('http://localhost:5079/client/new');
                 url.searchParams.set('name', 'web_user');
                 xhr.open('PUT', url); 
-                xhr.onload = function() {
+                xhr.onloadend = function(event) {
+                    finish_create_client_screen();
                     if (xhr.status != 201) { 
-                        alert(`Error ${xhr.status}: ${xhr.statusText}`); 
+                        start_create_client_fail_screen();
                     } else {
-                        alert(`Loaded: ${xhr.status} ${xhr.response}`);
+                        start_client_menu_screen();
                     }
                 };
                 xhr.onerror = function() {
@@ -71,6 +103,21 @@
 
                 xhr.send();            
             }
+
+
+            function start_create_client_fail_screen()
+            {
+                var screen = document.getElementById("create_client_fail_screen");            
+                screen.style.display = "block";     
+            }
+
+
+            function start_client_menu_screen()
+            {
+                var screen = document.getElementById("client_menu_screen");            
+                screen.style.display = "block";     
+            }
+
         </script>
 
     </body>
