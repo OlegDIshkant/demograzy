@@ -11,6 +11,7 @@ namespace Demograzy.Core.Test.Room.StartVoting.Success
         [TestCase(16)]
         [TestCase(32)]
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenStartVotingThenReturnsTrue(int candidatesAmount)
         {

@@ -166,12 +166,12 @@ namespace Demograzy.BusinessLogic
         {
             var roomId = (await VersesGateway.GetVersusInfoAsync(_versusId)).Value.roomId;
             var unpairedVerses = await VersesGateway.GetCompletedVersesWithoutFollowUpAsync(roomId);
-            var otherVersusIndex = unpairedVerses.FindIndex(vId => vId != _versusId);
-            if (otherVersusIndex == -1)
+            var otherVerses = unpairedVerses.Where(vId => vId != _versusId);
+            if (otherVerses.Any())
             {
-                return null;
+                return otherVerses.First();
             }
-            return unpairedVerses[otherVersusIndex];
+            return null;
         }
 
 

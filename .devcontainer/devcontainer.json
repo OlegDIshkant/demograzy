@@ -10,6 +10,16 @@
         "extensions": ["streetsidesoftware.code-spell-checker", "ms-dotnettools.csdevkit"]
       }
     },
+    
+    
+    "initializeCommand" : "echo docker network create demograzy-dev-net", 
+    //We use "echo" to prevent devcontainer initialization failure (in case if such network already exists)  
+
+    "runArgs":
+    [
+      "--network=demograzy-dev-net"
+    ],
+
 
     "postStartCommand": "dotnet restore ./*.sln"
 }

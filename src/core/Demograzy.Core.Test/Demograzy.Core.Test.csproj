@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-
     <IsPackable>false</IsPackable>
+    <DefineConstants>POSTGRESQL</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,7 @@
 
     <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql\DataAccess.Sql.csproj" />
     <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql.SQLite\DataAccess.Sql.SQLite.csproj" />
+    <ProjectReference Include="..\..\etc\database_access\DataAccess.Sql.PostgreSql\DataAccess.Sql.PostgreSql.csproj" />
     <ProjectReference Include="..\Demograzy.BusinessLogic\Demograzy.BusinessLogic.csproj" />
     <ProjectReference Include="..\Demograzy.DataAccess.Sql\Demograzy.DataAccess.Sql.csproj" />
   </ItemGroup>

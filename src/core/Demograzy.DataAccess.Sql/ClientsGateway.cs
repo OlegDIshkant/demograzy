@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Sql;
 using Demograzy.BusinessLogic.DataAccess;
@@ -10,13 +11,17 @@ namespace Demograzy.DataAccess.Sql
 {
     internal class ClientsGateway : Gateway, BusinessLogic.DataAccess.IClientsGateway
     {
-        private readonly static string CLIENT_TABLE = "client";
+        private readonly static string CLIENT_TABLE = "demograzy.client";
         private readonly static string ID = "id";
         private readonly static string NAME = "name";
 
+        protected override string TableName => CLIENT_TABLE;
 
-        public ClientsGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
-            base(PeekQueryBuilder, PeekNonQueryBuilder) 
+        public ClientsGateway(
+            Func<IQueryBuilder> PeekQueryBuilder,
+             Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder, PeekLockCommandsBuilder) 
         {
         }
 
@@ -36,9 +41,9 @@ namespace Demograzy.DataAccess.Sql
                     new InsertOptions()
                     {
                         Into = CLIENT_TABLE,
-                        Values = new List<(string, object)>()
+                        Values = new List<(ColumnName, Parameter)>()
                         {
-                            (NAME, name)
+                            (new ColumnName(NAME), new Parameter(name))
                         }
                     }
                 );
@@ -54,25 +59,25 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<ClientInfo?> GetClientInfoAsync(int id)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(NAME)),
                     From = CLIENT_TABLE,
                     Where = new Comparison(new Parameter(id), CompareType.EQUALS, new ColumnName(ID))
                 }
-            );
+                ,
+                r => new ClientInfo() { name = r.GetString(0) }
+            )
+            .ExecuteAsync();
             
-            using (var result = (await query.ExecuteAsync()).GetEnumerator())
+            if (queryResult.Any())
             {
-                if (result.MoveNext())
-                {
-                    return new ClientInfo() { name = result.Current.GetString(0) };
-                }
-                else
-                {
-                    return null;
-                }
+                return queryResult.Single();
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -102,20 +107,19 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<int> GetClientsAmountAsync()
         {
-            var query = 
-                QueryBuilder.Create(
+            var queryResult = 
+                await QueryBuilder.Create(
                     new SelectOptions()
                     {
                         Select = new SelectClause(new Count()),
                         From = CLIENT_TABLE
                     }
-                );
+                    ,
+                    r => r.GetInt(0)
+                )
+                .ExecuteAsync();
             
-            using (var result = (await query.ExecuteAsync()).GetEnumerator())
-            {
-                result.MoveNext();
-                return result.Current.GetInt(0);
-            }
+            return queryResult.Single();
         }
 
         public async Task<bool> CheckClientExistsAsync(int id)

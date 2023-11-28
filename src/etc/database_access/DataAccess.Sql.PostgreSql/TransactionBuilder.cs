@@ -26,7 +26,7 @@ namespace DataAccess.Sql.PostgreSql
                     {
                         throw new InvalidOperationException("Some transaction has already been started.");
                     }
-                    _currentTransaction = await _GetConnection().BeginTransactionAsync();
+                    _currentTransaction = await _GetConnection().BeginTransactionAsync(System.Data.IsolationLevel.Snapshot);
                     return Task<object>.CompletedTask;
                 } 
             );

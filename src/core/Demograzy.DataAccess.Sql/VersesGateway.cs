@@ -10,7 +10,7 @@ namespace Demograzy.DataAccess.Sql
 {
     internal class VersesGateway : Gateway, BusinessLogic.DataAccess.IVersesGateway
     {
-        private static readonly string VERSUS_TABLE = "versus";
+        private static readonly string VERSUS_TABLE = "demograzy.versus";
         private static readonly string ID_COLUMN = "id";
         private static readonly string ROOM_COLUMN = "room";
         private static readonly string FIRST_CANDIDATE_COLUMN = "first_candidate";
@@ -18,10 +18,14 @@ namespace Demograzy.DataAccess.Sql
         private static readonly string FIRST_CANDIDATE_WON_COLUMN = "first_candidate_won";
         private static readonly string FOLLOW_UP_COLUMN = "follow_up";
         
+        protected override string TableName => VERSUS_TABLE;
 
 
-        public VersesGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
-            base(PeekQueryBuilder, PeekNonQueryBuilder)
+        public VersesGateway(
+            Func<IQueryBuilder> PeekQueryBuilder,
+            Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder, PeekLockCommandsBuilder)
         {
         }
 
@@ -32,12 +36,12 @@ namespace Demograzy.DataAccess.Sql
                 new InsertOptions()
                 {
                     Into = VERSUS_TABLE,
-                    Values = new List<(string, object)>()
+                    Values = new List<(ColumnName, Parameter)>()
                     {
-                        (ROOM_COLUMN, roomId),
-                        (FIRST_CANDIDATE_COLUMN, singleCandidateId),
-                        (SECOND_CANDIDATE_COLUMN, null),
-                        (FIRST_CANDIDATE_WON_COLUMN, true)
+                        (new ColumnName(ROOM_COLUMN), new Parameter(roomId)),
+                        (new ColumnName(FIRST_CANDIDATE_COLUMN), new Parameter(singleCandidateId)),
+                        (new ColumnName(SECOND_CANDIDATE_COLUMN), new Parameter(null)),
+                        (new ColumnName(FIRST_CANDIDATE_WON_COLUMN), new Parameter(true))
                     }
                 }
             ).ExecuteAsync();
@@ -59,12 +63,12 @@ namespace Demograzy.DataAccess.Sql
                 new InsertOptions()
                 {
                     Into = VERSUS_TABLE,
-                    Values = new List<(string, object)>()
+                    Values = new List<(ColumnName, Parameter)>()
                     {
-                        (ROOM_COLUMN, roomId),
-                        (FIRST_CANDIDATE_COLUMN, firstCandidateId),
-                        (SECOND_CANDIDATE_COLUMN, secondCandidateId),
-                        (FIRST_CANDIDATE_WON_COLUMN, null)
+                        (new ColumnName(ROOM_COLUMN), new Parameter(roomId)),
+                        (new ColumnName(FIRST_CANDIDATE_COLUMN), new Parameter(firstCandidateId)),
+                        (new ColumnName(SECOND_CANDIDATE_COLUMN), new Parameter(secondCandidateId)),
+                        (new ColumnName(FIRST_CANDIDATE_WON_COLUMN), new Parameter(null))
                     }
                 }
             ).ExecuteAsync();
@@ -82,9 +86,9 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public async Task<List<int>> GetCompletedVersesWithoutFollowUpAsync(int roomId)
+        public async Task<ICollection<int>> GetCompletedVersesWithoutFollowUpAsync(int roomId)
         {
-            var query = QueryBuilder.Create(
+            return await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(ID_COLUMN)),
@@ -95,16 +99,17 @@ namespace Demograzy.DataAccess.Sql
                         new NullComparison(new ColumnName(FOLLOW_UP_COLUMN), NullCompareType.IS_NULL)
                     )
                 }
-            );
-
-            return await InvokeQuery(query, r => r.GetInt(0));
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
         }
 
 
 
-        public async Task<List<int>> GetUnfinishedVersesAsync(int roomId)
+        public async Task<ICollection<int>> GetUnfinishedVersesAsync(int roomId)
         {
-            var query = QueryBuilder.Create(
+            return await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(ID_COLUMN)),
@@ -114,16 +119,16 @@ namespace Demograzy.DataAccess.Sql
                         new NullComparison(new ColumnName(FIRST_CANDIDATE_WON_COLUMN), NullCompareType.IS_NULL)
                     ) 
                 }
-            );
-
-            var queryResult = await InvokeQuery(query, r => r.GetInt(0));
-            return queryResult.ToList();
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
         }
 
 
         public async Task<VersusInfo?> GetVersusInfoAsync(int versusId)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(
@@ -133,10 +138,8 @@ namespace Demograzy.DataAccess.Sql
                         new ColumnName(FIRST_CANDIDATE_WON_COLUMN)),
                     From = VERSUS_TABLE,
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
-                });
-
-            var queryResult = await InvokeQuery(
-                query,
+                }
+                ,
                 r => new VersusInfo()
                 {
                     roomId = r.GetInt(0),
@@ -146,7 +149,9 @@ namespace Demograzy.DataAccess.Sql
                         r.IsNull(3) ? VersusInfo.Statuses.UNCOMPLETED :
                         r.GetBool(3) ? VersusInfo.Statuses.FIRST_WON :
                         VersusInfo.Statuses.SECOND_WON
-                });
+                }
+            )
+            .ExecuteAsync();
 
             if (queryResult.Count == 1)
             {
@@ -162,7 +167,7 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<int?> GetVersusWinnerAsync(int versusId)
         {
-            var query = QueryBuilder.Create(
+            var query = QueryBuilder.Create<int?>(
                 new SelectOptions()
                 {
                     Select = new SelectClause(
@@ -172,10 +177,7 @@ namespace Demograzy.DataAccess.Sql
                     From = VERSUS_TABLE,
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
                 }
-            );
-
-            var queryResult = await InvokeQuery<int?>(
-                query, 
+                , 
                 r => 
                 {
                     var winnerExists = !r.IsNull(0);
@@ -187,7 +189,10 @@ namespace Demograzy.DataAccess.Sql
                             r.GetInt(2);
                     }
                     return null;
-                });
+                }
+            );
+
+            var queryResult = await query.ExecuteAsync();
 
             if (queryResult.Count == 1)
             {
@@ -204,7 +209,10 @@ namespace Demograzy.DataAccess.Sql
                 new UpdateOptions()
                 {
                     Update = VERSUS_TABLE,
-                    Set = new List<(string, object)>() { (FOLLOW_UP_COLUMN, referencedVersusId) },
+                    Set = new List<(ColumnName, Parameter)>() 
+                    { 
+                        (new ColumnName(FOLLOW_UP_COLUMN), new Parameter(referencedVersusId)) 
+                    },
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
                 }
             ).ExecuteAsync();
@@ -220,9 +228,9 @@ namespace Demograzy.DataAccess.Sql
                 new UpdateOptions()
                 {
                     Update = VERSUS_TABLE,
-                    Set = new List<(string column, object value)>()
+                    Set = new List<(ColumnName, Parameter)>()
                     {
-                        (FIRST_CANDIDATE_WON_COLUMN, firstIsWinner)
+                        (new ColumnName(FIRST_CANDIDATE_WON_COLUMN), new Parameter(firstIsWinner))
                     },
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(versusId))
                 }

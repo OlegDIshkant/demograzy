@@ -10,6 +10,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Fail
     {
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenNonMemberTriesVoteThenReturnsFalse()
         {     

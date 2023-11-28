@@ -1,25 +1,34 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Sql;
+using Demograzy.BusinessLogic.DataAccess;
 
 
 namespace Demograzy.DataAccess.Sql
 {
-    internal abstract class Gateway 
+    internal abstract class Gateway : IGateway
     {
         private Func<IQueryBuilder> _PeekQueryBuilder;
         private Func<INonQueryBuilder> _PeekNonQueryBuilder;
+        private Func<ILockCommandsBuilder> _PeekLockCommandsBuilder;
 
 
         protected IQueryBuilder QueryBuilder => _PeekQueryBuilder();
         protected INonQueryBuilder NonQueryBuilder => _PeekNonQueryBuilder();
 
+        protected abstract string TableName { get; }
 
-        public Gateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder)
+        public Gateway(
+            Func<IQueryBuilder> PeekQueryBuilder,
+            Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder)
         {
             _PeekQueryBuilder = PeekQueryBuilder;
             _PeekNonQueryBuilder = PeekNonQueryBuilder;
+            _PeekLockCommandsBuilder = PeekLockCommandsBuilder;
         }
 
 
@@ -27,19 +36,17 @@ namespace Demograzy.DataAccess.Sql
 
         protected async Task<int> GetLastInsertedIdAsync()
         {
-            var query =
-                _PeekQueryBuilder().Create(
+            var queryResult =
+                await _PeekQueryBuilder().Create(
                     new SelectOptions()
                     {
                         Select = new SelectClause(new LastInsertedRowId())
                     }
-                );
+                    ,
+                    r => r.GetInt(0)
+                ).ExecuteAsync();
 
-            using (var result = (await query.ExecuteAsync()).GetEnumerator())
-            {
-                result.MoveNext();
-                return result.Current.GetInt(0);
-            }
+            return queryResult.Single();
         }
 
 
@@ -62,18 +69,21 @@ namespace Demograzy.DataAccess.Sql
         }
 
 
-        protected async Task<List<R>> InvokeQuery<R>(ISqlCommand<IQueryResult> query, Func<IRow, R> ExtractRowInfo)
+
+
+        protected R? SingleOrNull<R>(ICollection<R> collection)
+            where R : struct
         {
-            using (var queryResult = await query.ExecuteAsync())
+            if (collection.Any())
             {
-                var result = new List<R>();
-                var e = queryResult.GetEnumerator();
-                while(e.MoveNext())
-                {
-                    result.Add(ExtractRowInfo(e.Current));
-                }
-                return result;
-            }
+                return collection.Single();
+            } 
+            return null;
+        }
+
+        public Task<bool> LockAsync()
+        {
+            return _PeekLockCommandsBuilder().Create(TableName).ExecuteAsync();
         }
 
     }

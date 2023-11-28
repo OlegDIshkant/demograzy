@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace Demograzy.BusinessLogic.DataAccess
 {
-    public interface IMembershipGateway
+    public interface IMembershipGateway : IGateway
     {
         Task<bool> AddRoomMemberAsync(int roomId, int clientId);
-        Task<List<int>> GetRoomMembersAsync(int roomId);
-        Task<List<int>> GetJoinedRoomsAsync(int clientId);
+        Task<ICollection<int>> GetRoomMembersAsync(int roomId);
+        Task<ICollection<int>> GetJoinedRoomsAsync(int clientId);
         Task<bool> ForgetAllMembersAsync(int roomId);
         Task<bool> ForgetMemberAsync(int roomId, int clientId);
     }

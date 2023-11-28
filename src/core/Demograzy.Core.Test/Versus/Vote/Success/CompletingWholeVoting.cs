@@ -34,39 +34,39 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             // Get first stage verses
             var firstStageVerses = await service.GetActiveVersesAsync(room, owner);
             // Complete fist versus
-            var versus1 = firstStageVerses[0];
+            var versus1 = firstStageVerses.ElementAt(0);
             Assert.That(await service.VoteAsync(versus1, extraMember1, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, extraMember2, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, owner, votedForFirst: true));
             // Complete second versus
-            var versus2 = firstStageVerses[1];
+            var versus2 = firstStageVerses.ElementAt(1);
             Assert.That(await service.VoteAsync(versus2, extraMember1, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus2, extraMember2, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus2, owner, votedForFirst: false));
             // Complete third versus 
-            var versus3 = firstStageVerses[2];
+            var versus3 = firstStageVerses.ElementAt(2);
             Assert.That(await service.VoteAsync(versus3, extraMember1, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus3, extraMember3, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus3, owner, votedForFirst: false));
             // Complete forth versus 
-            var versus4 = firstStageVerses[3];
+            var versus4 = firstStageVerses.ElementAt(3);
             Assert.That(await service.VoteAsync(versus4, extraMember1, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus4, extraMember3, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus4, extraMember2, votedForFirst: true));
             // Get second stage verses
             var secondStageVerses = await service.GetActiveVersesAsync(room, owner);
             // Complete fifth versus
-            var versus5 = secondStageVerses[0];
+            var versus5 = secondStageVerses.ElementAt(0);
             Assert.That(await service.VoteAsync(versus5, extraMember3, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus5, extraMember2, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus5, owner, votedForFirst: false));
             // Complete sixth versus
-            var versus6 = secondStageVerses[1];
+            var versus6 = secondStageVerses.ElementAt(1);
             Assert.That(await service.VoteAsync(versus6, extraMember1, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus6, extraMember2, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus6, extraMember3, votedForFirst: false));
             // Get last versus
-            var lastVersus = (await service.GetActiveVersesAsync(room, owner))[0];
+            var lastVersus = (await service.GetActiveVersesAsync(room, owner)).ElementAt(0);
 
 
             // Complete last versus

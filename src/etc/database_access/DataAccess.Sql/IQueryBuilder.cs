@@ -6,13 +6,7 @@ namespace DataAccess.Sql
 {
     public interface IQueryBuilder
     {
-        ISqlCommand<IQueryResult> Create(SelectOptions selectOptions); 
-    }
-
-
-    public interface IQueryResult : IDisposable, IEnumerable<IRow>
-    {
-
+        ISqlCommand<ICollection<R>> Create<R>(SelectOptions selectOptions, Func<IRow, R> ReadRow); 
     }
 
 

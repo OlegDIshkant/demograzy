@@ -10,16 +10,27 @@ namespace DataAccess.Sql.PostgreSql
         private NpgsqlConnection _connection;
 
         public ITransactionBuilder Transactions { get; private set; }
+        public IQueryBuilder Queries { get; private set; }
+        public INonQueryBuilder NonQueries { get; private set; }
+        public ILockCommandsBuilder LockCommands { get; private set; }
 
-        public IQueryBuilder Queries => throw new NotImplementedException();
-        public INonQueryBuilder NonQueries => throw new NotImplementedException();
 
-
-        public SqlCommandBuilder(IConnectionStringProvider connectionStringProvider)
+        public static async Task<SqlCommandBuilder> CreateAsync(IConnectionStringProvider connectionStringProvider)
         {
-            _connection = DbConnection.GetNewConnection(connectionStringProvider);
+            var connection =  DbConnection.GetNewConnection(connectionStringProvider);
+            await connection.OpenAsync();
+            return new SqlCommandBuilder(connection);
 
+        }
+
+
+        private SqlCommandBuilder(NpgsqlConnection connection)
+        {
+            _connection = connection;
             Transactions = new TransactionBuilder(() => _connection);
+            Queries = new QueryBuilder(() => _connection);
+            NonQueries = new NonQueryBuilder(() => _connection);
+            LockCommands = new LockCommandsBuilder(() => _connection);
         }
 
 

@@ -1,16 +1,15 @@
-using System;
-using System.Text;
 using DataAccess.Sql.Common;
-using Microsoft.Data.Sqlite;
+using Npgsql;
 
-namespace DataAccess.Sql.SQLite
+namespace DataAccess.Sql.PostgreSql
 {
     internal class NonQueryBuilder : INonQueryBuilder
     {
-        private readonly Func<SqliteConnection> _PeekConnection;
 
-        
-        public NonQueryBuilder(Func<SqliteConnection> PeekConnection)
+        private Func<NpgsqlConnection> _PeekConnection;
+
+
+        public NonQueryBuilder(Func<NpgsqlConnection> PeekConnection)
         {
             _PeekConnection = PeekConnection;
         }
@@ -58,6 +57,7 @@ namespace DataAccess.Sql.SQLite
                 }
             );
         }
+
 
     }
 }

@@ -1,17 +1,18 @@
 using DataAccess.Sql.Common;
-using Microsoft.Data.Sqlite;
+using Npgsql;
 
-namespace DataAccess.Sql.SQLite
+namespace DataAccess.Sql.PostgreSql
 {
     internal class QueryBuilder : IQueryBuilder
     {
-        private readonly Func<SqliteConnection> _PeekConnection;
+        private readonly Func<NpgsqlConnection> _PeekConnection;
 
 
-        public QueryBuilder(Func<SqliteConnection> PeekConnection)
+        public QueryBuilder(Func<NpgsqlConnection> PeekConnection)
         {
             _PeekConnection = PeekConnection;
         }
+        
 
 
         public ISqlCommand<ICollection<R>> Create<R>(SelectOptions selectOptions, Func<IRow, R> ReadRow)
@@ -31,18 +32,17 @@ namespace DataAccess.Sql.SQLite
         }
 
 
-        private void SetUpCommand(SqliteCommand command, SelectOptions selectOptions)
+        private void SetUpCommand(NpgsqlCommand command, SelectOptions selectOptions)
         {
-            var buildSettings = new StatementBuildSettings();
-            command.CommandText = SelectStatementBuilder.Build(selectOptions, out var parameters, buildSettings); 
-            foreach (var p in parameters)
+            command.CommandText = SelectStatementBuilder.Build(selectOptions, out var parameters, new StatementBuildSettings()); 
+            foreach (var parameter in parameters)
             {
-                command.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value);
-            }          
+                command.Parameters.Add(new NpgsqlParameter(parameter.Key, parameter.Value ?? DBNull.Value));
+            }
         }
 
 
-        private async Task<ICollection<R>> ExecuteAndReadResult<R> (SqliteCommand command, Func<IRow, R> ReadRow)
+        private async Task<ICollection<R>> ExecuteAndReadResult<R> (NpgsqlCommand command, Func<IRow, R> ReadRow)
         {
             using (var reader = await command.ExecuteReaderAsync())
             {
@@ -58,11 +58,13 @@ namespace DataAccess.Sql.SQLite
 
         private struct Row : IRow
         {
-            public SqliteDataReader reader;
+            public NpgsqlDataReader reader;
             public bool GetBool(int columnIndex) => reader.GetBoolean(columnIndex);
             public int GetInt(int columnIndex) => reader.GetInt32(columnIndex);
             public string GetString(int columnIndex) => reader.GetString(columnIndex);
             public bool IsNull(int columnIndex) => reader.IsDBNull(columnIndex);
         }
+
+
     }
 }

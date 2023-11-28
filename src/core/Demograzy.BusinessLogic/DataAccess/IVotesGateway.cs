@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Demograzy.BusinessLogic.DataAccess
 {
-    public interface IVotesGateway
+    public interface IVotesGateway : IGateway
     {
         Task<bool> AddVoteAsync(int versusId, int clientId, bool votedForFirst);
         Task<int> GetVotesAmountAsync(int versusId);

@@ -4,7 +4,7 @@ namespace DataAccess.Sql
 {
     public sealed class InsertOptions
     {
-        public List<(string, object)> Values { get; set; }
+        public List<(ColumnName, Parameter)> Values { get; set; }
         public string Into { get; set; }
     }
 

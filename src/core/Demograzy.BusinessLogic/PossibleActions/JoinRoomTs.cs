@@ -45,8 +45,8 @@ namespace Demograzy.BusinessLogic
             //-----------
             bool RoomDoesNotExist(RoomInfo? roomInfo) => !roomInfo.HasValue;
             bool VotingStarted(RoomInfo? roomInfo) => roomInfo.Value.votingStarted;
-            bool LimitReached(List<int> roomMemberIds) => roomMemberIds.Count >= Limits.MAX_MEMBERS_PER_ROOMS;
-            bool ClientAlreadyJoinedRoom(List<int> roomMemberIds) => roomMemberIds.Contains(_clientId);
+            bool LimitReached(ICollection<int> roomMemberIds) => roomMemberIds.Count >= Limits.MAX_MEMBERS_PER_ROOMS;
+            bool ClientAlreadyJoinedRoom(ICollection<int> roomMemberIds) => roomMemberIds.Contains(_clientId);
         }
 
 

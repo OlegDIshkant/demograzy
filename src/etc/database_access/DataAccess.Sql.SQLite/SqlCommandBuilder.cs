@@ -12,6 +12,7 @@ namespace DataAccess.Sql.SQLite
         public ITransactionBuilder Transactions { get; private set; }
         public IQueryBuilder Queries { get; private set; }
         public INonQueryBuilder NonQueries {  get; private set; }
+        public ILockCommandsBuilder LockCommands => throw new NotImplementedException();
 
 
         public static async Task<SqlCommandBuilder> CreateAsync(string connectionString)

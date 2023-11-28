@@ -20,7 +20,7 @@ namespace Demograzy.BusinessLogic
 
         protected override async Task<Result> OnRunAsync()
         {
-            if (await MayStartVoting())
+            if (await LockData() && await MayStartVoting())
             {
                 return Result.DependsOn(await StartVoting());
             }
@@ -28,6 +28,14 @@ namespace Demograzy.BusinessLogic
             {
                 return Result.Fail(false);
             }
+        }
+
+        private async Task<bool> LockData()
+        {
+            return
+                await RoomGateway.LockAsync() &&
+                await CandidateGateway.LockAsync() &&
+                await VersesGateway.LockAsync();
         }
 
 
@@ -71,15 +79,15 @@ namespace Demograzy.BusinessLogic
     
 
 
-        private async Task<bool> StartVersesForCandidatePairs(List<int> candidates)
+        private async Task<bool> StartVersesForCandidatePairs(ICollection<int> candidates)
         {
             var pairsAmount = (int)(candidates.Count / 2);
             for (int i = 0; i < pairsAmount; i += 1)
             {
                 var versus = await VersesGateway.AddVersusAsync(
                     _roomId,
-                    candidates[i * 2],
-                    candidates[i * 2 + 1]);
+                    candidates.ElementAt(i * 2),
+                    candidates.ElementAt(i * 2 + 1));
                     
                 if (!versus.HasValue)
                 {
@@ -92,7 +100,7 @@ namespace Demograzy.BusinessLogic
     
 
 
-        private bool ShouldAddFictiveVersusForLastCandidate(List<int> candidates)
+        private bool ShouldAddFictiveVersusForLastCandidate(ICollection<int> candidates)
         {
             var candidatesAmountIsOdd = (candidates.Count % 2) != 0;
             return candidatesAmountIsOdd; 

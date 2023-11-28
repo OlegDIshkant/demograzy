@@ -40,6 +40,10 @@ namespace DataAccess.Sql.PostgreSql
 
 
         /// <param name="path"> Path to the file containing a connection string.</param>
+        /// <remarks>
+        /// Connection string should look like: 
+        /// "Host=...;Username=...;Password=...;Database=..."
+        /// </remarks>
         public BaseConnectionStringProvider(string path)
         {
             _filePath = path;

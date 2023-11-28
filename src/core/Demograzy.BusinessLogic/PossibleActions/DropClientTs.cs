@@ -65,7 +65,7 @@ namespace Demograzy.BusinessLogic.PossibleActions
         }
 
 
-        private async Task<bool> RoomWithStartedVotingExists(List<int> joinedRoomIds)
+        private async Task<bool> RoomWithStartedVotingExists(ICollection<int> joinedRoomIds)
         {
             // TODO: find a solution with fewer database accesses.
             foreach (var roomId in joinedRoomIds)

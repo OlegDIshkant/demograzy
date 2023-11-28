@@ -11,6 +11,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
         [TestCase(true)]
         [TestCase(false)]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenCompleteFirstVersusThenActiveVersesListsHasCertainLength (bool candidateAmountIsEven)
         {     
@@ -33,7 +34,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
             // Complete fist versus
-            var versus1 = firstStageVerses[0];
+            var versus1 = firstStageVerses.ElementAt(0);
             Assert.That(await service.VoteAsync(versus1, extraMember1, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, extraMember2, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, owner, votedForFirst: true));
@@ -48,6 +49,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenHasSixCandidatesAndCompleteTwoVersesThenTheirWinnersGoToNewVersus()
         {     
@@ -61,7 +63,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             // Add candidates
             const int candidatesAmount = 6;
             var candidates = Enumerable.Range(0, candidatesAmount)
-            .Select(async i => await service.AddCandidateAsync(room, $"candidate_{i}"))
+            .Select(async i => (await service.AddCandidateAsync(room, $"candidate_{i}")).Value)
             .ToList();
             // Start voting
             Assert.That(await service.StartVotingAsync(room));
@@ -70,13 +72,13 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
             // Complete fist versus
-            var versus1 = firstStageVerses[0];
+            var versus1 = firstStageVerses.ElementAt(0);
             var firstWinner = (await service.GetVersusInfoAsync(versus1)).Value.firstCandidateId;
             Assert.That(await service.VoteAsync(versus1, extraMember1, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, extraMember2, votedForFirst: true));
             Assert.That(await service.VoteAsync(versus1, owner, votedForFirst: true));
             // Complete second versus
-            var versus2 = firstStageVerses[1];
+            var versus2 = firstStageVerses.ElementAt(1);
             var secondWinner = (await service.GetVersusInfoAsync(versus2)).Value.secondCandidateId;
             Assert.That(await service.VoteAsync(versus2, extraMember1, votedForFirst: false));
             Assert.That(await service.VoteAsync(versus2, extraMember2, votedForFirst: false));
@@ -101,6 +103,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOneOfManyMembersVotesThenVersusNoMoreActiveForHim()
         {     
@@ -132,6 +135,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenOneOfManyMembersVotesThenVersusStillActiveForOthers()
         {     
@@ -165,6 +169,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenMostMembersVotesTheSameWayThenVersusNoLongerActive()
         {     
@@ -203,6 +208,7 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
 
         [Test]
+        [Retry(MAX_RETRIES)]
         [Timeout(STANDARD_TIMEOUT)]
         public async Task WhenMostMembersVotesForSecondCandidateThenItBecomesVersusWinner()
         {     

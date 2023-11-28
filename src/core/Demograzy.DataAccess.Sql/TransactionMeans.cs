@@ -39,25 +39,32 @@ namespace Demograzy.DataAccess.Sql
 
             ClientsGateway = new ClientsGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);   
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);   
             RoomsGateway = new RoomsGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
             MembershipGateway = new MembershipGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
             CandidatesGateway = new CandidatesGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
             WinnersGateway = new WinnersGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
             VersesGateway = new VersesGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
             VotesGateway = new VotesGateway(
                 () => _commandBuilder.Queries,
-                () => _commandBuilder.NonQueries);
+                () => _commandBuilder.NonQueries,
+                () => _commandBuilder.LockCommands);
         }
 
 

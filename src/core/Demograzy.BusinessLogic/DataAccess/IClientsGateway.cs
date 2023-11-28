@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Demograzy.BusinessLogic.DataAccess
 {
-    public interface IClientsGateway
+    public interface IClientsGateway : IGateway
     {
         Task<int> AddClientAsync(string name);
         Task<ClientInfo?> GetClientInfoAsync(int id);

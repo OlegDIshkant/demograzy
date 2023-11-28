@@ -37,7 +37,7 @@ namespace Demograzy.BusinessLogic
         public async Task<int?> AddRoomAsync(int ownerClientId, string title, string passphrase) => 
             await new AddRoomTs(ownerClientId, title, passphrase, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<List<int>> GetOwnedRoomsAsync(int ownerClientId) => 
+        public async Task<ICollection<int>> GetOwnedRoomsAsync(int ownerClientId) => 
             await new GetOwnedRoomsTs(ownerClientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<RoomInfo?> GetRoomInfoAsync(int roomId) => 
@@ -49,13 +49,13 @@ namespace Demograzy.BusinessLogic
         public async Task<bool> AddMember(int roomId, int clientId) => 
             await new JoinRoomTs(roomId, clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<List<int>> GetMembers(int roomId) => 
+        public async Task<ICollection<int>> GetMembers(int roomId) => 
             await new GetRoomMembersTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<bool> DeleteMemberAsync(int roomId, int clientId) => 
             await new LeftRoomTs(roomId, clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<List<int>> GetJoinedRooms(int clientId) => 
+        public async Task<ICollection<int>> GetJoinedRooms(int clientId) => 
             await new GetJoinedRoomsTs(clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<int?> AddCandidateAsync(int roomId, string name) => 
@@ -64,7 +64,7 @@ namespace Demograzy.BusinessLogic
         public async Task<bool> DeleteCandidateAsync(int candidateId) => 
             await new DeleteCandidateTs(candidateId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<List<int>> GetCandidatesAsync(int roomId) => 
+        public async Task<ICollection<int>> GetCandidatesAsync(int roomId) => 
             await new GetCandidatesTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<CandidateInfo?> GetCandidateInfo(int candidateId) => 
@@ -76,7 +76,7 @@ namespace Demograzy.BusinessLogic
         public async Task<int?> GetWinnerAsync(int roomId) => 
             await new GetWinnerTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<List<int>> GetActiveVersesAsync(int roomId, int clientId) => 
+        public async Task<ICollection<int>> GetActiveVersesAsync(int roomId, int clientId) => 
             await new GetActiveVersesTs(roomId, clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<VersusInfo?> GetVersusInfoAsync(int versusId) => 

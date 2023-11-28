@@ -13,9 +13,9 @@ namespace DataAccess.Sql.PostgreSql
         }
 
 
-        public Task<ISqlCommandBuilder> CreateAsync()
+        public async Task<ISqlCommandBuilder> CreateAsync()
         {
-            return Task.FromResult((ISqlCommandBuilder)new SqlCommandBuilder(_connectionStringProvider));
+            return await SqlCommandBuilder.CreateAsync(_connectionStringProvider);
         }
     }
 }

@@ -11,15 +11,19 @@ namespace Demograzy.DataAccess.Sql
 {
     internal class CandidatesGateway : Gateway, BusinessLogic.DataAccess.ICandidatesGateway
     {
-        private readonly static string CANDIDATE_TABLE = "candidate";
+        private readonly static string CANDIDATE_TABLE = "demograzy.candidate";
         private readonly static string ID_COLUMN = "id";
         private readonly static string NAME_COLUMN = "name";
         private readonly static string ROOM_COLUMN = "room";
         
+        protected override string TableName => CANDIDATE_TABLE;
 
 
-        public CandidatesGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
-            base(PeekQueryBuilder, PeekNonQueryBuilder)
+        public CandidatesGateway(
+            Func<IQueryBuilder> PeekQueryBuilder, 
+            Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder, PeekLockCommandsBuilder)
         {
         }
 
@@ -30,10 +34,10 @@ namespace Demograzy.DataAccess.Sql
                 new InsertOptions()
                 {
                     Into = CANDIDATE_TABLE,
-                    Values = new List<(string, object)>()
+                    Values = new List<(ColumnName, Parameter)>()
                     {
-                        (NAME_COLUMN, name),
-                        (ROOM_COLUMN, roomId)
+                        (new ColumnName(NAME_COLUMN), new Parameter(name)),
+                        (new ColumnName(ROOM_COLUMN), new Parameter(roomId))
                     }
                 }
             )
@@ -45,67 +49,58 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<CandidateInfo?> GetCandidateInfo(int candidateId)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(NAME_COLUMN), new ColumnName(ROOM_COLUMN)),
                     From = CANDIDATE_TABLE,
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(candidateId))
                 }
-            );
+                ,
+                r => new CandidateInfo()
+                {
+                    name = r.GetString(0),
+                    roomId = r.GetInt(1)
+                }
+            )
+            .ExecuteAsync();
 
-            using (var result = await query.ExecuteAsync())
-            {
-                var e = result.GetEnumerator();
-                if (e.MoveNext())
-                {
-                    return new CandidateInfo()
-                    {
-                        name = e.Current.GetString(0),
-                        roomId = e.Current.GetInt(1)
-                    };
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            return SingleOrNull(queryResult);
         }
 
 
 
-        public async Task<List<int>> GetCandidates(int roomId)
+        public async Task<ICollection<int>> GetCandidates(int roomId)
         {
-            var query = QueryBuilder.Create(
+            return await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(ID_COLUMN)),
                     From = CANDIDATE_TABLE,
                     Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
-            );
-
-            return await InvokeQuery(query, r => r.GetInt(0));
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
         }
 
 
         public async Task<int> GetCandidatesAmount(int roomId)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new Count()),
                     From = CANDIDATE_TABLE,
                     Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
-            );
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
 
-            using (var queryResult = await query.ExecuteAsync())
-            {
-                var e = queryResult.GetEnumerator();
-                e.MoveNext();
-                return e.Current.GetInt(0);
-            }
+            return queryResult.Single();
         }
 
 

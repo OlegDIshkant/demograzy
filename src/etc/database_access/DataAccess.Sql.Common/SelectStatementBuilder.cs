@@ -1,24 +1,26 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Sql.SQLite
+namespace DataAccess.Sql.Common
 {
-    internal static class SelectStatementBuilder
+    public static class SelectStatementBuilder
     {
-        public static string Build(SelectOptions selectOptions, out Dictionary<string, object> parameters)
+        public static string Build(SelectOptions selectOptions, out Dictionary<string, object> parameters, IStatementBuildSettings settings)
         {
             parameters = new Dictionary<string, object>();
             var b = new StringBuilder();
 
-            b.AppendSelectClause(selectOptions);
+            b.AppendSelectClause(selectOptions, settings);
             b.AppendFromClause(selectOptions);
-            b.AppendWhereClause(selectOptions.Where, parameters);
+            b.AppendWhereClause(selectOptions.Where, parameters, settings);
 
             return b.ToString();
         }
 
 
 
-        private static void AppendSelectClause(this StringBuilder b, SelectOptions selectOptions)
+        private static void AppendSelectClause(this StringBuilder b, SelectOptions selectOptions, IStatementBuildSettings settings)
         {
             if ((selectOptions.Select?.Items?.Count ?? 0) <= 0)
             {
@@ -28,7 +30,7 @@ namespace DataAccess.Sql.SQLite
             b.Append("SELECT ");
             foreach(var item in selectOptions.Select.Items)
             {
-                b.AppendItem(item, null);
+                b.AppendItem(item, null, settings);
                 b.Append(", ");
             }
             b.DropLastChars(2);

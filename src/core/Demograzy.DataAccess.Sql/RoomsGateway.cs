@@ -10,17 +10,21 @@ namespace Demograzy.DataAccess.Sql
 {
     internal class RoomsGateway : Gateway, BusinessLogic.DataAccess.IRoomsGateway
     {
-        private static readonly string ROOM_TABLE = "room";
+        private static readonly string ROOM_TABLE = "demograzy.room";
         private static readonly string ID_COLUMN = "id";
         private static readonly string OWNER_COLUMN = "owner";
         private static readonly string TITLE_COLUMN = "title";
         private static readonly string PASSPHRASE_COLUMN = "passphrase";
         private static readonly string VOTING_STARTED_COLUMN = "voting_started";
         
+        protected override string TableName => ROOM_TABLE;
 
 
-        public RoomsGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
-            base(PeekQueryBuilder, PeekNonQueryBuilder)
+        public RoomsGateway(
+            Func<IQueryBuilder> PeekQueryBuilder,
+            Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder,PeekLockCommandsBuilder)
         {
         }
 
@@ -32,12 +36,12 @@ namespace Demograzy.DataAccess.Sql
                 new InsertOptions()
                 {
                     Into = ROOM_TABLE,
-                    Values = new List<(string, object)>()
+                    Values = new List<(ColumnName, Parameter)>()
                     {
-                        (OWNER_COLUMN, ownerId),
-                        (TITLE_COLUMN, title),
-                        (PASSPHRASE_COLUMN, passphrase),
-                        (VOTING_STARTED_COLUMN, false)
+                        (new ColumnName(OWNER_COLUMN), new Parameter(ownerId)),
+                        (new ColumnName(TITLE_COLUMN), new Parameter(title)),
+                        (new ColumnName(PASSPHRASE_COLUMN), new Parameter(passphrase)),
+                        (new ColumnName(VOTING_STARTED_COLUMN), new Parameter(false))
                     }
                 }
             )
@@ -48,7 +52,7 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<RoomInfo?> GetRoomInfoAsync(int roomId)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(
@@ -59,26 +63,18 @@ namespace Demograzy.DataAccess.Sql
                     From = ROOM_TABLE,
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
-            );
-
-            var queryResult = await InvokeQuery(
-                query, 
+                ,
                 r => new RoomInfo()
                 {
                     ownerClientId = r.GetInt(0),
                     title = r.GetString(1),
                     passphrase = r.GetString(2),
                     votingStarted = r.GetBool(3),
-                });
+                }
+            )
+            .ExecuteAsync();
 
-            if (queryResult.Any())
-            {
-                return queryResult.Single();
-            }
-            else
-            {
-                return null;
-            }
+            return SingleOrNull(queryResult);
         }
 
 
@@ -89,7 +85,10 @@ namespace Demograzy.DataAccess.Sql
                 new UpdateOptions()
                 {
                     Update = ROOM_TABLE,
-                    Set = new List<(string, object)>() { (VOTING_STARTED_COLUMN, true) },
+                    Set = new List<(ColumnName, Parameter)>() 
+                    { 
+                        (new ColumnName(VOTING_STARTED_COLUMN), new Parameter(true)) 
+                    },
                     Where = new Comparison(new ColumnName(ID_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
             ).ExecuteAsync();
@@ -100,18 +99,19 @@ namespace Demograzy.DataAccess.Sql
 
 
 
-        public async Task<List<int>> GetOwnedRoomsAsync(int ownerId)
+        public async Task<ICollection<int>> GetOwnedRoomsAsync(int ownerId)
         {
-            var query = QueryBuilder.Create(
+            return await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(ID_COLUMN)),
                     From = ROOM_TABLE,
                     Where = new Comparison(new ColumnName(OWNER_COLUMN), CompareType.EQUALS, new Parameter(ownerId))
                 }
-            );
-
-            return await InvokeQuery(query, r => r.GetInt(0));
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
         }
 
 

@@ -5,7 +5,7 @@ using Demograzy.BusinessLogic.PossibleActions;
 
 namespace Demograzy.BusinessLogic
 {
-    internal class GetRoomMembersTs : TransactionScript<List<int>>
+    internal class GetRoomMembersTs : TransactionScript<ICollection<int>>
     {
         private readonly int _roomId;
 

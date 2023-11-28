@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using System;
+using System.Runtime.InteropServices;
 
 namespace DataAccess.Sql.PostgreSql
 {
@@ -14,7 +15,8 @@ namespace DataAccess.Sql.PostgreSql
             {
                 using (var connString = connStringProvider.ConnectionString)
                 {
-                    _dataSource = NpgsqlDataSource.Create(connString.ToString());
+                    _dataSource = NpgsqlDataSource.Create(
+                        Marshal.PtrToStringBSTR(Marshal.SecureStringToBSTR(connString)));
                 }
             }
 

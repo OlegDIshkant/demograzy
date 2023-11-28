@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace Demograzy.BusinessLogic.DataAccess
 {
-    public interface ICandidatesGateway
+    public interface ICandidatesGateway : IGateway
     {
         Task<int?> AddCandidateAsync(int roomId, string name);
         Task<CandidateInfo?> GetCandidateInfo(int candidateId);
-        Task<List<int>> GetCandidates(int roomId);
+        Task<ICollection<int>> GetCandidates(int roomId);
         Task<int> GetCandidatesAmount(int roomId);
         Task<bool> DeleteCandidateAsync(int candidateId);
     }

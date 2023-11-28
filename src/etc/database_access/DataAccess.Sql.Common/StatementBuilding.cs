@@ -1,12 +1,18 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Sql.SQLite
+namespace DataAccess.Sql.Common
 {
     internal static class StatementBuilding
     {
         private static readonly string AND_COPULA = " AND ";
 
-        public static void AppendWhereClause(this StringBuilder b, IWhereClause whereClause, Dictionary<string, object> parameters)
+        public static void AppendWhereClause(
+            this StringBuilder b, 
+            IWhereClause whereClause, 
+            Dictionary<string, object> parameters, 
+            IStatementBuildSettings settings)
         {
             if (whereClause != null)
             {
@@ -14,7 +20,7 @@ namespace DataAccess.Sql.SQLite
 
                 if (whereClause is IComparison comparison)
                 {
-                    b.AppendComparison(comparison, parameters);
+                    b.AppendComparison(comparison, parameters, settings);
                 }
                 else 
                 {
@@ -27,15 +33,19 @@ namespace DataAccess.Sql.SQLite
         }
 
 
-        private static void AppendComparison(this StringBuilder b, IComparison comparison, Dictionary<string, object> parameters)
+        private static void AppendComparison(
+            this StringBuilder b, 
+            IComparison comparison, 
+            Dictionary<string, object> parameters, 
+            IStatementBuildSettings settings)
         {
                 if (comparison is Comparison simpleComparison)
                 {
-                    b.AppendItem(simpleComparison.Left, parameters);
+                    b.AppendItem(simpleComparison.Left, parameters, settings);
                     b.AppendWhitespace();
-                    b.AppendComparisonSign(simpleComparison.CompareType);
+                    b.AppendComparisonSign(simpleComparison.CompareType, settings);
                     b.AppendWhitespace();
-                    b.AppendItem(simpleComparison.Right, parameters);
+                    b.AppendItem(simpleComparison.Right, parameters, settings);
                 }
                 else if (comparison is MultiComparison multiComparison)
                 {
@@ -45,7 +55,7 @@ namespace DataAccess.Sql.SQLite
 
                     foreach (var comp in multiComparison.Comparisons)
                     {
-                        b.AppendComparison(comp, parameters);
+                        b.AppendComparison(comp, parameters, settings);
                         b.Append(copula);        
                     }
 
@@ -54,7 +64,7 @@ namespace DataAccess.Sql.SQLite
                 }
                 else if (comparison is NullComparison nullComparison)
                 {
-                    b.AppendItem(nullComparison.Item, parameters);
+                    b.AppendItem(nullComparison.Item, parameters, settings);
                     b.AppendWhitespace();
                     b.AppendNullComparison(nullComparison.CompareType);
                 }
@@ -77,7 +87,11 @@ namespace DataAccess.Sql.SQLite
       
 
 
-        public static void AppendItem(this StringBuilder b, IItem item, Dictionary<string, object> parameters)
+        public static void AppendItem(
+            this StringBuilder b, 
+            IItem item, 
+            Dictionary<string, object> parameters, 
+            IStatementBuildSettings settings)
         {
             if (item is ColumnName columnName)
             {
@@ -85,7 +99,7 @@ namespace DataAccess.Sql.SQLite
             }
             else if (item is Parameter parameter)
             {
-                var @ref = $"${parameter.RefIndex}";
+                var @ref = $"{settings.ParameterPrefixSign}{parameter.RefIndex}";
                 b.Append(@ref);
                 parameters.Add(@ref, parameter.Value);
 
@@ -96,7 +110,7 @@ namespace DataAccess.Sql.SQLite
             }
             else if (item is LastInsertedRowId)
             {
-                b.Append("last_insert_rowid()");
+                b.Append(settings.LastInsertedIdFunctionCall);
             }
             else 
             {
@@ -115,11 +129,14 @@ namespace DataAccess.Sql.SQLite
         }
 
 
-        private static void AppendComparisonSign(this StringBuilder b, CompareType compareType)
+        private static void AppendComparisonSign(
+            this StringBuilder b, 
+            CompareType compareType, 
+            IStatementBuildSettings settings)
         {
             if (compareType is CompareType.EQUALS)
             {
-                b.Append("==");
+                b.Append(settings.EqualityComparisonSign);
             }
             else if (compareType is CompareType.MORE_THAN)
             {

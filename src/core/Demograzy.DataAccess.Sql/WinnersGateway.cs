@@ -10,17 +10,20 @@ namespace Demograzy.DataAccess.Sql
 {
     internal class WinnersGateway : Gateway, BusinessLogic.DataAccess.IWinnersGateway
     {
-        private static readonly string WINNER_TABLE = "winner";
+        private static readonly string WINNER_TABLE = "demograzy.winner";
         private static readonly string ID_COLUMN = "id";
         private static readonly string ROOM_COLUMN = "room";
         
+        protected override string TableName => WINNER_TABLE;
 
 
-        public WinnersGateway(Func<IQueryBuilder> PeekQueryBuilder, Func<INonQueryBuilder> PeekNonQueryBuilder) :
-            base(PeekQueryBuilder, PeekNonQueryBuilder)
+        public WinnersGateway(
+            Func<IQueryBuilder> PeekQueryBuilder,
+            Func<INonQueryBuilder> PeekNonQueryBuilder,
+            Func<ILockCommandsBuilder> PeekLockCommandsBuilder) :
+            base(PeekQueryBuilder, PeekNonQueryBuilder, PeekLockCommandsBuilder)
         {
         }
-
 
 
         public async Task<bool> AddWinnerAsync(int roomId, int winnerId)
@@ -29,10 +32,10 @@ namespace Demograzy.DataAccess.Sql
                 new InsertOptions()
                 {
                     Into = WINNER_TABLE,
-                    Values = new List<(string, object)>()
+                    Values = new List<(ColumnName, Parameter)>()
                     {
-                        (ID_COLUMN, winnerId),
-                        (ROOM_COLUMN, roomId)
+                        (new ColumnName(ID_COLUMN), new Parameter(winnerId)),
+                        (new ColumnName(ROOM_COLUMN), new Parameter(roomId))
                     }
                 }
             ).ExecuteAsync();
@@ -44,17 +47,19 @@ namespace Demograzy.DataAccess.Sql
 
         public async Task<int?> GetWinnerAsync(int roomId)
         {
-            var query = QueryBuilder.Create(
+            var queryResult = await QueryBuilder.Create(
                 new SelectOptions()
                 {
                     Select = new SelectClause(new ColumnName(ID_COLUMN)),
                     From = WINNER_TABLE,
                     Where = new Comparison(new ColumnName(ROOM_COLUMN), CompareType.EQUALS, new Parameter(roomId))
                 }
-            );
+                ,
+                r => r.GetInt(0)
+            )
+            .ExecuteAsync();
 
-            var queryResult = await InvokeQuery(query, r => r.GetInt(0));
-            if (queryResult.Count == 1)
+            if (queryResult.Any())
             {
                 return queryResult.Single();
             }

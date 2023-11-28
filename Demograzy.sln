@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Sql.SQLite", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Sql.PostgreSql", "src\etc\database_access\DataAccess.Sql.PostgreSql\DataAccess.Sql.PostgreSql.csproj", "{81931019-7CB8-491A-A7B1-21D82A75539E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Sql.Common", "src\etc\database_access\DataAccess.Sql.Common\DataAccess.Sql.Common.csproj", "{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{81931019-7CB8-491A-A7B1-21D82A75539E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81931019-7CB8-491A-A7B1-21D82A75539E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81931019-7CB8-491A-A7B1-21D82A75539E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B1A0CBE4-D82F-4F0B-B6CB-0D514FFB63BD} = {77CEAD5A-D0CF-4D52-80E5-4E78F06B416E}
@@ -84,5 +90,6 @@ Global
 		{CF65757E-E040-4CEC-B615-6299D5EF30F9} = {6977E1A2-16A4-403D-B04F-121581A4C40B}
 		{9490CEDA-520A-4F7F-8F26-A8219ED59B38} = {6977E1A2-16A4-403D-B04F-121581A4C40B}
 		{81931019-7CB8-491A-A7B1-21D82A75539E} = {6977E1A2-16A4-403D-B04F-121581A4C40B}
+		{DDD0AFE8-F357-4DEB-A579-777E3E0C86AA} = {6977E1A2-16A4-403D-B04F-121581A4C40B}
 	EndGlobalSection
 EndGlobal

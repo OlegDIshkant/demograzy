@@ -1,17 +1,18 @@
+using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Sql.SQLite
+namespace DataAccess.Sql.Common
 {
-    internal static class UpdateStatementBuilder
+    public static class UpdateStatementBuilder
     {
-        public static string Build(UpdateOptions updateOptions, out Dictionary<string, object> parameters)
+        public static string Build(UpdateOptions updateOptions, out Dictionary<string, object> parameters, IStatementBuildSettings settings)
         {
             parameters = new Dictionary<string, object>();
             var b = new StringBuilder();
 
             b.AppendUpdateClause(updateOptions);
-            b.AppendSetClause(updateOptions, parameters);
-            b.AppendWhereClause(updateOptions.Where, parameters);
+            b.AppendSetClause(updateOptions, parameters, settings);
+            b.AppendWhereClause(updateOptions.Where, parameters, settings);
 
             return b.ToString();
         }
@@ -28,18 +29,20 @@ namespace DataAccess.Sql.SQLite
 
 
 
-        private static void AppendSetClause(this StringBuilder b, UpdateOptions updateOptions, Dictionary<string, object> parameters)
+        private static void AppendSetClause(
+            this StringBuilder b, 
+            UpdateOptions updateOptions, 
+            Dictionary<string, object> parameters,
+            IStatementBuildSettings settings)
         {
             b.Append("SET");
             b.AppendWhitespace();
             
             foreach(var setter in updateOptions.Set)
             {
-                string parameterName = $"${setter.column}";
-                b.Append(setter.column);
+                b.Append(setter.column.Value);
                 b.Append(" = ");
-                b.Append(parameterName);
-                parameters.Add(parameterName, setter.value);
+                b.AppendItem(setter.value, parameters, settings);
                 b.Append(", ");
             }
 
