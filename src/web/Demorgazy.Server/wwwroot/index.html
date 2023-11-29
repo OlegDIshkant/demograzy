@@ -26,15 +26,46 @@
 
 
         <div id=client_menu_screen>
-            <h2>Welcome!</h2>
+            <h2 class="welcome_title">Welcome!</h2>
             <br>
-            <button>Start New Voting</button>
+            <button id="start_new_voting_btn">Start New Voting</button>
             <br>
             <button>Join Voting</button>
         </div>
 
 
+
+        <div id=create_room_screen>
+            <h2>Room creation:</h2>
+            <br>
+            <form id="create_room_form">
+                <label>Title: </label>
+                <input type="text" class="title_input">
+                <br>
+                <label>Passphrase: </label>
+                <input type="text" class="passphrase_input">
+                <br>
+                <input class="submit_room" type="submit">
+            </form>
+        </div>
+
+
+
+        <div id=create_room_fail_screen>
+            <h2>Failed to create room...</h2>
+            <br>
+            <button class="back_btn">Okey :(</button>
+        </div>
+
+
+
+        <div id=room_lobby_screen>
+            <h2>Room Created!</h2>
+        </div>
+
+
         <script>
+
 
             main();
 
@@ -53,8 +84,16 @@
                 document.getElementById("create_client_screen").style.display = "none";
                 document.getElementById("create_client_fail_screen").style.display = "none";  
                 document.getElementById("client_menu_screen").style.display = "none";  
+                document.getElementById("create_room_screen").style.display = "none";  
+                document.getElementById("create_room_fail_screen").style.display = "none";  
+                document.getElementById("room_lobby_screen").style.display = "none";  
             }
 
+
+            function init_create_client_screen()
+            {
+
+            }
 
 
             function start_create_client_screen()
@@ -94,11 +133,12 @@
                     if (xhr.status != 201) { 
                         start_create_client_fail_screen();
                     } else {
-                        start_client_menu_screen();
+                        start_client_menu_screen(xhr.responseText);
                     }
                 };
                 xhr.onerror = function() {
-                        alert(`Connection error`); 
+                    finish_create_client_screen();
+                    start_create_client_fail_screen();
                 };
 
                 xhr.send();            
@@ -112,10 +152,105 @@
             }
 
 
-            function start_client_menu_screen()
+            function start_client_menu_screen(client_id)
             {
                 var screen = document.getElementById("client_menu_screen");            
+                screen.style.display = "block";  
+
+                var welcome_title = screen.getElementsByClassName("welcome_title")[0];
+                welcome_title.innerHTML = "Welcome user '" + client_id + "'!";
+
+                document.getElementById("start_new_voting_btn").onclick = function()
+                {
+                    finish_client_menu_screen();
+                    start_create_room_screen(client_id);
+                }   
+            }
+
+
+            function finish_client_menu_screen()
+            {
+                var screen = document.getElementById("client_menu_screen");            
+                screen.style.display = "none";  
+            }
+
+
+            function start_create_room_screen(client_id)
+            {
+                var screen = document.getElementById("create_room_screen");            
                 screen.style.display = "block";     
+
+                var form = document.getElementById("create_room_form");
+                form.addEventListener('submit', function(event) { event.preventDefault(); });
+
+                var submit_btn = screen.getElementsByClassName("submit_room")[0];
+                submit_btn.onclick = function() 
+                { 
+                    submit_btn.style.display = "none";
+                    var room_title = screen.getElementsByClassName("title_input")[0];
+                    var passphrase = screen.getElementsByClassName("passphrase_input")[0];
+                    create_room(client_id, room_title, passphrase);
+                };
+            }
+
+
+            function finish_create_room_screen()
+            {
+                var screen = document.getElementById("create_room_screen");            
+                screen.style.display = "none";     
+            }
+
+
+
+            function create_room(client_id, room_title, passphrase)
+            {
+                let xhr = new XMLHttpRequest();
+                let url = new URL('http://localhost:5079/client/' + client_id +'/room/new');
+                url.searchParams.set('title', room_title);
+                url.searchParams.set('passphrase', passphrase);
+                xhr.open('PUT', url); 
+                xhr.onloadend = function(event) {
+                    finish_create_room_screen();
+                    if (xhr.status != 201) { 
+                        start_create_room_fail_screen(client_id);
+                    } else {
+                        start_room_lobby_screen();
+                    }
+                };
+                xhr.onerror = function() {
+                    finish_create_room_screen();
+                    start_create_room_fail_screen(client_id);
+                };
+
+                xhr.send();            
+            }
+
+
+            function start_create_room_fail_screen(client_id)
+            {
+                var screen = document.getElementById("create_room_fail_screen");            
+                screen.style.display = "block";     
+
+                var back_btn = screen.getElementsByClassName("back_btn")[0];
+                back_btn.onclick = function()
+                {
+                    finish_create_room_fail_screen();
+                    start_client_menu_screen(client_id);
+                }
+            }
+
+
+            function finish_create_room_fail_screen()
+            {
+                var screen = document.getElementById("create_room_fail_screen");            
+                screen.style.display = "none";
+            }
+
+
+            function start_room_lobby_screen()
+            {
+                var screen = document.getElementById("room_lobby_screen");            
+                screen.style.display = "none";
             }
 
         </script>

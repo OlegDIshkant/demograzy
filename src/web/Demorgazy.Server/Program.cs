@@ -38,4 +38,27 @@ app.MapPut(
 
     });
 
+app.MapPut(
+    "/client/{clientId}/new",
+    async (int clientId, HttpContext context) =>
+    {
+        if (context.Request.Query.TryGetValue("title", out var title) &&
+            context.Request.Query.TryGetValue("passphrase", out var passphrase))
+        {
+            var roomId = await demograzyService.AddRoomAsync(clientId, title, passphrase);
+            
+            if (roomId.HasValue)
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = 201; 
+                await context.Response.WriteAsync(JsonSerializer.Serialize(roomId));
+                return;
+            }
+        }
+
+        context.Response.StatusCode = 400;
+        
+
+    });
+
 app.Run();
