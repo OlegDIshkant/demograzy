@@ -115,4 +115,53 @@ app.MapPut(
 
     });
 
+app.MapGet(
+    "/room/{roomId}/members",
+    async (int roomId, HttpContext context) =>
+    {        
+        var memberIds = await demograzyService.GetMembers(roomId);
+
+        if (memberIds != null)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(memberIds));
+            return;
+        }
+
+        context.Response.StatusCode = 400;
+    });
+
+app.MapGet(
+    "/room/{roomId}/candidates",
+    async (int roomId, HttpContext context) =>
+    {        
+        var candidateIds = await demograzyService.GetCandidatesAsync(roomId);
+
+        if (candidateIds != null)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(candidateIds));
+            return;
+        }
+
+        context.Response.StatusCode = 400;
+    });
+
+app.MapPost(
+    "/room/{roomId}/start_voting",
+    async (int roomId, HttpContext context) =>
+    {        
+        if (await demograzyService.StartVotingAsync(roomId))
+        {
+            context.Response.StatusCode = 200; 
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+
+    });
+
 app.Run();

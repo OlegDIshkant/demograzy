@@ -67,6 +67,31 @@
 
         <div id=room_lobby_screen>
             <h2>Room Created!</h2>
+            
+            <br>
+
+            <button class="update_btn">update</button>
+            <button class="add_candidate_btn">add candidate</button>
+            <br>
+
+            <br>
+
+            <label>Members:</label>
+            <ul class="members_list">
+            </ul>
+
+            <br>
+
+            <label>Candidates:</label>
+            <ul class="candidate_list">
+            </ul>
+
+            <br>
+            <br>
+            
+            <button class="start_btn">start voting</button>
+            <h4 class="start_error_title">Failed to start voting :(</h4>
+
         </div>
 
 
@@ -108,7 +133,7 @@
 
                 createRoomScreen = new CreateRoomScreen(
                     document.getElementById("create_room_screen"),
-                    function(clientId, roomId) { roomLobbyScreen.enable(clientId); },
+                    function(clientId, roomId) { roomLobbyScreen.enable(clientId, roomId); },
                     function(clientId) { createRoomFailScreen.enable(clientId); }
                 );
 
@@ -118,7 +143,9 @@
                 );
 
                 roomLobbyScreen = new RoomLobbyScreen(
-                    document.getElementById("room_lobby_screen")
+                    document.getElementById("room_lobby_screen"),
+                    function(clientId, roomId) { alert("adding new candidate"); },
+                    function(clientId, roomId) { alert("voting started"); }
                 );
             }
 
