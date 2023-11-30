@@ -20,6 +20,60 @@ app.MapGet(
 
     });
 
+app.MapGet(
+    "/create_client_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_client_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/client_menu_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "client_menu_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/create_room_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_room_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/create_room_fail_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_room_fail_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/create_client_failed_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_client_failed_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/room_lobby_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "room_lobby_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
 app.MapPut(
     "/client/new", 
     async (context) =>
@@ -39,7 +93,7 @@ app.MapPut(
     });
 
 app.MapPut(
-    "/client/{clientId}/new",
+    "/client/{clientId}/room/new",
     async (int clientId, HttpContext context) =>
     {
         if (context.Request.Query.TryGetValue("title", out var title) &&
