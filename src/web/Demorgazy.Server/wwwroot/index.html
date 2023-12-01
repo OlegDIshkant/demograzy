@@ -10,6 +10,7 @@
         <script type="text/javascript" src="./create_room_screen.js"></script>
         <script type="text/javascript" src="./create_room_fail_screen.js"></script>
         <script type="text/javascript" src="./room_lobby_screen.js"></script>
+        <script type="text/javascript" src="./create_candidate_screen.js"></script>
 
         <h1>---DEMOGRAZY---</h1>
         <br><br>
@@ -95,6 +96,23 @@
         </div>
 
 
+
+        <div id=add_candidate_screen>
+            <h2>New candidate:</h2>
+            <br>
+            <form class="form">
+                <label>Name: </label>
+                <input type="text" class="name_input">
+                <input class="submit" type="submit">
+            </form>
+            <br>
+            <h4 class="error_msg">Failed to add new candidate :(</h4>
+            <br>
+            <button class="go_back">go back</button>
+        </div>
+
+
+
         <script>
 
             let createClientScreen;
@@ -103,6 +121,7 @@
             let createRoomScreen;
             let createRoomFailScreen;
             let roomLobbyScreen;
+            let createCandidateScreen;
             
 
             main();
@@ -144,8 +163,13 @@
 
                 roomLobbyScreen = new RoomLobbyScreen(
                     document.getElementById("room_lobby_screen"),
-                    function(clientId, roomId) { alert("adding new candidate"); },
+                    function(clientId, roomId) { createCandidateScreen.enable(clientId, roomId); },
                     function(clientId, roomId) { alert("voting started"); }
+                );
+
+                createCandidateScreen = new CreateCandidateScreen(
+                    document.getElementById("add_candidate_screen"),
+                    function(clientId, roomId) { roomLobbyScreen.enable(clientId, roomId); },
                 );
             }
 

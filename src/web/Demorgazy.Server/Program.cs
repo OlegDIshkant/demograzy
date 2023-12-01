@@ -66,6 +66,15 @@ app.MapGet(
     });
 
 app.MapGet(
+    "/create_candidate_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_candidate_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
     "/room_lobby_screen.js", 
     () => 
     {
@@ -161,6 +170,29 @@ app.MapPost(
         {
             context.Response.StatusCode = 400;
         }
+
+    });
+    
+app.MapPut(
+    "/room/{roomId}/candidates/new",
+    async (int roomId, HttpContext context) =>
+    {
+
+        if (context.Request.Query.TryGetValue("name", out var name))
+        {
+            var candidateId = await demograzyService.AddCandidateAsync(roomId, name);
+            
+            if (candidateId.HasValue)
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = 201; 
+                await context.Response.WriteAsync(JsonSerializer.Serialize(candidateId));
+                return;
+            }
+        }
+
+        context.Response.StatusCode = 400;
+        
 
     });
 
