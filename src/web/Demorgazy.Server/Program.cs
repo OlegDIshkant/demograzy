@@ -92,6 +92,24 @@ app.MapGet(
         return Results.Content(fileContent, "application/javascript");
     });
 
+app.MapGet(
+    "/winner_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "winner_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
+    "/requests.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "requests.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
 app.MapPut(
     "/client/new", 
     async (context) =>

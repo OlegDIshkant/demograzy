@@ -217,7 +217,7 @@ class VotePanel
     {
         var candidateIds = this.#getCandidateIds(versusId);
         let result = [];
-        candidateIds.forEach(id => { result.push(this.#getCandidateName(id)); });
+        candidateIds.forEach(id => { result.push(Requests.getCandidateName(id)); });
         return result;
     }
 
@@ -235,22 +235,6 @@ class VotePanel
     #genUrlToRequestCandidateIds(versusId)
     {
         return new URL('http://localhost:5079/versus/' + versusId + '/candidates');
-    }
-
-    
-    #getCandidateName(candidateId)
-    {
-        let request = new XMLHttpRequest();
-        let url = this.#genUrlToRequestCandidateName(candidateId);
-        request.open('GET', url, false); 
-        request.send();
-        return request.responseText;    
-    }
-
-
-    #genUrlToRequestCandidateName(candidateId)
-    {
-        return new URL('http://localhost:5079/candidate/' + candidateId + '/name');
     }
     
     
