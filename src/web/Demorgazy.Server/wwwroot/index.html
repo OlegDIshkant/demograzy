@@ -11,6 +11,7 @@
         <script type="text/javascript" src="./create_room_fail_screen.js"></script>
         <script type="text/javascript" src="./room_lobby_screen.js"></script>
         <script type="text/javascript" src="./create_candidate_screen.js"></script>
+        <script type="text/javascript" src="./vote_screen.js"></script>
 
         <h1>---DEMOGRAZY---</h1>
         <br><br>
@@ -113,6 +114,26 @@
 
 
 
+        <div id=voting_screen>
+            <h2 class="status">Current versus:</h2>
+            <br>
+            <br>
+            
+            <div class="vote_panel">                
+                <button class="choose_1">Vote for #1---> </button>
+                <label class="option_1">Candidate_1</label>
+                
+                <br>
+                <br>
+                
+                <button class="choose_2">Vote for #2---> </button>
+                <label class="option_2">Candidate_2</label>
+            </div>
+
+        </div>
+
+
+
         <script>
 
             let createClientScreen;
@@ -122,6 +143,7 @@
             let createRoomFailScreen;
             let roomLobbyScreen;
             let createCandidateScreen;
+            let voteScreen;
             
 
             main();
@@ -164,12 +186,17 @@
                 roomLobbyScreen = new RoomLobbyScreen(
                     document.getElementById("room_lobby_screen"),
                     function(clientId, roomId) { createCandidateScreen.enable(clientId, roomId); },
-                    function(clientId, roomId) { alert("voting started"); }
+                    function(clientId, roomId) { voteScreen.enable(clientId, roomId); }
                 );
 
                 createCandidateScreen = new CreateCandidateScreen(
                     document.getElementById("add_candidate_screen"),
                     function(clientId, roomId) { roomLobbyScreen.enable(clientId, roomId); },
+                );
+
+                voteScreen = new VoteScreen(
+                    document.getElementById("voting_screen"),
+                    (winnerId) => alert("winner is: " + winnerId)
                 );
             }
 

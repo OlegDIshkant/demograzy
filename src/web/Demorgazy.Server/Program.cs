@@ -83,6 +83,15 @@ app.MapGet(
         return Results.Content(fileContent, "application/javascript");
     });
 
+app.MapGet(
+    "/vote_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "vote_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
 app.MapPut(
     "/client/new", 
     async (context) =>
@@ -142,6 +151,23 @@ app.MapGet(
     });
 
 app.MapGet(
+    "/room/{roomId}/members/{clientId}/active_verses",
+    async (int roomId, int clientId, HttpContext context) =>
+    {        
+        var memberIds = await demograzyService.GetActiveVersesAsync(roomId, clientId);
+
+        if (memberIds != null)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(memberIds));
+            return;
+        }
+
+        context.Response.StatusCode = 400;
+    });
+
+app.MapGet(
     "/room/{roomId}/candidates",
     async (int roomId, HttpContext context) =>
     {        
@@ -172,6 +198,25 @@ app.MapPost(
         }
 
     });
+
+app.MapGet(
+    "/room/{roomId}/winner",
+    async (int roomId, HttpContext context) =>
+    {        
+        var winnerId = await demograzyService.GetWinnerAsync(roomId);
+        
+        if (winnerId.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(winnerId.Value));
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+
+    });
     
 app.MapPut(
     "/room/{roomId}/candidates/new",
@@ -193,6 +238,67 @@ app.MapPut(
 
         context.Response.StatusCode = 400;
         
+
+    });
+    
+app.MapGet(
+    "/versus/{versusId}/candidates",
+    async (int versusId, HttpContext context) =>
+    {
+        var versusInfo = await demograzyService.GetVersusInfoAsync(versusId);
+        
+        if (versusInfo.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            var candidates = new List<int>()
+            {
+                versusInfo.Value.firstCandidateId,
+                versusInfo.Value.secondCandidateId
+            };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(candidates));
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    });
+    
+app.MapPost(
+    "/versus/{versusId}/vote",
+    async (int versusId, HttpContext context) =>
+    {
+        if (context.Request.Query.TryGetValue("voter", out var voterIdString) &&
+            context.Request.Query.TryGetValue("voteForFirst", out var voteForFirstString) &&
+            int.TryParse(voterIdString, out var voterId) &&
+            bool.TryParse(voteForFirstString, out var voteForFirst) &&
+            await demograzyService.VoteAsync(versusId, voterId, voteForFirst))
+        {
+            context.Response.StatusCode = 200;
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    });
+
+
+app.MapGet(
+    "/candidate/{candidateId}/name",
+    async (int candidateId, HttpContext context) =>
+    {        
+        var candidateInfo = await demograzyService.GetCandidateInfo(candidateId);
+        
+        if (candidateInfo.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(candidateInfo.Value.name);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
 
     });
 

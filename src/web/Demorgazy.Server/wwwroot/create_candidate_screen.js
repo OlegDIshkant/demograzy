@@ -131,7 +131,7 @@ class CreateCandidateScreen
 
     #getNameInput()
     {
-        return this.#nameInput.innerHtml;
+        return this.#nameInput.value;
     }
 
 
