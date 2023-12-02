@@ -3,21 +3,26 @@ class ClientMenuScreen
     #screen;
     #welcomeTitle;
     #createRoomBtn;
-    #onStartVoting;
+    #joinRoomBtn;
+    #onStartCreatingRoom;
+    #onStartJoiningRoom;
 
-    constructor(htmlElement, onStartVoting)
+
+    constructor(htmlElement, onStartCreatingRoom, onStartJoiningRoom)
     {
-        this.#defineFields(htmlElement, onStartVoting);
+        this.#defineFields(htmlElement, onStartCreatingRoom, onStartJoiningRoom);
         this.#hideScreen();
     }
 
 
-    #defineFields(htmlElement, onStartVoting)
+    #defineFields(htmlElement, onStartCreatingRoom, onStartJoiningRoom)
     {
         this.#screen = htmlElement;
         this.#welcomeTitle = htmlElement.getElementsByClassName("welcome_title")[0]; 
         this.#createRoomBtn = htmlElement.getElementsByClassName("start_new_voting_btn")[0];
-        this.#onStartVoting = onStartVoting; 
+        this.#joinRoomBtn = htmlElement.getElementsByClassName("join_voting_btn")[0];
+        this.#onStartCreatingRoom = onStartCreatingRoom; 
+        this.#onStartJoiningRoom = onStartJoiningRoom; 
     }
 
 
@@ -58,19 +63,28 @@ class ClientMenuScreen
     {
         let myself = this;
         this.#createRoomBtn.onclick = function() { myself.#onStartVotingBtnClicked(clientId); };   
+        this.#joinRoomBtn.onclick = function() { myself.#onJoinVotingBtnClicked(clientId); };   
     }
 
 
     #disableButtons()
     {
         this.#createRoomBtn.onclick = null;   
+        this.#joinRoomBtn.onclick = null;   
     }
 
 
     #onStartVotingBtnClicked(clientId)
     {
         this.#disable();
-        this.#onStartVoting(clientId);
+        this.#onStartCreatingRoom(clientId);
+    }
+
+
+    #onJoinVotingBtnClicked(clientId)
+    {
+        this.#disable();
+        this.#onStartJoiningRoom(clientId);
     }
 
 }

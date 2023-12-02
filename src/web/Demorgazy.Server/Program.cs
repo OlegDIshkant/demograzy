@@ -102,6 +102,15 @@ app.MapGet(
     });
 
 app.MapGet(
+    "/join_room_screen.js", 
+    () => 
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "join_room_screen.js");
+        var fileContent = System.IO.File.ReadAllText(filePath);
+        return Results.Content(fileContent, "application/javascript");
+    });
+
+app.MapGet(
     "/requests.js", 
     () => 
     {
@@ -169,23 +178,6 @@ app.MapGet(
     });
 
 app.MapGet(
-    "/room/{roomId}/members/{clientId}/active_verses",
-    async (int roomId, int clientId, HttpContext context) =>
-    {        
-        var memberIds = await demograzyService.GetActiveVersesAsync(roomId, clientId);
-
-        if (memberIds != null)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = 200; 
-            await context.Response.WriteAsync(JsonSerializer.Serialize(memberIds));
-            return;
-        }
-
-        context.Response.StatusCode = 400;
-    });
-
-app.MapGet(
     "/room/{roomId}/candidates",
     async (int roomId, HttpContext context) =>
     {        
@@ -200,6 +192,42 @@ app.MapGet(
         }
 
         context.Response.StatusCode = 400;
+    });
+
+app.MapGet(
+    "/room/{roomId}/voting_started",
+    async (int roomId, HttpContext context) =>
+    {        
+        var roomInfo = await demograzyService.GetRoomInfoAsync(roomId);
+
+
+        if (roomInfo.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(roomInfo.Value.votingStarted));
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+
+    });
+
+app.MapPut(
+    "/room/{roomId}/members/new",
+    async (int roomId, HttpContext context) =>
+    {        
+        if (context.Request.Query.TryGetValue("memberId", out var memberIdString) &&
+            int.TryParse(memberIdString, out var memberId) &&
+            await demograzyService.AddMember(roomId, memberId))
+        {
+            context.Response.StatusCode = 200; 
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }        
     });
 
 app.MapPost(
@@ -318,6 +346,23 @@ app.MapGet(
             context.Response.StatusCode = 400;
         }
 
+    });
+
+app.MapGet(
+    "/room/{roomId}/members/{clientId}/active_verses",
+    async (int roomId, int clientId, HttpContext context) =>
+    {        
+        var memberIds = await demograzyService.GetActiveVersesAsync(roomId, clientId);
+
+        if (memberIds != null)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(memberIds));
+            return;
+        }
+
+        context.Response.StatusCode = 400;
     });
 
 app.Run();

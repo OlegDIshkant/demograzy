@@ -14,6 +14,7 @@
         <script type="text/javascript" src="./create_candidate_screen.js"></script>
         <script type="text/javascript" src="./vote_screen.js"></script>
         <script type="text/javascript" src="./winner_screen.js"></script>
+        <script type="text/javascript" src="./join_room_screen.js"></script>
 
 
         <h1>---DEMOGRAZY---</h1>
@@ -41,7 +42,7 @@
             <br>
             <button class="start_new_voting_btn">Start New Voting</button>
             <br>
-            <button>Join Voting</button>
+            <button class="join_voting_btn">Join Voting</button>
         </div>
 
 
@@ -70,8 +71,26 @@
 
 
 
+        <div id="join_room_screen">
+            <h2>Joining room:</h2>
+            <br>
+            <form class="form">
+                <label>Room Id: </label>
+                <input type="text" class="room_id_input">
+                <br>
+                <label>Passphrase: </label>
+                <input type="text" class="passphrase_input">
+                <br>
+                <input class="join" type="submit">
+            </form>
+            <br>
+            <label class="error_msg">Failed to join room!</label>
+        </div>
+
+
+
         <div id=room_lobby_screen>
-            <h2>Room Created!</h2>
+            <h2 class="room_title">Room Created!</h2>
             
             <br>
 
@@ -154,6 +173,7 @@
             let createCandidateScreen;
             let voteScreen;
             let winnerScreen;
+            let joinRoomScreen;
             
 
             main();
@@ -170,8 +190,8 @@
             {
                 createClientScreen = new CreateClientScreen(
                     document.getElementById("create_client_screen"),
-                    function(clientId) { clientMenuScreen.enable(clientId); },
-                    function() { createClientFailedScreen.enable(); });
+                    (clientId) => clientMenuScreen.enable(clientId),
+                    () => createClientFailedScreen.enable());
 
                 createClientFailedScreen = new CreateClientFailedScreen(
                     document.getElementById("create_client_fail_screen")
@@ -179,29 +199,35 @@
 
                 clientMenuScreen = new ClientMenuScreen(
                     document.getElementById("client_menu_screen"),
-                    function(clientId) { createRoomScreen.enable(clientId); }
+                    (clientId) => createRoomScreen.enable(clientId),
+                    (clientId) => joinRoomScreen.enable(clientId)
                 );
 
                 createRoomScreen = new CreateRoomScreen(
                     document.getElementById("create_room_screen"),
-                    function(clientId, roomId) { roomLobbyScreen.enable(clientId, roomId); },
-                    function(clientId) { createRoomFailScreen.enable(clientId); }
+                    (clientId, roomId) => roomLobbyScreen.enable(clientId, roomId, true),
+                    (clientId) => createRoomFailScreen.enable(clientId)
                 );
 
                 createRoomFailScreen = new CreateRoomFailScreen(
                     document.getElementById("create_room_fail_screen"),
-                    function(clientId) { clientMenuScreen.enable(clientId); }
+                    (clientId) => clientMenuScreen.enable(clientId)
+                );
+
+                joinRoomScreen = new JoinRoomScreen(
+                    document.getElementById("join_room_screen"),
+                    (clientId, roomId) => roomLobbyScreen.enable(clientId, roomId, false)
                 );
 
                 roomLobbyScreen = new RoomLobbyScreen(
                     document.getElementById("room_lobby_screen"),
-                    function(clientId, roomId) { createCandidateScreen.enable(clientId, roomId); },
-                    function(clientId, roomId) { voteScreen.enable(clientId, roomId); }
+                    (clientId, roomId) => createCandidateScreen.enable(clientId, roomId),
+                    (clientId, roomId) => voteScreen.enable(clientId, roomId)
                 );
 
                 createCandidateScreen = new CreateCandidateScreen(
                     document.getElementById("add_candidate_screen"),
-                    function(clientId, roomId) { roomLobbyScreen.enable(clientId, roomId); },
+                    (clientId, roomId) => roomLobbyScreen.enable(clientId, roomId, true),
                 );
 
                 voteScreen = new VoteScreen(
@@ -210,7 +236,8 @@
                 );
 
                 winnerScreen = new WinnerScreen(
-                    document.getElementById("winner_screen")
+                    document.getElementById("winner_screen"),
+                    (clientId, roomId) => roomLobbyScreen.enable(clientId, roomId)
                 );
             }
 

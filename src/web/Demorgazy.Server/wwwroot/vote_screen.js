@@ -110,8 +110,15 @@ class VoteScreen
         let url = this.#genUrlToRequestActiveVerses(this.#clientId, this.#roomId);
         request.open('GET', url, false); 
         request.send();
-        return JSON.parse(request.responseText);    
-
+        
+        if (request.status == 200)
+        {
+            return JSON.parse(request.responseText);    
+        }
+        else
+        {
+            return [];
+        }
     }
 
     
@@ -228,7 +235,14 @@ class VotePanel
         let url = this.#genUrlToRequestCandidateIds(versusId);
         request.open('GET', url, false); 
         request.send();
-        return JSON.parse(request.responseText);    
+        if (request.status == 200)
+        {
+            return JSON.parse(request.responseText);    
+        }
+        else
+        {
+            return [];
+        }
     }
 
 

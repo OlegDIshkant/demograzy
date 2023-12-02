@@ -4,6 +4,7 @@ class RoomLobbyScreen
 
     //Labels:
     #startErrorTitle;
+    #roomTitle;
 
     //Buttons:
     #updateBtn;
@@ -21,6 +22,8 @@ class RoomLobbyScreen
     //Callbacks:
     #onNeedToAddCandidate;
     #onVotingStarted;
+
+    #isAdmin;
     
 
     constructor(htmlElement, onNeedToAddCandidate, onVotingStarted)
@@ -39,6 +42,7 @@ class RoomLobbyScreen
         this.#startBtn = htmlElement.getElementsByClassName("start_btn")[0];
 
         this.#startErrorTitle = htmlElement.getElementsByClassName("start_error_title")[0];
+        this.#roomTitle = htmlElement.getElementsByClassName("room_title")[0];
 
         this.#onVotingStarted = onVotingStarted;
         this.#onNeedToAddCandidate = onNeedToAddCandidate;
@@ -60,11 +64,13 @@ class RoomLobbyScreen
     }
 
 
-    enable(clientId, roomId)
+    enable(clientId, roomId, isAdmin)
     {
         this.#clientId = clientId;
         this.#roomId = roomId;
+        this.#isAdmin = isAdmin;
         
+        this.#setUpRoomTitle();
         this.#hideStartFailureMsg();
         this.#actualizeListsUpdaters();
         this.#enableButtons();
@@ -83,13 +89,18 @@ class RoomLobbyScreen
     #enableButtons()
     {
         let myself = this;
+        
         this.#updateBtn.onclick = function() { myself.#onUpdateBtnClicked(); };
-        this.#addCandidateBtn.onclick = function() { myself.#onAddCandidateButtonClicked(); };
-        this.#startBtn.onclick = function() { myself.#onStartBtnClicked(); };
-
         this.#updateBtn.style.display = "block";
-        this.#addCandidateBtn.style.display = "block";
-        this.#startBtn.style.display = "block";
+
+        if (this.#isAdmin)
+        {
+            this.#addCandidateBtn.onclick = function() { myself.#onAddCandidateButtonClicked(); };
+            this.#addCandidateBtn.style.display = "block";
+        
+            this.#startBtn.onclick = function() { myself.#onStartBtnClicked(); };
+            this.#startBtn.style.display = "block";
+        }
     }
 
 
@@ -103,6 +114,12 @@ class RoomLobbyScreen
         this.#updateBtn.style.display = "none";
         this.#addCandidateBtn.style.display = "none";
         this.#startBtn.style.display = "none";
+    }
+
+
+    #setUpRoomTitle()
+    {
+        this.#roomTitle.innerHTML = "ROOM: " + this.#roomId;
     }
 
 
@@ -120,8 +137,28 @@ class RoomLobbyScreen
     #onUpdateBtnClicked()
     {
         this.#disableButtons();
+        if (this.#shouldGoToVoteScreenNow())
+        {
+            this.#goToVoteScreen();
+            return;
+        }
         this.#updatePage();
         this.#enableButtons();
+    }
+
+
+
+    #shouldGoToVoteScreenNow()
+    {
+        return !this.#isAdmin && Requests.isVotingStarted(this.#roomId);
+    }
+
+
+
+    #goToVoteScreen()
+    {
+        this.#disable();
+        this.#onVotingStarted(this.#clientId, this.#roomId);
     }
 
 
@@ -153,8 +190,7 @@ class RoomLobbyScreen
 
         if (this.#tryStartVoting())
         {
-            this.#disable();
-            this.#onVotingStarted(this.#clientId, this.#roomId);
+            this.#goToVoteScreen();
         }
         else
         {
@@ -249,15 +285,19 @@ class ListUpdater
         }
 
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', this.#url, false);
-        xhr.send();     
+        xhr.open('GET', this.#url, false); 
 
-        if (xhr.status == 200)
+        try
         {
-            return JSON.parse(xhr.response);
-        }       
+            xhr.send();     
+            if (xhr.status == 200)
+            {
+                return JSON.parse(xhr.response);
+            }       
+        }
+        catch (e) { }
 
-        throw "failed to extract members";
+        return [];
     }
 
 
