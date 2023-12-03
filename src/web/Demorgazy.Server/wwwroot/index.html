@@ -232,18 +232,52 @@
 
 
 
-        <div id=add_candidate_screen>
-            <h2>New candidate:</h2>
-            <br>
-            <form class="form">
-                <label>Name: </label>
-                <input type="text" class="name_input">
-                <input class="submit" type="submit">
-            </form>
-            <br>
-            <h4 class="error_msg">Failed to add new candidate :(</h4>
-            <br>
-            <button class="go_back">go back</button>
+        <div id="add_candidate_screen" class="container align-middle">        
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="col-6 border rounded bg-body-tertiary p-4 shadow p-3 mb-5 bg-body-tertiary rounded">
+                    
+
+                    <div class="row">
+                        <button class="go_back btn btn-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4z"/>
+                            </svg>
+                            back
+                        </button>
+                    </div>
+
+
+                    <br>
+
+                    <div class="row">
+                        <h1 class="text-secondary">New candidate:</h1>
+                    </div>
+
+                    <br>
+
+                    <div class="row p-3 border rounded bg-light">    
+                        <form class="form">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="name_input form-control" id="nameFloatingInput" placeholder="mr. John Smith">
+                                <label for="nameFloatingInput">Title:</label>
+                            </div>
+                            <br>
+                            <input type="submit" class="submit btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="error_msg col-6 border rounded bg-danger p-4 shadow p-3 mb-5 rounded">
+                    <div class="row">
+                        <label>Failed to add new candidate :(</label>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
 

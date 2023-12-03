@@ -54,6 +54,7 @@ class CreateCandidateScreen
         this.#clientId = clientId;
         this.#roomId = roomId;
 
+        this.#clearPrevInput();
         this.#enableButtons();
         this.#showScreen();
         this.#hideErrorMsg();
@@ -64,6 +65,12 @@ class CreateCandidateScreen
     {
         this.#disableButtons();
         this.#hideScreen();
+    }
+
+
+    #clearPrevInput()
+    {
+        this.#nameInput.value = null;
     }
 
 
