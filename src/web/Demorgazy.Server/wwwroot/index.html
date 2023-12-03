@@ -100,7 +100,7 @@
                     <br>
 
                     <div class="row p-3 border rounded bg-light">    
-                        <form class="title_input form">
+                        <form class="form">
                             <div class="form-floating mb-3">
                                 <input type="text" class="title_input form-control" id="titleFloatingInput" placeholder="mr. John Smith">
                                 <label for="titleFloatingInput">Voting agenda:</label>
@@ -130,21 +130,48 @@
 
 
 
-        <div id="join_room_screen">
-            <h2>Joining room:</h2>
-            <br>
-            <form class="form">
-                <label>Room Id: </label>
-                <input type="text" class="room_id_input">
-                <br>
-                <label>Passphrase: </label>
-                <input type="text" class="passphrase_input">
-                <br>
-                <input class="join" type="submit">
-            </form>
-            <br>
-            <label class="error_msg">Failed to join room!</label>
+
+        <div id="join_room_screen" class="container align-middle">        
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="col-6 border rounded bg-body-tertiary p-4 shadow p-3 mb-5 bg-body-tertiary rounded">
+                    
+                    <div class="row">
+                        <h1 class="text-secondary">What room you want to join?</h1>
+                    </div>
+
+                    <br>
+
+                    <div class="row p-3 border rounded bg-light">    
+                        <form class="form">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="room_id_input form-control" id="roomIdFloatingInput" placeholder="mr. John Smith">
+                                <label for="roomIdFloatingInput">Room ID:</label>
+                            </div>
+                            <br>
+                            <div class="form-floating">
+                                <input type="text" class="passphrase_input form-control" id="passphrasefloatingInput" placeholder="mr. John Smith">
+                                <label for="passphrasefloatingInput">Passphrase:</label>
+                            </div>
+                            <br>
+                            <input type="submit" class="join btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="error_msg col-6 border rounded bg-danger p-4 shadow p-3 mb-5 rounded">
+                    <div class="row">
+                        <label>Failed to join room!</label>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
+
+
 
 
 
