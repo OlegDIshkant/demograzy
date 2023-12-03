@@ -3,6 +3,7 @@ class CreateClientScreen
 {
     #wholeScreen;
     #form;
+    #clientNameInput;
     #submitBtn;
     #startSuccessScreen;
     #startFailScreen;
@@ -12,6 +13,7 @@ class CreateClientScreen
     {
         this.#wholeScreen = htmlElement;
         this.#form = htmlElement.getElementsByClassName("form")[0];
+        this.#clientNameInput = htmlElement.getElementsByClassName("client_name_input")[0];
         this.#submitBtn = this.#wholeScreen.getElementsByClassName("submit")[0];
         this.#startSuccessScreen = startSuccessScreen;
         this.#startFailScreen = startFailScreen;
@@ -54,7 +56,7 @@ class CreateClientScreen
         }
 
         let url = new URL('http://localhost:5079/client/new');
-        url.searchParams.set('name', 'web_user');
+        url.searchParams.set('name', this.#getClientNameInput());
 
         this.#currentRequest = new XMLHttpRequest();
         this.#currentRequest.open('PUT', url); 
@@ -64,6 +66,12 @@ class CreateClientScreen
         this.#currentRequest.onerror = function(event) { myself.#onClientFormSubmitFailed(myself); }
 
         this.#currentRequest.send();            
+    }
+
+
+    #getClientNameInput()
+    {
+        return this.#clientNameInput.value;
     }
 
 

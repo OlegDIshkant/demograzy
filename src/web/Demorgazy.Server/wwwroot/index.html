@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <title>Test web page.</title>  
     </head>
     <body>
@@ -17,17 +19,36 @@
         <script type="text/javascript" src="./join_room_screen.js"></script>
 
 
-        <h1>---DEMOGRAZY---</h1>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                        <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
+                    </svg>
+                    <mark>DEMO</mark>GR<mark>A</mark>Z<mark>Y</mark>
+                </a>
+            </div>
+        </nav>
+
         <br><br>
 
-        <div id=create_client_screen>
-            <h2>Come up with some name to start using the service...</h2>
-            <form class="form">
-                <label>Name: </label>
-                <input type="text" class="name_input">
-                <input type="submit" class="submit">
-            </form>
+        <div id="create_client_screen" class="card   shadow p-3 mb-5 bg-body-tertiary rounded  position-absolute top-50 start-50 translate-middle" style="width: 18rem;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Plato%27s_Academy_mosaic_from_Pompeii.jpg/1024px-Plato%27s_Academy_mosaic_from_Pompeii.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Let's start!</h5>
+                <p class="card-text">Come up with some name to start using the service...</p>
+
+                
+
+                <form class="form form-floating mb-3">
+                    <input type="text" class="client_name_input form-control" id="floatingInput" placeholder="mr. John Smith">
+                    <label for="floatingInput">Your Name:</label>
+                    <br>
+                    <input type="submit" class="submit btn btn-primary">
+                </form>
+            </div>
         </div>
+
 
 
 
@@ -36,30 +57,68 @@
         </div>
 
 
+        <div id="client_menu_screen" class="container align-middle">       
+            <div class="row align-items-center justify-content-center  ">
+                <div class="col-6 border rounded bg-body-tertiary p-4 shadow p-3 mb-5 bg-body-tertiary rounded">
+                    
+                    <div class="row">
+                        <h1 class="text-secondary">Welcome!</h1>
+                    </div>
 
-        <div id=client_menu_screen>
-            <h2 class="welcome_title">Welcome!</h2>
-            <br>
-            <button class="start_new_voting_btn">Start New Voting</button>
-            <br>
-            <button class="join_voting_btn">Join Voting</button>
+                    <div class="row">
+                        <h5>
+                            <span class="welcome_title_client_name">No name</span> 
+                            <span class="welcome_title_client_id badge bg-secondary">#</span>
+                        </h5>
+                    </div>
+
+                    <br>
+                        
+                        
+                    <div class="row p-3 border rounded bg-light">
+                        <div class="vstack gap-2 mx-auto">
+                            <button type="button" class="start_new_voting_btn btn btn-primary">Start New Voting</button>
+                            <button type="button" class="join_voting_btn btn btn-outline-primary">Join Voting</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
         </div>
 
 
 
-        <div id=create_room_screen>
-            <h2>Room creation:</h2>
-            <br>
-            <form class="form">
-                <label>Title: </label>
-                <input type="text" class="title_input">
-                <br>
-                <label>Passphrase: </label>
-                <input type="text" class="passphrase_input">
-                <br>
-                <input class="submit" type="submit">
-            </form>
+
+        <div id="create_room_screen" class="container align-middle">        
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="col-6 border rounded bg-body-tertiary p-4 shadow p-3 mb-5 bg-body-tertiary rounded">
+                    
+                    <div class="row">
+                        <h1 class="text-secondary">Let's create a room!</h1>
+                    </div>
+
+                    <br>
+
+                    <div class="row p-3 border rounded bg-light">    
+                        <form class="title_input form">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="title_input form-control" id="titleFloatingInput" placeholder="mr. John Smith">
+                                <label for="titleFloatingInput">Voting agenda:</label>
+                            </div>
+                            <br>
+                            <div class="form-floating">
+                                <input type="text" class="passphrase_input form-control" id="passphrasefloatingInput" placeholder="mr. John Smith">
+                                <label for="passphrasefloatingInput">Passphrase:</label>
+                            </div>
+                            <br>
+                            <input type="submit" class="submit btn btn-primary">
+                        </form>
+                    </div>
+
+                </div>
+            </div>
         </div>
+        
 
 
 

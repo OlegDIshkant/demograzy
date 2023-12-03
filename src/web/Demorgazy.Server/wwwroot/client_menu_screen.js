@@ -1,7 +1,8 @@
 class ClientMenuScreen
 {
     #screen;
-    #welcomeTitle;
+    #welcomeTitleId;
+    #welcomeTitleName;
     #createRoomBtn;
     #joinRoomBtn;
     #onStartCreatingRoom;
@@ -18,7 +19,8 @@ class ClientMenuScreen
     #defineFields(htmlElement, onStartCreatingRoom, onStartJoiningRoom)
     {
         this.#screen = htmlElement;
-        this.#welcomeTitle = htmlElement.getElementsByClassName("welcome_title")[0]; 
+        this.#welcomeTitleId = htmlElement.getElementsByClassName("welcome_title_client_id")[0];
+        this.#welcomeTitleName = htmlElement.getElementsByClassName("welcome_title_client_name")[0]; 
         this.#createRoomBtn = htmlElement.getElementsByClassName("start_new_voting_btn")[0];
         this.#joinRoomBtn = htmlElement.getElementsByClassName("join_voting_btn")[0];
         this.#onStartCreatingRoom = onStartCreatingRoom; 
@@ -55,7 +57,8 @@ class ClientMenuScreen
 
     #greetUserViaWelcomeTitle(clientId)
     {
-        this.#welcomeTitle.innerHTML = "Welcome user '" + clientId + "'!";
+        this.#welcomeTitleName.innerHTML = Requests.getClientName(clientId);
+        this.#welcomeTitleId.innerHTML = "#" + clientId + "";
     }
 
 

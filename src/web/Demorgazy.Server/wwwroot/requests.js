@@ -58,4 +58,29 @@ class Requests
         return url;
     }
 
+
+    static getClientName(clientId)
+    {
+        let request = new XMLHttpRequest();
+        let url = this.#genUrlToGetClientName(clientId);
+        request.open('GET', url, false); 
+        request.send();
+        
+        if (request.status == 200)
+        {
+            return JSON.parse(request.responseText);
+        }  
+        else
+        {
+            return '';
+        }
+    }
+
+
+    static #genUrlToGetClientName(clientId)
+    {
+        let url = new URL('http://localhost:5079/client/' + clientId + '/name');
+        return url;
+    }
+
 }

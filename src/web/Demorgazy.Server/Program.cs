@@ -137,6 +137,24 @@ app.MapPut(
 
     });
 
+app.MapGet(
+    "/client/{clientId}/name", 
+    async (int clientId, HttpContext context) =>
+    {
+        var clientInfo = await demograzyService.GetClientInfo(clientId);
+        if (clientInfo.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(clientInfo.Value.name));
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+
+    });
+
 app.MapPut(
     "/client/{clientId}/room/new",
     async (int clientId, HttpContext context) =>
