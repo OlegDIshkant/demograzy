@@ -40,7 +40,7 @@ class WinnerScreen
     #updateHeader(winnerId)
     {
         var winnerName = Requests.getCandidateName(winnerId);
-        this.#title.innerHTML = "WINNER IS '" + winnerName + "'";
+        this.#title.innerHTML = "\"" + winnerName + "\"";
     }
 
 
