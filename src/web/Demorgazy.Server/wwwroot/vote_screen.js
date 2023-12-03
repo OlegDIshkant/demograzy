@@ -215,8 +215,8 @@ class VotePanel
     #updateOptionLabels(versusId)
     {
         var candidateNames = this.#getCandidateNames(versusId);
-        this.#optionLabel1.innerHTML = candidateNames[0];
-        this.#optionLabel2.innerHTML = candidateNames[1];
+        this.#optionLabel1.innerHTML = "\"" + candidateNames[0] + "\"";
+        this.#optionLabel2.innerHTML = "\"" + candidateNames[1] + "\"";
     }
 
     
