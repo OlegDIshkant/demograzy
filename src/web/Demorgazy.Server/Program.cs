@@ -196,6 +196,24 @@ app.MapGet(
     });
 
 app.MapGet(
+    "/room/{roomId}/title",
+    async (int roomId, HttpContext context) =>
+    {        
+        var roomInfo = await demograzyService.GetRoomInfoAsync(roomId);
+
+        if (roomInfo.HasValue)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 200; 
+            await context.Response.WriteAsync(JsonSerializer.Serialize(roomInfo.Value.title));
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    });
+
+app.MapGet(
     "/room/{roomId}/candidates",
     async (int roomId, HttpContext context) =>
     {        

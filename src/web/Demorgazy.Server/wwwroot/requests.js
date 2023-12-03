@@ -83,4 +83,29 @@ class Requests
         return url;
     }
 
+
+    static getRoomTitle(roomId)
+    {
+        let request = new XMLHttpRequest();
+        let url = this.#genUrlToGetRoomTitle(roomId);
+        request.open('GET', url, false); 
+        request.send();
+        
+        if (request.status == 200)
+        {
+            return JSON.parse(request.responseText);
+        }  
+        else
+        {
+            return '';
+        }
+    }
+
+
+    static #genUrlToGetRoomTitle(roomId)
+    {
+        let url = new URL('http://localhost:5079/room/' + roomId + '/title');
+        return url;
+    }
+
 }

@@ -4,10 +4,10 @@ class RoomLobbyScreen
 
     //Labels:
     #startErrorTitle;
-    #roomTitle;
+    #roomTitleLabel;
+    #roomIdLabel;
 
     //Buttons:
-    #updateBtn;
     #addCandidateBtn;
     #startBtn;
 
@@ -37,18 +37,22 @@ class RoomLobbyScreen
     {
         this.#screen = htmlElement;
 
-        this.#updateBtn = htmlElement.getElementsByClassName("update_btn")[0];
         this.#addCandidateBtn = htmlElement.getElementsByClassName("add_candidate_btn")[0];
         this.#startBtn = htmlElement.getElementsByClassName("start_btn")[0];
 
         this.#startErrorTitle = htmlElement.getElementsByClassName("start_error_title")[0];
-        this.#roomTitle = htmlElement.getElementsByClassName("room_title")[0];
+        this.#roomIdLabel = htmlElement.getElementsByClassName("room_title")[0];
+        this.#roomTitleLabel = htmlElement.getElementsByClassName("vote_topic")[0];
 
         this.#onVotingStarted = onVotingStarted;
         this.#onNeedToAddCandidate = onNeedToAddCandidate;
 
-        this.#memberListUpdater = new ListUpdater(htmlElement.getElementsByClassName("members_list")[0]);
-        this.#candidateListUpdater = new ListUpdater(htmlElement.getElementsByClassName("candidate_list")[0]);
+        this.#memberListUpdater = new ListUpdater(
+            htmlElement.getElementsByClassName("members_list")[0],
+            (id) => Requests.getClientName(id));
+        this.#candidateListUpdater = new ListUpdater(
+            htmlElement.getElementsByClassName("candidate_list")[0],
+            (id) => Requests.getCandidateName(id));
     }
 
 
@@ -75,7 +79,7 @@ class RoomLobbyScreen
         this.#actualizeListsUpdaters();
         this.#enableButtons();
         this.#showScreen();
-        this.#onUpdateBtnClicked();
+        this.#startContinuousUpdate();
     }
 
 
@@ -89,9 +93,6 @@ class RoomLobbyScreen
     #enableButtons()
     {
         let myself = this;
-        
-        this.#updateBtn.onclick = function() { myself.#onUpdateBtnClicked(); };
-        this.#updateBtn.style.display = "block";
 
         if (this.#isAdmin)
         {
@@ -107,11 +108,9 @@ class RoomLobbyScreen
 
     #disableButtons()
     {
-        this.#updateBtn.onclick = null;
         this.#addCandidateBtn.onclick = null;
         this.#startBtn.onclick = null;
 
-        this.#updateBtn.style.display = "none";
         this.#addCandidateBtn.style.display = "none";
         this.#startBtn.style.display = "none";
     }
@@ -119,7 +118,8 @@ class RoomLobbyScreen
 
     #setUpRoomTitle()
     {
-        this.#roomTitle.innerHTML = "ROOM: " + this.#roomId;
+        this.#roomIdLabel.innerHTML = "#" + this.#roomId;
+        this.#roomTitleLabel.innerHTML = "\"" + Requests.getRoomTitle(this.#roomId) + "\"";
     }
 
 
@@ -134,16 +134,53 @@ class RoomLobbyScreen
 
 
 
-    #onUpdateBtnClicked()
+    #startContinuousUpdate()
+    {
+        new Promise(
+            async (resolve) =>
+            {
+                await this.#runContinuousUpdateAsync();
+                resolve();
+            }
+        )
+    }
+
+
+
+    async #runContinuousUpdateAsync()
+    {
+        while (this.#screenIsActive())
+        {
+            let keepGoing = this.#continuousUpdateIteration();
+            if (keepGoing)
+            {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+
+    #continuousUpdateIteration()
     {
         this.#disableButtons();
         if (this.#shouldGoToVoteScreenNow())
         {
             this.#goToVoteScreen();
-            return;
+            return false;
         }
         this.#updatePage();
         this.#enableButtons();
+        return true;
+    }
+
+
+    #screenIsActive()
+    {
+        return this.#screen.style.display != 'none';
     }
 
 
@@ -258,10 +295,12 @@ class ListUpdater
 {
     #list;
     #url;
+    #queryItemLabel;
 
-    constructor(htmlList)
+    constructor(htmlList, queryItemLabel)
     {
         this.#list = htmlList;
+        this.#queryItemLabel = queryItemLabel;
     }
 
 
@@ -325,8 +364,10 @@ class ListUpdater
     #insertIntoHtmlList(items)
     {
         items.forEach(i => {
+            let itemLabel = this.#queryItemLabel(i);
             var item = document.createElement("li");
-            item.appendChild(document.createTextNode(i));
+            item.setAttribute("class", "list-group-item");
+            item.appendChild(document.createTextNode(itemLabel));
             this.#list.appendChild(item);
         });
         

@@ -174,35 +174,61 @@
 
 
 
+        <div id="room_lobby_screen" class="container align-middle">        
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="col-6 border rounded bg-body-tertiary p-4 shadow p-3 mb-5 bg-body-tertiary rounded">
+                    
+                    <div class="row">
+                        <h1>
+                            <span class="text-secondary">Room </span>
+                            <span class="room_title badge bg-secondary">#</span>
+                        </h1>
+                    </div>
 
-        <div id=room_lobby_screen>
-            <h2 class="room_title">Room Created!</h2>
-            
-            <br>
+                    <div class="row">
+                        <h5 class="vote_topic">"Vote topic"</h5>
+                    </div>
 
-            <button class="update_btn">update</button>
-            <button class="add_candidate_btn">add candidate</button>
-            <br>
+                    <br>
 
-            <br>
+                    <div class="row p-3 border rounded">
+                        <button class="btn add_candidate_btn btn-outline-primary p-1">add candidate</button>
+                        <button class="btn start_btn btn-primary p-1">start voting</button>                        
+                    </div>
 
-            <label>Members:</label>
-            <ul class="members_list">
-            </ul>
+                    <br>
 
-            <br>
+                    <div class="row p-1"> 
+                        
+                        <div class="col">
+                            <label>Voters:</label>
+                            <ul class="members_list list-group">
+                            </ul>
+                        </div>
+                        
+                        <div class="col">
+                            <label>Candidates:</label>
+                            <ul class="candidate_list list-group">
+                            </ul>
+                        </div>
 
-            <label>Candidates:</label>
-            <ul class="candidate_list">
-            </ul>
+                    </div>
+                </div>
+            </div>
 
-            <br>
-            <br>
-            
-            <button class="start_btn">start voting</button>
-            <h4 class="start_error_title">Failed to start voting :(</h4>
+
+            <div class="row align-items-center justify-content-center  "> 
+                <div class="start_error_title col-6 border rounded bg-danger p-4 shadow p-3 mb-5 rounded">
+                    <div class="row">
+                        <label>Failed to start voting :(</label>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
+
+
 
 
 

@@ -82,13 +82,13 @@ class CreateRoomScreen
 
     #getRoomTitleInput()
     {
-        return this.#screen.getElementsByClassName("title_input")[0].innerHtml;
+        return this.#screen.getElementsByClassName("title_input")[0].value;
     }
 
 
     #getRoomPassphraseInput()
     {
-        return this.#screen.getElementsByClassName("passphrase_input")[0].innerHtml;
+        return this.#screen.getElementsByClassName("passphrase_input")[0].value;
     }
 
 
