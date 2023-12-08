@@ -94,39 +94,23 @@ class CreateRoomScreen
 
     #requestRoomCreation(clientId, roomTitle, passphrase)
     {
-        let xhr = new XMLHttpRequest();
-        xhr.open('PUT', this.#prepareRequestUrl(clientId, roomTitle, passphrase));
+        let roomId = Requests.createRoom(clientId, roomTitle, passphrase);
 
-        let myself = this;
-        xhr.onloadend = function() { myself.#onRequestCompleted(xhr) } ;
-        xhr.onerror = function() { myself.#onRequestFailed() };
-
-        xhr.send();            
-    }
-
-
-    #prepareRequestUrl(clientId, roomTitle, passphrase)
-    {
-        let url = new URL('http://localhost:5079/client/' + clientId +'/room/new');
-        url.searchParams.set('title', roomTitle);
-        url.searchParams.set('passphrase', passphrase);
-        return url;
-    }
-
-
-    #onRequestCompleted(request)
-    {
-        this.#disable();
-
-        if (request.status == 201) 
-        { 
-            let roomId = request.responseText;
-            this.#onSuccess(this.#clientId, roomId);
-        } 
+        if (roomId != null)
+        {
+            this.#onRequestCompleted(roomId);
+        }
         else
         {
             this.#onRequestFailed();
-        }
+        }        
+    }
+
+
+    #onRequestCompleted(roomId)
+    {
+        this.#disable();
+        this.#onSuccess(this.#clientId, roomId);
     }
 
 

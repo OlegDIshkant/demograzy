@@ -81,50 +81,13 @@ class VoteScreen
 
     #getTournamentWinner(roomId)
     {
-        let request = new XMLHttpRequest();
-        let url = this.#genUrlToRequestWinnerId(this.#roomId);
-        request.open('GET', url, false); 
-        try 
-        {
-            request.send();
-            if (request.status == 200)
-            {
-                return request.responseText;
-            }    
-        } 
-        catch (error) { }
-        
-        return null;    
-    }
-
-
-    #genUrlToRequestWinnerId(roomId)
-    {
-        return new URL('http://localhost:5079/room/' + roomId + '/winner');
+        return Requests.getTournamentWinner(this.#roomId);    
     }
 
 
     #getActiveVerses()
     {
-        let request = new XMLHttpRequest();
-        let url = this.#genUrlToRequestActiveVerses(this.#clientId, this.#roomId);
-        request.open('GET', url, false); 
-        request.send();
-        
-        if (request.status == 200)
-        {
-            return JSON.parse(request.responseText);    
-        }
-        else
-        {
-            return [];
-        }
-    }
-
-    
-    #genUrlToRequestActiveVerses(clientId, roomId)
-    {
-        return new URL('http://localhost:5079/room/' + roomId + '/members/' + clientId + '/active_verses');
+        return Requests.getActiveVerses(this.#clientId, this.#roomId);
     }
 
 
@@ -222,34 +185,12 @@ class VotePanel
     
     #getCandidateNames(versusId)
     {
-        var candidateIds = this.#getCandidateIds(versusId);
+        var candidateIds = Requests.getVersusCandidateIds(versusId);
         let result = [];
         candidateIds.forEach(id => { result.push(Requests.getCandidateName(id)); });
         return result;
     }
 
-
-    #getCandidateIds(versusId)
-    {
-        let request = new XMLHttpRequest();
-        let url = this.#genUrlToRequestCandidateIds(versusId);
-        request.open('GET', url, false); 
-        request.send();
-        if (request.status == 200)
-        {
-            return JSON.parse(request.responseText);    
-        }
-        else
-        {
-            return [];
-        }
-    }
-
-
-    #genUrlToRequestCandidateIds(versusId)
-    {
-        return new URL('http://localhost:5079/versus/' + versusId + '/candidates');
-    }
     
     
     #activateButtons(clientId, versusId, onFinish)
@@ -286,21 +227,7 @@ class VotePanel
 
     #tryVote(clientId, versusId, voteForFirst)
     {
-        let request = new XMLHttpRequest();
-        let url = this.#genUrlToVote(clientId, versusId, voteForFirst);
-        request.open('POST', url, false); 
-        request.send();
-
-        return request.status == 200;    
-    }
-
-
-    #genUrlToVote(clientId, versusId, voteForFirst)
-    {
-        let url = new URL('http://localhost:5079/versus/' + versusId + '/vote');
-        url.searchParams.set('voter', clientId);
-        url.searchParams.set('voteForFirst', voteForFirst);
-        return url;
+        return Requests.vote(clientId, versusId, voteForFirst);
     }
 
 

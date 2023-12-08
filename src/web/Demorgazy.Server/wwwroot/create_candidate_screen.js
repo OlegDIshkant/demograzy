@@ -121,18 +121,7 @@ class CreateCandidateScreen
 
     #trySubmitNewCandidate()
     {
-        let xhr = new XMLHttpRequest();
-        xhr.open('PUT', this.#prepareUrl(), false);
-        xhr.send(); 
-        return xhr.status == 201;
-    }
-
-
-    #prepareUrl()
-    {
-        let url = new URL('http://localhost:5079/room/' + this.#roomId +'/candidates/new');
-        url.searchParams.set('name', this.#getNameInput());
-        return url;
+        return Requests.addCandidate(this.#roomId, this.#getNameInput());
     }
 
 

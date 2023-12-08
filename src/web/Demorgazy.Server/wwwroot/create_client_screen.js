@@ -7,7 +7,6 @@ class CreateClientScreen
     #submitBtn;
     #startSuccessScreen;
     #startFailScreen;
-    #currentRequest;
 
     constructor(htmlElement, startSuccessScreen, startFailScreen)
     {
@@ -42,30 +41,23 @@ class CreateClientScreen
 
     #disable()
     {
-        this.#currentRequest = null;
         this.#submitBtn.onclick = null;
         this.#wholeScreen.style.display = "none";
     }
 
 
     #submitClientForm()
-    {   
-        if (this.#currentRequest != null)
+    {         
+        var clientId = Requests.createClient(this.#getClientNameInput());
+
+        if (clientId != null)
         {
-            throw "Some request already exists.";
+            this.#onClientFormSubmitted(clientId);
         }
-
-        let url = new URL('http://localhost:5079/client/new');
-        url.searchParams.set('name', this.#getClientNameInput());
-
-        this.#currentRequest = new XMLHttpRequest();
-        this.#currentRequest.open('PUT', url); 
-
-        var myself = this;
-        this.#currentRequest.onloadend = function(event) { myself.#onClientFormSubmitted(myself); }
-        this.#currentRequest.onerror = function(event) { myself.#onClientFormSubmitFailed(myself); }
-
-        this.#currentRequest.send();            
+        else
+        {
+            this.#onClientFormSubmitFailed();
+        }
     }
 
 
@@ -75,24 +67,10 @@ class CreateClientScreen
     }
 
 
-    #onClientFormSubmitted()
-    {         
-        if (!this.#currentRequest)
-        {
-            throw "request is null";
-        }
-
-        if (this.#currentRequest.status == 201)
-        { 
-            var clientId = this.#currentRequest.responseText;
-            this.#startSuccessScreen(clientId);
-        } 
-        else 
-        {
-            this.#onClientFormSubmitFailed();
-        }  
-        
+    #onClientFormSubmitted(clientId)
+    {
         this.#disable();
+        this.#startSuccessScreen(clientId);
     }
 
 

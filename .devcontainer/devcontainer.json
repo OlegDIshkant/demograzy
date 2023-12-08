@@ -1,7 +1,6 @@
 {
     "build" : { "dockerfile": "DockerFile" },
     
-    "forwardPorts": [5079],
 
     "customizations": 
     {
@@ -17,7 +16,9 @@
 
     "runArgs":
     [
-      "--network=demograzy-dev-net"
+      "--network=demograzy-dev-net",
+      "-p=7050:7050",
+      "-p=5050:5050"
     ],
 
 

@@ -409,8 +409,15 @@
 
             function main()
             {
+                makePossibleSendingRequests();
                 init_screens();
                 createClientScreen.enable();
+            }
+
+
+            function makePossibleSendingRequests()
+            {                
+                Requests.init(window.location.origin);
             }
 
 

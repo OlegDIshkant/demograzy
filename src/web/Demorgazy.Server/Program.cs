@@ -1,123 +1,35 @@
 // Create app logic object
+using System.ComponentModel;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 var demograzyService = new Demograzy.BusinessLogic.MainService(
     new Demograzy.DataAccess.Sql.TransactionMeansFactory(
         new DataAccess.Sql.PostgreSql.SqlCommandBuilderFactory(
-            new DataAccess.Sql.PostgreSql.BaseConnectionStringProvider("/etc/demograzy/db_connection_string"))));
+            new DataAccess.Sql.PostgreSql.BaseConnectionStringProvider("/etc/demograzy_dev/db_connection_string"))));
 
 // Create server
 var builder = WebApplication.CreateBuilder(args);
+
 var app = builder.Build();
+
+
+app.UseStaticFiles();
 
 app.MapGet(
     "/", 
-    () =>
+    (HttpContext context) => 
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "text/html");
-
+        return Results.Redirect(GenRedirectUrlToMainPage(context.Request));
     });
 
-app.MapGet(
-    "/create_client_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_client_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
 
-app.MapGet(
-    "/client_menu_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "client_menu_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
+string GenRedirectUrlToMainPage(HttpRequest request)
+{
+    return $"{request.Scheme}://{request.Host}/index.html";
+}
 
-app.MapGet(
-    "/create_room_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_room_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/create_room_fail_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_room_fail_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/create_client_failed_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_client_failed_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/create_candidate_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "create_candidate_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/room_lobby_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "room_lobby_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/vote_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "vote_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/winner_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "winner_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/join_room_screen.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "join_room_screen.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
-
-app.MapGet(
-    "/requests.js", 
-    () => 
-    {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "requests.js");
-        var fileContent = System.IO.File.ReadAllText(filePath);
-        return Results.Content(fileContent, "application/javascript");
-    });
 
 app.MapPut(
     "/client/new", 
@@ -160,7 +72,7 @@ app.MapPut(
     async (int clientId, HttpContext context) =>
     {
         if (context.Request.Query.TryGetValue("title", out var title) &&
-            context.Request.Query.TryGetValue("passphrase", out var passphrase))
+            context.Request.Headers.TryGetValue("passphrase", out var passphrase))
         {
             var roomId = await demograzyService.AddRoomAsync(clientId, title, passphrase);
             

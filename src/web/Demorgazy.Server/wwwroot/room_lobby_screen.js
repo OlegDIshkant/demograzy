@@ -125,11 +125,8 @@ class RoomLobbyScreen
 
     #actualizeListsUpdaters()
     {
-        let url = this.#genUrlToRequestMembers();
-        this.#memberListUpdater.setRequestUrl(url);
-
-        url = this.#genUrlToRequestCandidates();
-        this.#candidateListUpdater.setRequestUrl(url);
+        this.#memberListUpdater.setRequestItemsMethod(() => Requests.getRoomMembers(this.#roomId));
+        this.#candidateListUpdater.setRequestItemsMethod(() => Requests.getCandidates(this.#roomId));
     }
 
 
@@ -207,19 +204,6 @@ class RoomLobbyScreen
     }
 
 
-    #genUrlToRequestMembers()
-    {        
-        return new URL('http://localhost:5079/room/' + this.#roomId + '/members');
-    }
-
-
-
-    #genUrlToRequestCandidates()
-    {        
-        return new URL('http://localhost:5079/room/' + this.#roomId + '/candidates');
-    }
-
-
 
     #onStartBtnClicked()
     {
@@ -240,11 +224,7 @@ class RoomLobbyScreen
 
     #tryStartVoting()
     {
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', this.#genUrlToStartVoting(), false);
-        xhr.send();     
-
-        return xhr.status == 200;
+        return Requests.startVoting(this.#roomId);
     }
 
 
@@ -259,12 +239,6 @@ class RoomLobbyScreen
         this.#startErrorTitle.style.display = "none";
     }
 
-
-    #genUrlToStartVoting()
-    {
-        let url = new URL('http://localhost:5079/room/' + this.#roomId + "/start_voting");
-        return url;
-    }
 
     #onAddCandidateButtonClicked()
     {
@@ -294,7 +268,7 @@ class RoomLobbyScreen
 class ListUpdater
 {
     #list;
-    #url;
+    #requestItems;
     #queryItemLabel;
 
     constructor(htmlList, queryItemLabel)
@@ -304,39 +278,20 @@ class ListUpdater
     }
 
 
-    setRequestUrl(url)
+    setRequestItemsMethod(requestItems)
     {
-        this.#url = url;
+        this.#requestItems = requestItems;
     }
 
 
     update()
     {
+        if (this.#requestItems == null)
+        {
+            throw "no request items method provided";
+        }
+
         this.#updateHtmlList(this.#requestItems());
-    }
-
-
-    #requestItems()
-    {
-        if (this.#url == null)
-        {
-            throw "no url";
-        }
-
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', this.#url, false); 
-
-        try
-        {
-            xhr.send();     
-            if (xhr.status == 200)
-            {
-                return JSON.parse(xhr.response);
-            }       
-        }
-        catch (e) { }
-
-        return [];
     }
 
 
