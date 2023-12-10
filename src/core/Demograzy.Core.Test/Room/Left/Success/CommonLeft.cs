@@ -15,9 +15,9 @@ namespace Demograzy.Core.Test.Room.Left.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
 
             var deleteSuccess = await service.DeleteMemberAsync(roomId, memberId);
 
@@ -31,9 +31,9 @@ namespace Demograzy.Core.Test.Room.Left.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
 
             await service.DeleteMemberAsync(roomId, memberId);
 
@@ -47,9 +47,9 @@ namespace Demograzy.Core.Test.Room.Left.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
 
             await service.DeleteMemberAsync(roomId, memberId);
 

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection.Emit;
 using Demograzy.BusinessLogic;
+using static Demograzy.Core.Test.GeneralConstants;
 
 
 namespace Demograzy.Core.Test.CommonRoutines
@@ -12,7 +13,7 @@ namespace Demograzy.Core.Test.CommonRoutines
         public static async Task<(int room, int owner)> NewRoomAndOwner(this MainService service)
         {
             var owner = await service.AddClientAsync("room_owner"); 
-            var room = (await service.AddRoomAsync(owner, "some_room", "")).Value;
+            var room = (await service.AddRoomAsync(owner, "some_room", PASSPHRASE)).Value;
             return (room, owner);
         }
 
@@ -35,7 +36,7 @@ namespace Demograzy.Core.Test.CommonRoutines
         public static async Task<int> NewExtraMember(this MainService service, int room)
         {
                 var member = await service.AddClientAsync("extra_member");
-                Assert.True(await service.AddMember(room, member)); 
+                Assert.True(await service.AddMember(room, member, PASSPHRASE)); 
                 return member;
         }
 

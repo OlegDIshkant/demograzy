@@ -9,12 +9,14 @@ namespace Demograzy.BusinessLogic
     {
         private readonly int _roomId;
         private readonly int _clientId;
+        private readonly string _passphrase; 
 
 
-        public JoinRoomTs(int roomId, int clientId, ITransactionMeans transactionMeans) : base(transactionMeans)
+        public JoinRoomTs(int roomId, int clientId, string passphrase, ITransactionMeans transactionMeans) : base(transactionMeans)
         {
             _roomId = roomId;
             _clientId = clientId;
+            _passphrase = passphrase;
         }
 
 

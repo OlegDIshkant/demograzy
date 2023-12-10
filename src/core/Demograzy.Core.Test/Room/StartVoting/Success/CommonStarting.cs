@@ -56,12 +56,12 @@ namespace Demograzy.Core.Test.Room.StartVoting.Success
             var service = StartUpRoutines.PrepareMainService();
             // Add room with owner
             var owner = await service.AddClientAsync("room_owner"); 
-            var room = (await service.AddRoomAsync(owner, "some_room", "")).Value;
+            var room = (await service.AddRoomAsync(owner, "some_room", PASSPHRASE)).Value;
             // Add extra members
             var extraMember1 = await service.AddClientAsync("extraMember1");
             var extraMember2 = await service.AddClientAsync("extraMember2");
-            await service.AddMember(room, extraMember1);
-            await service.AddMember(room, extraMember2);
+            await service.AddMember(room, extraMember1, PASSPHRASE);
+            await service.AddMember(room, extraMember2, PASSPHRASE);
             // Add candidates
             var candidates = Enumerable.Range(0, candidatesAmount)
             .Select(async i => (await service.AddCandidateAsync(room, $"candidate_{i}")).Value)

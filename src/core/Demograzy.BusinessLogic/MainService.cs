@@ -46,8 +46,8 @@ namespace Demograzy.BusinessLogic
         public async Task<bool> DeleteRoomAsync(int roomId) => 
             await new DeleteRoomTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
-        public async Task<bool> AddMember(int roomId, int clientId) => 
-            await new JoinRoomTs(roomId, clientId, await _transactionMeansFactory.CreateAsync()).RunAsync();
+        public async Task<bool> AddMember(int roomId, int clientId, string passphrase) => 
+            await new JoinRoomTs(roomId, clientId, passphrase, await _transactionMeansFactory.CreateAsync()).RunAsync();
 
         public async Task<ICollection<int>> GetMembers(int roomId) => 
             await new GetRoomMembersTs(roomId, await _transactionMeansFactory.CreateAsync()).RunAsync();

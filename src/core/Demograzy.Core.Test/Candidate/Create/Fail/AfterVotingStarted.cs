@@ -15,7 +15,7 @@ namespace Demograzy.Core.Test.Candidate.Create.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
-            var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "room", PASSPHRASE)).Value;
             for(int i = 0; i < MAX_CANDIDATES - 1; i++)
             {
                 await service.AddCandidateAsync(roomId, $"candidate_{i}");
@@ -34,7 +34,7 @@ namespace Demograzy.Core.Test.Candidate.Create.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("room_owner");
-            var roomId = (await service.AddRoomAsync(ownerId, "room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "room", PASSPHRASE)).Value;
             for(int i = 0; i < MAX_CANDIDATES - 1; i++)
             {
                 await service.AddCandidateAsync(roomId, $"candidate_{i}");

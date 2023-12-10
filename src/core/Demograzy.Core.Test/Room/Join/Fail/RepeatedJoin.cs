@@ -15,11 +15,11 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
 
-            var extraJoinFailed = !await service.AddMember(roomId, memberId);
+            var extraJoinFailed = !await service.AddMember(roomId, memberId, PASSPHRASE);
 
             Assert.That(extraJoinFailed);
         }
@@ -32,12 +32,12 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
             var expectedMembers = await service.GetMembers(roomId);
 
-            await service.AddMember(roomId, memberId);
+            await service.AddMember(roomId, memberId, PASSPHRASE);
 
             Assert.That(await service.GetMembers(roomId), Is.EqualTo(expectedMembers));
         }
@@ -50,12 +50,12 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var memberId = await service.AddClientAsync("client_for_room_1");
-            Assert.That(await service.AddMember(roomId, memberId));
+            Assert.That(await service.AddMember(roomId, memberId, PASSPHRASE));
             var expectedRooms = await service.GetJoinedRooms(memberId);
 
-            await service.AddMember(roomId, memberId);
+            await service.AddMember(roomId, memberId, PASSPHRASE);
 
             Assert.That(await service.GetJoinedRooms(memberId), Is.EqualTo(expectedRooms));
         }

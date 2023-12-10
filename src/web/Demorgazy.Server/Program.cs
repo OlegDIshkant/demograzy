@@ -168,7 +168,8 @@ app.MapPut(
     {        
         if (context.Request.Query.TryGetValue("memberId", out var memberIdString) &&
             int.TryParse(memberIdString, out var memberId) &&
-            await demograzyService.AddMember(roomId, memberId))
+            context.Request.Headers.TryGetValue("passphrase", out var passphrase) &&
+            await demograzyService.AddMember(roomId, memberId, passphrase))
         {
             context.Response.StatusCode = 200; 
         }

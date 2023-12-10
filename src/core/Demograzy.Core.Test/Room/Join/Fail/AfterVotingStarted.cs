@@ -15,18 +15,18 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             for(int i = 0; i < MAX_ROOM_MEMBERS - 2; i++)
             {
                 var otherClientId = await service.AddClientAsync($"client_{i}");
-                await service.AddMember(roomId, otherClientId);
+                await service.AddMember(roomId, otherClientId, PASSPHRASE);
             }
             var candidate1 = await service.AddCandidateAsync(roomId, "c1");
             var candidate2 = await service.AddCandidateAsync(roomId, "c2");
             Assert.That(await service.StartVotingAsync(roomId));
 
             var clientToFailId = await service.AddClientAsync("client_to_fail");
-            var jointFailed = !await service.AddMember(roomId, clientToFailId);
+            var jointFailed = !await service.AddMember(roomId, clientToFailId, PASSPHRASE);
 
             Assert.That(jointFailed);
         }
@@ -38,11 +38,11 @@ namespace Demograzy.Core.Test.Room.Join.Fail
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             for(int i = 0; i < MAX_ROOM_MEMBERS - 2; i++)
             {
                 var otherClientId = await service.AddClientAsync($"client_{i}");
-                await service.AddMember(roomId, otherClientId);
+                await service.AddMember(roomId, otherClientId, PASSPHRASE);
             }
             var candidate1 = await service.AddCandidateAsync(roomId, "c1");
             var candidate2 = await service.AddCandidateAsync(roomId, "c2");
@@ -50,7 +50,7 @@ namespace Demograzy.Core.Test.Room.Join.Fail
             var expectedMembers = await service.GetMembers(roomId);
 
             var clientToFailId = await service.AddClientAsync("client_to_fail");
-            await service.AddMember(roomId, clientToFailId);
+            await service.AddMember(roomId, clientToFailId, PASSPHRASE);
 
             Assert.That(expectedMembers, Is.EqualTo(await service.GetMembers(roomId)));
         }

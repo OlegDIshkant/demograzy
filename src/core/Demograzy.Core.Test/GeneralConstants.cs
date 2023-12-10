@@ -11,5 +11,7 @@ namespace Demograzy.Core.Test
         public const int MAX_ROOM_MEMBERS = 10;
         public const int MAX_CANDIDATES = 32;
         public const int MIN_CANDIDATES = 2;
+
+        public const string PASSPHRASE = "q123";
     }
 }

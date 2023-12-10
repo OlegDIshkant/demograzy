@@ -16,13 +16,13 @@ namespace Demograzy.Core.Test.Room.Join.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var joinResults = new List<bool>();
 
             for(int i = 0; i < MAX_ROOM_MEMBERS - 1; i++)
             {
                 var otherClientId = await service.AddClientAsync($"client_{i}");
-                joinResults.Add(await service.AddMember(roomId, otherClientId));
+                joinResults.Add(await service.AddMember(roomId, otherClientId, PASSPHRASE));
             }
 
             Assert.That(joinResults, Has.No.Member(false));
@@ -36,13 +36,13 @@ namespace Demograzy.Core.Test.Room.Join.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var expectedMembers = new List<int>() { ownerId };
 
             for(int i = 0; i < MAX_ROOM_MEMBERS - 1; i++)
             {
                 var otherClientId = await service.AddClientAsync($"client_{i}");
-                Assert.That(await service.AddMember(roomId, otherClientId));
+                Assert.That(await service.AddMember(roomId, otherClientId, PASSPHRASE));
                 expectedMembers.Add(otherClientId);
             }
 
@@ -57,13 +57,13 @@ namespace Demograzy.Core.Test.Room.Join.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var ownerId = await service.AddClientAsync("client_for_room");
-            var roomId = (await service.AddRoomAsync(ownerId, "some_room", "")).Value;
+            var roomId = (await service.AddRoomAsync(ownerId, "some_room", PASSPHRASE)).Value;
             var clientIds = new List<int>();
 
             for(int i = 0; i < MAX_ROOM_MEMBERS - 1; i++)
             {
                 var otherClientId = await service.AddClientAsync($"client_{i}");
-                await service.AddMember(roomId, otherClientId);
+                await service.AddMember(roomId, otherClientId, PASSPHRASE);
                 clientIds.Add(otherClientId);
             }
 
@@ -81,10 +81,10 @@ namespace Demograzy.Core.Test.Room.Join.Success
         {
             var service = StartUpRoutines.PrepareMainService();
             var owner = await service.AddClientAsync("client_for_room");
-            var room = (await service.AddRoomAsync(owner, "some_room", "")).Value;
+            var room = (await service.AddRoomAsync(owner, "some_room", PASSPHRASE)).Value;
             var extraMember = await service.AddClientAsync("extra_member");
             
-            await service.AddMember(room, extraMember);
+            await service.AddMember(room, extraMember, PASSPHRASE);
 
             Assert.That(await service.GetActiveVersesAsync(room, owner), Is.Null);
             Assert.That(await service.GetActiveVersesAsync(room, extraMember), Is.Null);
