@@ -87,13 +87,19 @@ namespace Demograzy.BusinessLogic
             if (fewVoted) return null;
 
             var votesForFirst = await VotesGateway.GetVotesAmountForFirstCandidateAsync(_versusId);
-            var firstWon = votesForFirst >= votesMajority;
+            var votesForSecond = votesSoFar - votesForFirst;
+            var everyoneVoted = maxVotes == votesSoFar;
+            var votesSpreadEvenly = votesForFirst == votesForSecond; 
 
+            if (everyoneVoted && votesSpreadEvenly)
+            {
+                return _votedForFirst ? Winner.FIRST : Winner.SECOND;
+            }            
+            
+            var firstWon = votesForFirst >= votesMajority;
             if (firstWon) return Winner.FIRST; 
 
-            var votesForSecond = votesSoFar - votesForFirst;
             var secondWon = votesForSecond >= votesMajority;
-
             if (secondWon) return Winner.SECOND;
 
             return null;
