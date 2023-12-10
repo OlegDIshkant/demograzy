@@ -26,7 +26,8 @@ RUN cat /dev/null > liquibase-keyring.gpg
 RUN rm liquibase-keyring.gpg
 RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/liquibase-keyring.gpg] https://repo.liquibase.com stable main' | tee /etc/apt/sources.list.d/liquibase.list
 RUN apt update
-RUN apt install -y liquibase
+# installing specific liquibase version to avoid problems of new version 
+RUN apt install -y liquibase=4.24.0 
 
 # Install JDK
 RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb -O jdk-21_linux-x64_bin.deb
