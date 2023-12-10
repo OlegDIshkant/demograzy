@@ -41,6 +41,7 @@ namespace Demograzy.BusinessLogic
             var roomMembers = await MembershipGateway.GetRoomMembersAsync(_roomId);
             if (LimitReached(roomMembers)) return false;
             if (ClientAlreadyJoinedRoom(roomMembers)) return false;
+            if (PassphraseIsWrong(roomInfo)) return false;
 
             return true;
 
@@ -49,6 +50,7 @@ namespace Demograzy.BusinessLogic
             bool VotingStarted(RoomInfo? roomInfo) => roomInfo.Value.votingStarted;
             bool LimitReached(ICollection<int> roomMemberIds) => roomMemberIds.Count >= Limits.MAX_MEMBERS_PER_ROOMS;
             bool ClientAlreadyJoinedRoom(ICollection<int> roomMemberIds) => roomMemberIds.Contains(_clientId);
+            bool PassphraseIsWrong(RoomInfo? roomInfo) => roomInfo.Value.passphrase != _passphrase;
         }
 
 
