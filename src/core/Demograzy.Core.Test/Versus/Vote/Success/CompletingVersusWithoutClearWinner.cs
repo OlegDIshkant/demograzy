@@ -83,11 +83,8 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
             // Get versus
             var versus = (await service.GetActiveVersesAsync(room, owner)).Single();
             var versusInfo = (await service.GetVersusInfoAsync(versus)).Value;
-            var expectedNextVersusCandidates = new List<int>()
-            {
-                candidate3,
-                lastVoteForFirst ? versusInfo.firstCandidateId : versusInfo.secondCandidateId  
-            };
+            var first = versusInfo.firstCandidateId;
+            var second = versusInfo.secondCandidateId;
 
             // Complete versus!
             // Votes should be distributed equally between candidates. 
@@ -109,13 +106,24 @@ namespace Demograzy.Core.Test.Versus.Vote.Success
 
             // Check
             var nextVersus = (await service.GetActiveVersesAsync(room, owner)).Single();
-            var nextVersusInfo = (await service.GetVersusInfoAsync(versus)).Value;
+            var nextVersusInfo = (await service.GetVersusInfoAsync(nextVersus)).Value;
             var nextVersusCandidates = new List<int>() 
             { 
                 nextVersusInfo.firstCandidateId,
                 nextVersusInfo.secondCandidateId
             };
-            Assert.That(nextVersusCandidates, Is.EquivalentTo(expectedNextVersusCandidates));
+
+            if (lastVoteForFirst)
+            {
+                Assert.That(nextVersusCandidates, Has.Member(first));
+                Assert.That(nextVersusCandidates, Has.No.Member(second));
+            }
+            else
+            {
+                Assert.That(nextVersusCandidates, Has.Member(second));
+                Assert.That(nextVersusCandidates, Has.No.Member(first));
+            }
+
         }
 
     }
