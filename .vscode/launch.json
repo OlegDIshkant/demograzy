@@ -13,7 +13,8 @@
             "env": {
                 "ASPNETCORE_WEBROOT": "${workspaceFolder}/src/web/Demorgazy.Server/wwwroot",
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "https://*:7050;http://*:5050"
+                "ASPNETCORE_URLS": "https://*:7050;http://*:5050",
+                "PATH_TO_CONNECTION_STRING_FILE": "/etc/demograzy_dev/pg_connection_string"
             }
         }
     ]
