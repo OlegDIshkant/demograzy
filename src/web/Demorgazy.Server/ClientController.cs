@@ -38,15 +38,15 @@ namespace Demograzy.Server
 
 
 
-        [HttpPut("{clientId}/name")]
+        [HttpGet("{clientId}/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetClientName([FromRoute] int clientId, [FromQuery] string title, [FromHeader] string passphrase)
+        public async Task<IActionResult> GetClientName([FromRoute] int clientId)
         {            
             var clientInfo = await Service.GetClientInfo(clientId);
             return 
                 clientInfo.HasValue ?
-                Ok(clientInfo.Value.name) :
+                Ok(JsonSerializer.Serialize(clientInfo.Value.name)) :
                 NotFound();            
         }
         
